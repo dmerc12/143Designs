@@ -21,12 +21,12 @@ def test_login_success():
     result = user_dao.login(test_user.email, test_user.password)
     assert result is not None
 
-def test_update_user_success():
-    result = user_dao.update_user(updated_user)
+def test_update_email_success():
+    result = user_dao.update_email(updated_user)
     assert result.user_id == test_user.user_id and result.email != test_user.email
 
 def test_change_password_success():
-    result = user_dao.change_password(test_user.user_id, test_user.password)
+    result = user_dao.change_password(updated_user)
     assert result
 
 def test_delete_user_success():

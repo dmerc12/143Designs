@@ -22,11 +22,11 @@ class UserDALInterface(ABC):
         pass
 
     @abstractmethod
-    def update_user(self, user: User) -> User:
+    def update_email(self, user: User) -> User:
         pass
 
     @abstractmethod
-    def change_password(self, user_id: int, password: str) -> bool:
+    def change_password(self, user: User) -> bool:
         pass
 
     @abstractmethod
