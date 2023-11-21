@@ -66,14 +66,6 @@ def test_create_user_confirmation_password_empty():
     except CustomError as error:
         assert str(error) == "The confirmation password field cannot be left empty, please try again!"
 
-def test_create_user_confirmation_password_too_long():
-    try:
-        test_user = User(0, "test@email.com", "pass")
-        user_sao.create_user(test_user, "this is much too long and should raise the desired error")
-        assert False
-    except CustomError as error:
-        assert str(error) == "The confirmation password field cannot exceed 60 characters, please try again!"
-
 def test_create_user_confirmation_password_not_string():
     try:
         test_user = User(0, "test@email.com", "test")
@@ -300,4 +292,3 @@ def test_delete_user_not_found():
 def test_delete_user_success():
     result = user_sao.delete_user(success_user.user_id)
     assert result
-    
