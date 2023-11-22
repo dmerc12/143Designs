@@ -28,6 +28,4 @@ def get_user_route():
         return jsonify(user.convert_to_dictionary()), 200
     except CustomError as error:
         current_app.logger.error("Error with API function get user with error: " + str(error))
-        response = {"message": str(error)}
-        return jsonify(response), 400
-    
+        return jsonify({"message": str(error)}), 400

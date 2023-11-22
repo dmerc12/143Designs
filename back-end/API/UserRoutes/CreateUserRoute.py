@@ -22,5 +22,4 @@ def create_user_route():
         return jsonify(user.convert_to_dictionary()), 201
     except CustomError as error:
         current_app.logger.error("Finishing API function create user with error: " + str(error))
-        response = {"message": str(error)}
-        return jsonify(response), 400
+        return jsonify({"message": str(error)}), 400
