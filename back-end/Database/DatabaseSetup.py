@@ -34,14 +34,14 @@ if __name__ == "__main__":
 
     session_table_sql = '''
         CREATE TABLE 143Designs.Session (
-            session_id SERIAL PRIMARY KEY,
+            session_id VARCHAR(60) PRIMARY KEY,
             user_id INT NOT NULL,
             expiration TIMESTAMP NOT NULL,
             CONSTRAINT user_session_fk FOREIGN KEY (user_id) REFERENCES 143Designs.User(user_id) ON DELETE CASCADE
         );
     '''
 
-    test_session_1_sql = f"INSERT INTO 143Designs.Session (session_id, user_id, expiration) VALUES (-1, -1, " \
+    test_session_1_sql = f"INSERT INTO 143Designs.Session (session_id, user_id, expiration) VALUES ('-1', -1, " \
                          f"{datetime.now() - timedelta(minutes=15)});"
 
     request_table_sql = '''

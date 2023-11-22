@@ -23,7 +23,7 @@ if __name__ == "__main__":
     cursor.execute("INSERT INTO 143Designs.User (user_id, email, passwrd) VALUES (-1, 'test@email.com', 'test');")
     cursor.execute("INSERT INTO 143Designs.User (user_id, email, passwrd) VALUES (-2, "
                    "'delete-all-sessions@email.com', 'test');")
-    cursor.execute(f"INSERT INTO 143Designs.Session (session_id, user_id, expiration) VALUES (-1, -1, "
+    cursor.execute(f"INSERT INTO 143Designs.Session (session_id, user_id, expiration) VALUES ('-1', -1, "
                    f"{datetime.now() - timedelta(minutes=15)});")
     connection.commit()
     connection.close()
