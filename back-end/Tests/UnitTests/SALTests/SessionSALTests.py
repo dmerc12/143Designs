@@ -140,6 +140,13 @@ def test_delete_session_id_not_integer():
     except CustomError as error:
         assert str(error) == "The session ID field must be an integer, please try again!"
 
+def test_delete_session_expired():
+    try:
+        session_sao.delete_session(-1)
+        assert False
+    except CustomError as error:
+        assert str(error) == "Session has expired, please log in!"
+
 def test_delete_session_not_found():
     try:
         session_sao.delete_session(-5000000000)
