@@ -1,9 +1,13 @@
+import bcrypt
+
 from DAL.UserDAL.UserDALImplementation import UserDALImplementation
 from Entities.User import User
 
 user_dao = UserDALImplementation()
-test_user = User(0, "new@email.com", "test")
-updated_user = User(test_user.user_id, "updated@email.com", "updated")
+new_hashed_password = str(bcrypt.hashpw("test".encode("utf-8"), bcrypt.gensalt()))
+update_hashed_password = str(bcrypt.hashpw("updated".encode("utf-8"), bcrypt.gensalt()))
+test_user = User(0, "new@email.com", new_hashed_password)
+updated_user = User(test_user.user_id, "updated@email.com", update_hashed_password)
 
 def test_create_user_success():
     result = user_dao.create_user(test_user)
