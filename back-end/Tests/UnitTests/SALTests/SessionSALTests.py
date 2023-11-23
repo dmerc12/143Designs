@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta, datetime
 
 from DAL.SessionDAL.SessionDALImplementation import SessionDALImplementation
 from SAL.SessionSAL.SessionSALImplementation import SessionSALImplementation
@@ -8,12 +8,12 @@ from Entities.Session import Session
 session_dao = SessionDALImplementation()
 session_sao = SessionSALImplementation(session_dao)
 
-success_session = Session(0, -1, datetime.now() + timedelta(minutes=15))
+success_session = Session("0", -1, datetime.now() + timedelta(minutes=15))
 update_session = Session(success_session.session_id, success_session.user_id, datetime.now() + timedelta(minutes=15))
 
 def test_create_session_user_id_not_integer():
     try:
-        test_session = Session(0, "-1", datetime.now() + timedelta(minutes=15))
+        test_session = Session("0", "-1", datetime.now() + timedelta(minutes=15))
         session_sao.create_session(test_session)
         assert False
     except CustomError as error:
@@ -21,7 +21,7 @@ def test_create_session_user_id_not_integer():
 
 def test_create_session_user_not_found():
     try:
-        test_session = Session(0, -50000000, datetime.now() + timedelta(minutes=15))
+        test_session = Session("0", -50000000, datetime.now() + timedelta(minutes=15))
         session_sao.create_session(test_session)
         assert False
     except CustomError as error:
@@ -29,7 +29,7 @@ def test_create_session_user_not_found():
 
 def test_create_session_expiration_date_time_not_datetime():
     try:
-        test_session = Session(0, -1, str(datetime.now() + timedelta(minutes=15)))
+        test_session = Session("0", -1, str(datetime.now() + timedelta(minutes=15)))
         session_sao.create_session(test_session)
         assert False
     except CustomError as error:
@@ -47,23 +47,23 @@ def test_create_session_success():
     result = session_sao.create_session(success_session)
     assert result.session_id != 0
 
-def test_get_session_id_not_integer():
+def test_get_session_id_not_string():
     try:
-        session_sao.get_session("10")
+        session_sao.get_session(10)
         assert False
     except CustomError as error:
-        assert str(error) == "The session ID field must be an integer, please try again!"
+        assert str(error) == "The session ID field must be a string, please try again!"
 
 def test_get_session_not_found():
     try:
-        session_sao.get_session(-500000000000)
+        session_sao.get_session("-500000000000")
         assert False
     except CustomError as error:
         assert str(error) == "No session found, please try again!"
 
 def test_get_session_expired():
     try:
-        result = session_sao.get_session(-1)
+        result = session_sao.get_session("-1")
         print(result)
         assert False
     except CustomError as error:
@@ -73,13 +73,13 @@ def test_get_session_success():
     result = session_sao.get_session(success_session.session_id)
     assert result is not None
 
-def test_update_session_session_id_not_integer():
+def test_update_session_session_id_not_string():
     try:
-        test_session = Session("0", -1, datetime.now() + timedelta(minutes=15))
+        test_session = Session(0, -1, datetime.now() + timedelta(minutes=15))
         session_sao.update_session(test_session)
         assert False
     except CustomError as error:
-        assert str(error) == "The session ID field must be an integer, please try again!"
+        assert str(error) == "The session ID field must be a string, please try again!"
 
 def test_update_session_user_id_not_integer():
     try:
@@ -99,7 +99,7 @@ def test_update_session_expiration_not_datetime():
 
 def test_update_session_expired():
     try:
-        test_session = Session(-1, -1, datetime.now() + timedelta(minutes=15))
+        test_session = Session("-1", -1, datetime.now() + timedelta(minutes=15))
         session_sao.update_session(test_session)
         assert False
     except CustomError as error:
@@ -107,7 +107,7 @@ def test_update_session_expired():
 
 def test_update_session_session_not_found():
     try:
-        test_session = Session(-688085432234567, -1, datetime.now() + timedelta(minutes=15))
+        test_session = Session("-688085432234567", -1, datetime.now() + timedelta(minutes=15))
         session_sao.update_session(test_session)
         assert False
     except CustomError as error:
@@ -115,7 +115,7 @@ def test_update_session_session_not_found():
 
 def test_update_session_user_not_found():
     try:
-        test_session = Session(-1, -6756432123456789876, datetime.now() + timedelta(minutes=15))
+        test_session = Session("-1", -6756432123456789876, datetime.now() + timedelta(minutes=15))
         session_sao.update_session(test_session)
         assert False
     except CustomError as error:
@@ -133,16 +133,23 @@ def test_update_session_success():
     result = session_sao.update_session(update_session)
     assert result
 
-def test_delete_session_id_not_integer():
+def test_delete_session_id_not_string():
     try:
-        session_sao.delete_session("1")
+        session_sao.delete_session(1)
         assert False
     except CustomError as error:
-        assert str(error) == "The session ID field must be an integer, please try again!"
+        assert str(error) == "The session ID field must be a string, please try again!"
+
+def test_delete_session_expired():
+    try:
+        session_sao.delete_session("-1")
+        assert False
+    except CustomError as error:
+        assert str(error) == "Session has expired, please log in!"
 
 def test_delete_session_not_found():
     try:
-        session_sao.delete_session(-5000000000)
+        session_sao.delete_session("-5000000000")
         assert False
     except CustomError as error:
         assert str(error) == "No session found, please try again!"

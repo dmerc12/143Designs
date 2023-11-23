@@ -1,5 +1,7 @@
 import logging
 
+import bcrypt
+
 from DAL.UserDAL.UserDALImplementation import UserDALImplementation
 from SAL.UserSAL.UserSALInterface import UserSALInterface
 from Entities.CustomError import CustomError
@@ -47,6 +49,8 @@ class UserSALImplementation(UserSALInterface):
                 logging.warning("Error in SAL method create user, user with email already exists")
                 raise CustomError("The passwords do not match, please try again!")
             else:
+                hashed_password = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
+                user.password = hashed_password.decode("utf-8")
                 user = self.user_dao.create_user(user)
                 logging.info("Finishing SAL method create user with user: " + str(user.convert_to_dictionary()))
                 return user
@@ -91,7 +95,8 @@ class UserSALImplementation(UserSALInterface):
             raise CustomError("The password field cannot be left empty, please try again!")
         else:
             user = self.user_dao.login(email, password)
-            if user.user_id == 0 and user.email == "" and user.password == "":
+            if (user.user_id == 0 and user.email == "" and user.password == "") \
+                    or bcrypt.checkpw(password.encode(), user.password.encode()):
                 logging.warning("Error in SAL method login, incorrect credentials")
                 raise CustomError("Either the email or password are incorrect, please try again!")
             else:
@@ -149,7 +154,9 @@ class UserSALImplementation(UserSALInterface):
             raise CustomError("The passwords don't match, please try again!")
         else:
             current_info = self.get_user_by_id(user.user_id)
-            if current_info.password == user.password:
+            hashed_password = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
+            current_password = current_info.password.encode("utf-8")
+            if bcrypt.checkpw(hashed_password, current_password):
                 logging.warning("Error in SAL method change password, nothing changed")
                 raise CustomError("Nothing has changed, please try again!")
             else:

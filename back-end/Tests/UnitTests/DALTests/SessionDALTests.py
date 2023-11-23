@@ -4,7 +4,7 @@ from DAL.SessionDAL.SessionDALImplementation import SessionDALImplementation
 from Entities.Session import Session
 
 session_dao = SessionDALImplementation()
-test_session = Session(0, -1, datetime.now() + timedelta(minutes=15))
+test_session = Session("0", -1, datetime.now() + timedelta(minutes=15))
 update_session = Session(test_session.session_id, test_session.user_id, datetime.now() + timedelta(15))
 
 def test_create_session_success():

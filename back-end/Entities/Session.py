@@ -2,7 +2,7 @@ from datetime import datetime
 
 class Session:
 
-    def __init__(self, session_id: int, user_id: int, expiration: datetime):
+    def __init__(self, session_id: str, user_id: int, expiration: datetime):
         self.session_id = session_id
         self.user_id = user_id
         self.expiration = expiration
