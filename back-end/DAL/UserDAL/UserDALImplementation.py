@@ -59,7 +59,21 @@ class UserDALImplementation(UserDALInterface):
             return user
 
     def get_all_users(self) -> List[User]:
-        pass
+        logging.info("Beginning DAL method get all users")
+        sql = "SELECT * FROM 143Designs.User;"
+        connection = DBConnection.db_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        users_info = cursor.fetchall()
+        user_list = []
+        cursor.close()
+        connection.close()
+        for user in users_info:
+            user = User(*user)
+            user_list.append(user)
+        for user in user_list:
+            logging.info("Finishing DAL method get all users with users: " + str(user.convert_to_dictionary()))
+        return user_list
 
     def login(self, email: str, password: str) -> User:
         logging.info("Beginning DAL method login with email: " + email + " and password: " + password)

@@ -4,8 +4,10 @@ from DAL.UserDAL.UserDALImplementation import UserDALImplementation
 from Entities.User import User
 
 user_dao = UserDALImplementation()
+
 new_hashed_password = str(bcrypt.hashpw("test".encode("utf-8"), bcrypt.gensalt()))
 update_hashed_password = str(bcrypt.hashpw("updated".encode("utf-8"), bcrypt.gensalt()))
+
 test_user = User(0, "new@email.com", new_hashed_password)
 updated_user = User(test_user.user_id, "updated@email.com", update_hashed_password)
 
@@ -20,6 +22,10 @@ def test_get_user_by_id_success():
 def test_get_user_by_email_success():
     result = user_dao.get_user_by_email(test_user.email)
     assert result is not None
+
+def test_get_all_users_success():
+    result = user_dao.get_all_users()
+    assert len(result) != 0
 
 def test_login_success():
     result = user_dao.login(test_user.email, test_user.password)
