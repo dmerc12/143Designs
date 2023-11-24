@@ -1,15 +1,18 @@
-from datetime import datetime
+from datetime import datetime, date
 
 class Request:
 
-    def __init__(self, request_id: int, first_name: str, last_name: str, email: str, phone_number: str, message: str,
-                 complete: bool, timestamp: datetime):
+    # company name will be optional
+    def __init__(self, request_id: int, first_name: str, last_name: str, company_name: str, email: str,
+                 phone_number: str, message: str, completion_date: date, complete: bool, timestamp: datetime):
         self.request_id = request_id
         self.first_name = first_name
         self.last_name = last_name
+        self.company_name = company_name
         self.email = email
         self.phone_number = phone_number
         self.message = message
+        self.completion_date = completion_date
         self.complete = complete
         self.timestamp = timestamp
 
