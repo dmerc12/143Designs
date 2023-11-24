@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from DAL.UserDAL.UserDALInterface import UserDALInterface
 from Database.DBConnection import DBConnection
@@ -56,6 +57,9 @@ class UserDALImplementation(UserDALInterface):
             user = User(*user_info)
             logging.info("Finishing DAL method get user by email with user: " + user.convert_to_dictionary())
             return user
+
+    def get_all_users(self) -> List[User]:
+        pass
 
     def login(self, email: str, password: str) -> User:
         logging.info("Beginning DAL method login with email: " + email + " and password: " + password)
