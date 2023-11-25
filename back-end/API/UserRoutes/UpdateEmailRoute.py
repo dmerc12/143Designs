@@ -30,4 +30,4 @@ def update_email_route():
         return jsonify(result), 200
     except CustomError as error:
         current_app.logger.error("Error with API function update email with error: " + str(error))
-        return jsonify({"message": str(error)})
+        return jsonify({"message": str(error)}), 400
