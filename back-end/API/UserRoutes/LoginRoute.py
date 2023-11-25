@@ -22,7 +22,7 @@ def login():
         request_info = request.json
         current_app.logger.info("Beginning API functino login with info: " + str(request_info))
         user = user_sao.login(email=request_info["email"], password=request_info["password"])
-        session_info = Session(0, user.user_id, datetime.now() + timedelta(minutes=15))
+        session_info = Session("0", user.user_id, datetime.now() + timedelta(minutes=15))
         session = session_sao.create_session(session_info)
         current_app.logger.info("Finishing API function login with session: " + str(session.convert_to_dictionary()))
         return jsonify({"sessionId": session.session_id}), 200
