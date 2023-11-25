@@ -166,7 +166,15 @@ class UserSALImplementation(UserSALInterface):
 
     def delete_user(self, user_id: int) -> bool:
         logging.info("Beginning SAL method delete user with user ID: " + str(user_id))
+        if type(user_id) is not int:
+            logging.warning("Error in SAL method delete user, user ID not an integer")
+            raise CustomError("User ID field must be an integer, please try again!")
         self.get_user_by_id(user_id)
-        result = self.user_dao.delete_user(user_id)
-        logging.info("Finishing SAL method delete user with result: " + str(result))
-        return result
+        user_list = self.user_dao.get_all_users()
+        if len(user_list) == 0:
+            logging.warning("Error in SAL method delete user, user is last user in database")
+            raise CustomError("Please create another account first, then try again!")
+        else:
+            result = self.user_dao.delete_user(user_id)
+            logging.info("Finishing SAL method delete user with result: " + str(result))
+            return result

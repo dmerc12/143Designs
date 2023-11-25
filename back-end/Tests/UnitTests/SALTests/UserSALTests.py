@@ -282,6 +282,21 @@ def test_change_password_success():
     result = user_sao.change_password(update_user, update_user.password)
     assert result
 
+def test_delete_user_id_not_integer():
+    try:
+        user_sao.delete_user("1")
+        assert False
+    except CustomError as error:
+        assert str(error) == "User ID field must be an integer, please try again!"
+
+def test_delete_user_last_user():
+    try:
+        user_sao.delete_user(-1)
+        user_sao.delete_user(-2)
+        assert False
+    except CustomError as error:
+        assert str(error) == "Please create another account first, then try again!"
+
 def test_delete_user_not_found():
     try:
         user_sao.delete_user(-500000)

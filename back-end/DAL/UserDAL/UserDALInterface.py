@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from Entities.User import User
 
@@ -15,6 +16,10 @@ class UserDALInterface(ABC):
 
     @abstractmethod
     def get_user_by_email(self, email: str) -> User:
+        pass
+
+    @abstractmethod
+    def get_all_users(self) -> List[User]:
         pass
 
     @abstractmethod
