@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaSpinner, FaSync } from 'react-icons/fa';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 
-export const LoginForm = ({ toastRef }) => {
+export const LoginForm = ({ toast }) => {
     
     const [loginForm, setLoginForm] = useState({
         email: '',
@@ -19,8 +19,6 @@ export const LoginForm = ({ toastRef }) => {
     });
 
     const { fetch } = useFetch();
-
-    const toast = toastRef.current.addToast;
 
     const navigate = useNavigate();
 
@@ -105,5 +103,5 @@ export const LoginForm = ({ toastRef }) => {
 };
 
 LoginForm.propTypes = {
-    toastRef: PropTypes.object.isRequired
+    toast: PropTypes.object.isRequired
 };

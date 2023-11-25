@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaSpinner } from 'react-icons/fa';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 
-export const CreateUserForm = ({ toastRef }) => {
+export const CreateUserForm = ({ toast }) => {
     sessionId = Cookies.get('sessionId');
 
     const [createUserForm, setCreateUserForm] = useState({
@@ -21,8 +21,6 @@ export const CreateUserForm = ({ toastRef }) => {
         loading: false,
         failedToFetch: false
     });
-
-    const toast = toastRef.current.addToast;
 
     const { fetch } = useFetch();
 
@@ -130,5 +128,5 @@ export const CreateUserForm = ({ toastRef }) => {
 };
 
 CreateUserForm.propTypes = {
-    toastRef: PropTypes.object.isRequired
+    toast: PropTypes.object.isRequired
 };
