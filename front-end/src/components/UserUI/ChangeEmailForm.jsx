@@ -124,8 +124,8 @@ export const ChangeEmailForm = ({ toast }) => {
 
             if (responseStatus === 200) {
                 closeModal();
-                setLoading(false);
-                toast.success('Information successfully updated!');
+                setFormState.loading = false;
+                toast.success('Password successfully changed!');
             } else if (responseStatus === 400) {
                 throw new Error(`${data.message}`);
             } else {
