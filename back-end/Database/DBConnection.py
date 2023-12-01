@@ -13,7 +13,7 @@ class DBConnection:
                 dbname=os.environ.get("DBNAME"),
                 user=os.environ.get("USER"),
                 password=os.environ.get("PASSWORD"),
-                post=os.environ.get("PORT")
+                port=os.environ.get("PORT")
             )
             return new_connection
         except OperationalError:
