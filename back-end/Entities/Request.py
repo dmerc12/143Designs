@@ -17,13 +17,26 @@ class Request:
         self.timestamp = timestamp
 
     def convert_to_dictionary(self):
-        return {
-            'requestId': self.request_id,
-            'firstName': self.first_name,
-            'lastName': self.last_name,
-            'email': self.email,
-            'phoneNumber': self.phone_number,
-            'message': self.message,
-            'complete': self.complete,
-            'timestamp': self.timestamp
-        }
+        if self.company_name:
+            return {
+                'requestId': self.request_id,
+                'firstName': self.first_name,
+                'lastName': self.last_name,
+                'companyName': self.company_name,
+                'email': self.email,
+                'phoneNumber': self.phone_number,
+                'message': self.message,
+                'complete': self.complete,
+                'timestamp': self.timestamp
+            }
+        else:
+            return {
+                'requestId': self.request_id,
+                'firstName': self.first_name,
+                'lastName': self.last_name,
+                'email': self.email,
+                'phoneNumber': self.phone_number,
+                'message': self.message,
+                'complete': self.complete,
+                'timestamp': self.timestamp
+            }
