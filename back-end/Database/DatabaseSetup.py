@@ -1,5 +1,3 @@
-from datetime import timedelta, datetime
-
 from Database.DBConnection import DBConnection
 
 
@@ -17,35 +15,35 @@ def create_data(sql, data_name):
         connection.close()
 
 if __name__ == "__main__":
-    schema_sql = "CREATE SCHEMA 143Designs"
+    schema_sql = "CREATE SCHEMA Designs"
 
     user_table_sql = '''
-        CREATE TABLE 143Designs.User(
+        CREATE TABLE Designs.User(
             user_id SERIAL PRIMARY KEY,
             email VARCHAR(60) UNIQUE NOT NULL,
             passwrd VARCHAR(60) NOT NULL
         );
     '''
 
-    test_user_1_sql = "INSERT INTO 143Designs.User (user_id, email, passwrd) VALUES (-1, 'test@email.com', 'test');"
+    test_user_1_sql = "INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-1, 'test@email.com', 'test');"
 
-    test_user_2_sql = "INSERT INTO 143Designs.User (user_id, email, passwrd) VALUES (-2, " \
+    test_user_2_sql = "INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-2, " \
                       "'delete-all-sessions@email.com', 'test');"
 
     session_table_sql = '''
-        CREATE TABLE 143Designs.Session (
+        CREATE TABLE Designs.Session (
             session_id VARCHAR(60) PRIMARY KEY,
             user_id INT NOT NULL,
             expiration TIMESTAMP NOT NULL,
-            CONSTRAINT user_session_fk FOREIGN KEY (user_id) REFERENCES 143Designs.User(user_id) ON DELETE CASCADE
+            CONSTRAINT user_session_fk FOREIGN KEY (user_id) REFERENCES Designs.User(user_id) ON DELETE CASCADE
         );
     '''
 
-    test_session_1_sql = f"INSERT INTO 143Designs.Session (session_id, user_id, expiration) VALUES ('-1', -1, " \
-                         f"{datetime.now() - timedelta(minutes=15)});"
+    test_session_1_sql = f"INSERT INTO Designs.Session (session_id, user_id, expiration) " \
+                         f"VALUES ('-1', -1, '2022-1-1 1:30:45');"
 
     request_table_sql = '''
-        CREATE TABLE 143Designs.Request (
+        CREATE TABLE Designs.Request (
             request_id SERIAL PRIMARY KEY,
             first_name VARCHAR(36) NOT NULL,
             last_name VARCHAR(36) NOT NULL,
@@ -58,7 +56,7 @@ if __name__ == "__main__":
     '''
 
     review_table_sql = '''
-        CREATE TABLE 143Designs.Review (
+        CREATE TABLE Designs.Review (
             review_id SERIAL PRIMARY KEY,
             first_name VARCHAR(36) NOT NULL,
             last_name VARCHAR(36) NOT NULL,
@@ -68,7 +66,7 @@ if __name__ == "__main__":
     '''
 
     work_table_sql = '''
-        CREATE TABLE 143Designs.Work (
+        CREATE TABLE Designs.Work (
             work_id SERIAL PRIMARY KEY,
             first_name VARCHAR(36) NOT NULL,
             last_name VARCHAR(36) NOT NULL,
