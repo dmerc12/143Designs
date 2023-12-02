@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from typing import List
 
 from DAL.SessionDAL.SessionDALInterface import SessionDALInterface
 from Database.DBConnection import DBConnection
@@ -36,6 +37,22 @@ class SessionDALImplementation(SessionDALInterface):
             session = Session(*session_info)
             logging.info("Finishing DAL method get session with session: " + str(session.convert_to_dictionary()))
             return session
+
+    def get_all_sessions(self) -> List[Session]:
+        logging.info("Beginning DAL method get all sessions")
+        sql = "SELECT * FROM financial_tracker.Session;"
+        connection = DBConnection.db_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        session_records = cursor.fetchall()
+        sessions = []
+        cursor.close()
+        connection.close()
+        for session_info in session_records:
+            session = Session(session_info[0], session_info[1], session_info[2])
+            sessions.append(session)
+            logging.info("Finishing DAL method get all sessions with sessions: " + str(session.convert_to_dictionary()))
+        return sessions
 
     def update_session(self, session: Session) -> bool:
         logging.info("Beginning DAL method update session with session: " + str(session.convert_to_dictionary()))

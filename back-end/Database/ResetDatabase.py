@@ -23,5 +23,7 @@ if __name__ == "__main__":
                    "'delete-all-sessions@email.com', 'test');")
     cursor.execute("INSERT INTO Designs.Session (session_id, user_id, expiration) "
                    "VALUES ('-1', -1, '2022-1-1 1:30:45');")
+    cursor.execute("INSERT INTO Designs.Session (session_id, user_id, expiration) "
+                   "VALUES ('-2', -1, '2029-1-1 1:30:45');")
     connection.commit()
     connection.close()
