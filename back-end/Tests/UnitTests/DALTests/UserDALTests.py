@@ -33,7 +33,7 @@ def test_login_success():
 
 def test_update_email_success():
     result = user_dao.update_email(updated_user)
-    assert result.user_id == test_user.user_id and result.email != test_user.email
+    assert result
 
 def test_change_password_success():
     result = user_dao.change_password(updated_user)

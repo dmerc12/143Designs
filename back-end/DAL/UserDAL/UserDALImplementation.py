@@ -10,7 +10,7 @@ class UserDALImplementation(UserDALInterface):
 
     def create_user(self, user: User) -> User:
         logging.info("Beginning DAL method create user with user: " + str(user.convert_to_dictionary_full()))
-        sql = "INSERT INTO 143Designs.User (email, passwrd) VALUES (%s, %s);"
+        sql = "INSERT INTO Designs.User (email, passwrd) VALUES (%s, %s) RETURNING user_id;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (user.email, user.password))
@@ -24,7 +24,7 @@ class UserDALImplementation(UserDALInterface):
 
     def get_user_by_id(self, user_id: int) -> User:
         logging.info("Beginning DAL method get user by ID with ID: " + str(user_id))
-        sql = "SELECT * FROM 143Designs.User WHERE user_id=%s;"
+        sql = "SELECT * FROM Designs.User WHERE user_id=%s;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (user_id,))
@@ -37,12 +37,12 @@ class UserDALImplementation(UserDALInterface):
             return user
         else:
             user = User(*user_info)
-            logging.info("Finishing DAL method get user by ID with user: " + user.convert_to_dictionary())
+            logging.info("Finishing DAL method get user by ID with user: " + str(user.convert_to_dictionary()))
             return user
 
     def get_user_by_email(self, email: str) -> User:
-        logging.info("Beginning DAL method get user by email with email: " + email)
-        sql = "SELECT * FROM 143Designs.User WHERE email=%s;"
+        logging.info("Beginning DAL method get user by email with email: " + str(email))
+        sql = "SELECT * FROM Designs.User WHERE email=%s;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (email,))
@@ -55,12 +55,12 @@ class UserDALImplementation(UserDALInterface):
             return user
         else:
             user = User(*user_info)
-            logging.info("Finishing DAL method get user by email with user: " + user.convert_to_dictionary())
+            logging.info("Finishing DAL method get user by email with user: " + str(user.convert_to_dictionary()))
             return user
 
     def get_all_users(self) -> List[User]:
         logging.info("Beginning DAL method get all users")
-        sql = "SELECT * FROM 143Designs.User;"
+        sql = "SELECT * FROM Designs.User;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql)
@@ -76,8 +76,8 @@ class UserDALImplementation(UserDALInterface):
         return user_list
 
     def login(self, email: str, password: str) -> User:
-        logging.info("Beginning DAL method login with email: " + email + " and password: " + password)
-        sql = "SELECT * FROM 143Designs.User WHERE email=%s and passwrd=%s;"
+        logging.info("Beginning DAL method login with email: " + str(email) + " and password: " + str(password))
+        sql = "SELECT * FROM Designs.User WHERE email=%s and passwrd=%s;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (email, password))
@@ -93,21 +93,21 @@ class UserDALImplementation(UserDALInterface):
             logging.info("Finishing DAL method login with user: " + str(user.convert_to_dictionary()))
             return user
 
-    def update_email(self, user: User) -> User:
+    def update_email(self, user: User) -> bool:
         logging.info("Beginning DAL method update email with user: " + str(user.convert_to_dictionary()))
-        sql = "UPDATE 143Designs.User SET email=%s WHERE user_id=%s;"
+        sql = "UPDATE Designs.User SET email=%s WHERE user_id=%s;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (user.email, user.user_id))
         cursor.close()
         connection.commit()
         connection.close()
-        logging.info("Finishing DAL method update email with result: " + str(user.convert_to_dictionary()))
-        return user
+        logging.info("Finishing DAL method update email")
+        return True
 
     def change_password(self, user: User) -> bool:
-        logging.info("Beginning DAL method change password with user: ")
-        sql = "UPDATE 143Designs.User SET passwrd=%s WHERE user_id=%s;"
+        logging.info("Beginning DAL method change password with user: " + str(user))
+        sql = "UPDATE Designs.User SET passwrd=%s WHERE user_id=%s;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (user.password, user.user_id))
@@ -119,7 +119,7 @@ class UserDALImplementation(UserDALInterface):
 
     def delete_user(self, user_id: int) -> bool:
         logging.info("Beginning DAL method delete user with user ID: " + str(user_id))
-        sql = "DELETE FROM 143Designs.User WHERE user_id=%s;"
+        sql = "DELETE FROM Designs.User WHERE user_id=%s;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (user_id,))

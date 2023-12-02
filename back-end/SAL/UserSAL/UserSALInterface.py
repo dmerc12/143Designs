@@ -21,7 +21,7 @@ class UserSALInterface(ABC):
         pass
 
     @abstractmethod
-    def update_email(self, user: User) -> User:
+    def update_email(self, user: User) -> bool:
         pass
 
     @abstractmethod

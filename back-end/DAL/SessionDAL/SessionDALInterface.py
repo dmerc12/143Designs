@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from Entities.Session import Session
 
@@ -11,6 +12,10 @@ class SessionDALInterface(ABC):
 
     @abstractmethod
     def get_session(self, session_id: int) -> Session:
+        pass
+
+    @abstractmethod
+    def get_all_sessions(self) -> List[Session]:
         pass
 
     @abstractmethod

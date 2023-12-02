@@ -15,6 +15,10 @@ def test_get_session_success():
     result = session_dao.get_session(test_session.session_id)
     assert result is not None
 
+def test_get_all_sessions_success():
+    result = session_dao.get_all_sessions()
+    assert len(result) > 0
+
 def test_update_session_success():
     result = session_dao.update_session(update_session)
     assert result
