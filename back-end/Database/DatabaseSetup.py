@@ -50,6 +50,7 @@ if __name__ == "__main__":
             request_id SERIAL PRIMARY KEY,
             first_name VARCHAR(36) NOT NULL,
             last_name VARCHAR(36) NOT NULL,
+            company_name VARCHAR(60),
             email VARCHAR(60) NOT NULL,
             phone_number VARCHAR(15),
             message TEXT NOT NULL,
@@ -61,8 +62,7 @@ if __name__ == "__main__":
     review_table_sql = '''
         CREATE TABLE Designs.Review (
             review_id SERIAL PRIMARY KEY,
-            first_name VARCHAR(36) NOT NULL,
-            last_name VARCHAR(36) NOT NULL,
+            name VARCHAR(60) NOT NULL,
             text TEXT NOT NULL,
             rating DECIMAL(1, 1) NOT NULL
         );
@@ -71,10 +71,45 @@ if __name__ == "__main__":
     work_table_sql = '''
         CREATE TABLE Designs.Work (
             work_id SERIAL PRIMARY KEY,
-            first_name VARCHAR(36) NOT NULL,
-            last_name VARCHAR(36) NOT NULL,
+            name VARCHAR(60) NOT NULL,
             description TEXT NOT NULL
         );
+    '''
+
+    item_table_sql = '''
+        CREATE TABLE Designs.Item (
+            item_id SERIAL PRIMARY KEY,
+            item_name VARCHAR(60) NOT NULL
+        );
+    '''
+
+    order_table_sql = '''
+        CREATE TABLE Designs.Order (
+            order_id SERIAL PRIMARY KEY,
+            complete BOOLEAN NOT NULL,
+            paid BOOLEAN NOT NULL,
+            customer_name VARCHAR(60) NOT NULL,
+            description TEXT NOT NULL,
+            item_list JSONB
+        );
+        
+        CREATE OR REPLACE FUNCTION validate_item_list_items()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF (SELECT COUNT(*) FROM jsonb_array_elements(NEW.item_list)->>'item_id'::INTEGER
+                WHERE NOT EXISTS (SELECT 1 FROM Designs.Items WHERE item_id = (jsonb_array_elements(NEW.item_list)->>'item_id')::INTEGER)) > 0
+            THEN
+                RAISE EXCEPTION 'Invalid item_id in item_list';
+            END IF;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_validate_item_list_items
+        BEFORE INSERT OR UPDATE
+        ON Designs.Orders
+        FOR EACH ROW
+        EXECUTE FUNCTION validate_item_list_items();
     '''
 
     create_data(schema_sql, "Database schema")
@@ -87,5 +122,7 @@ if __name__ == "__main__":
     create_data(request_table_sql, "Request table")
     create_data(review_table_sql, "Review table")
     create_data(work_table_sql, "Work table")
+    create_data(item_table_sql, "Item table")
+    create_data(order_table_sql, "Order table")
 
     print("Database setup successfully!")

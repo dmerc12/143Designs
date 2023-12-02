@@ -20,4 +20,4 @@ def drop_table(table_names):
         print(f"Error dropping schema: {str(error)}")
 
 if __name__ == "__main__":
-    drop_table(["Session", "User", "Request", "Review", "Work"])
+    drop_table(["Session", "Order", "User", "Request", "Review", "Work", "Item"])

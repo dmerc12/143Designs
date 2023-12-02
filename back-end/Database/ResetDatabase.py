@@ -13,7 +13,7 @@ def truncate_table(table_name):
         print(f"Error truncating {table_name}: {str(error)}")
 
 if __name__ == "__main__":
-    tables_to_restart = ["User", "Session", "Request", "Review", "Work"]
+    tables_to_restart = ["User", "Order", "Session", "Request", "Review", "Work", "Item"]
 
     for table in tables_to_restart:
         truncate_table(table)
