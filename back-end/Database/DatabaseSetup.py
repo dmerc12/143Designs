@@ -21,7 +21,7 @@ if __name__ == "__main__":
         CREATE TABLE Designs.User(
             user_id SERIAL PRIMARY KEY,
             email VARCHAR(60) UNIQUE NOT NULL,
-            passwrd VARCHAR(60) NOT NULL
+            passwrd TEXT NOT NULL
         );
     '''
 
