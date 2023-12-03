@@ -94,24 +94,6 @@ if __name__ == "__main__":
             description TEXT NOT NULL,
             item_list JSONB
         );
-        
-        CREATE OR REPLACE FUNCTION validate_item_list_items()
-        RETURNS TRIGGER AS $$
-        BEGIN
-            IF (SELECT COUNT(*) FROM jsonb_array_elements(NEW.item_list)->>'item_id'::INTEGER
-                WHERE NOT EXISTS (SELECT 1 FROM Designs.Items WHERE item_id = (jsonb_array_elements(NEW.item_list)->>'item_id')::INTEGER)) > 0
-            THEN
-                RAISE EXCEPTION 'Invalid item_id in item_list';
-            END IF;
-            RETURN NEW;
-        END;
-        $$ LANGUAGE plpgsql;
-
-        CREATE TRIGGER trigger_validate_item_list_items
-        BEFORE INSERT OR UPDATE
-        ON Designs.Orders
-        FOR EACH ROW
-        EXECUTE FUNCTION validate_item_list_items();
     '''
 
     create_data(schema_sql, "Database schema")

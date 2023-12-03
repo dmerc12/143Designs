@@ -27,7 +27,7 @@ class ItemDALImplementation(ItemDALInterface):
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (item_id,))
-        item_info = cursor.fetchall()
+        item_info = cursor.fetchone()
         cursor.close()
         connection.close()
         if item_info is None:
