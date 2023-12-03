@@ -83,6 +83,8 @@ if __name__ == "__main__":
         );
     '''
 
+    test_item = "INSERT INTO Designs.Item VALUES (-1, 'test');"
+
     order_table_sql = '''
         CREATE TABLE Designs.Order (
             order_id SERIAL PRIMARY KEY,
@@ -123,6 +125,7 @@ if __name__ == "__main__":
     create_data(review_table_sql, "Review table")
     create_data(work_table_sql, "Work table")
     create_data(item_table_sql, "Item table")
+    create_data(test_item, "Test item")
     create_data(order_table_sql, "Order table")
 
     print("Database setup successfully!")

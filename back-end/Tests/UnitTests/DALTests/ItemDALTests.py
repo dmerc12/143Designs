@@ -11,7 +11,7 @@ def test_create_item_success():
     assert result.item_id != 0
 
 def test_get_item_success():
-    result = item_dao.get_item(test_item.item_id)
+    result = item_dao.get_item(-1)
     assert result is not None
 
 def test_get_all_items_success():

@@ -13,7 +13,7 @@ class ItemDALImplementation(ItemDALInterface):
         sql = "INSERT INTO Designs.Item (item_name) VALUES (%s) RETURNING item_id;"
         connection = DBConnection.db_connection()
         cursor = connection.cursor()
-        cursor.execute(sql, (item.name,))
+        cursor.execute(sql, (item.item_name,))
         item.item_id = cursor.fetchone()[0]
         cursor.close()
         connection.commit()
@@ -28,20 +28,53 @@ class ItemDALImplementation(ItemDALInterface):
         cursor = connection.cursor()
         cursor.execute(sql, (item_id,))
         item_info = cursor.fetchall()
-        if item_info is not None:
-            item = Item(*item_info)
-            logging.info("Finishing DAL method get item with item: " + str(item.convert_to_dictionary()))
-            return item
-        else:
+        cursor.close()
+        connection.close()
+        if item_info is None:
             item = Item(0, "")
             logging.info("Finishing DAL method get item, item not found")
             return item
+        else:
+            item = Item(*item_info)
+            logging.info("Finishing DAL method get item with item: " + str(item.convert_to_dictionary()))
+            return item
 
     def get_all_items(self) -> List[Item]:
-        pass
+        logging.info("Beginning DAL method get all items")
+        sql = "SELECT * FROM Designs.Item;"
+        connection = DBConnection.db_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        item_records = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        item_list = []
+        for item in item_records:
+            item = Item(*item)
+            item_list.append(item)
+            logging.info("Finishing DAL method get all items with items: " + str(item.convert_to_dictionary()))
+        return item_list
 
     def update_item(self, item: Item) -> bool:
-        pass
+        logging.info("Beginning DAL method update item with item: " + str(item.convert_to_dictionary()))
+        sql = "Update Designs.Item SET item_name=%s WHERE item_id=%s;"
+        connection = DBConnection.db_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (item.item_name, item.item_id))
+        cursor.close()
+        connection.commit()
+        connection.close()
+        logging.info("Finishing DAL method update item")
+        return True
 
     def delete_item(self, item_id: int) -> bool:
-        pass
+        logging.info("Beginning DAL method delete item with item ID: " + str(item_id))
+        sql = "DELETE FROM Designs.Item WHERE item_id=%s;"
+        connection = DBConnection.db_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (item_id,))
+        cursor.close()
+        connection.commit()
+        connection.close()
+        logging.info("Finishing DAL method delete item")
+        return True
