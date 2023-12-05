@@ -6,7 +6,7 @@ from flask_cors import CORS
 from API.UserRoutes.CreateUserRoute import create_user_route
 from API.UserRoutes.LoginRoute import login_route
 from API.UserRoutes.LogoutRoute import logout_route
-from API.UserRoutes.GetUserRoute import get_user_route
+from API.UserRoutes.GetAllUsersRoute import get_user_route
 from API.UserRoutes.UpdateEmailRoute import update_email_route
 from API.UserRoutes.ChangePasswordRoute import change_password_route
 from API.UserRoutes.DeleteUserRoute import delete_user_route

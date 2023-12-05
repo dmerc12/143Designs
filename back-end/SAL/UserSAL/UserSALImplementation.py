@@ -108,6 +108,9 @@ class UserSALImplementation(UserSALInterface):
 
     def update_email(self, user: User) -> bool:
         logging.info("Beginning SAL method update user with user: " + str(user.convert_to_dictionary()))
+        if type(user.user_id) is not int:
+            logging.warning("Error in SAL method update user, user ID not an integer")
+            raise CustomError("The user ID field must be an integer, please try again!")
         if type(user.email) is not str:
             logging.warning("Error in SAL method update user, email not a string")
             raise CustomError("The email field must be a string, please try again!")
@@ -169,7 +172,16 @@ class UserSALImplementation(UserSALInterface):
 
     def delete_user(self, user_id: int) -> bool:
         logging.info("Beginning SAL method delete user with user ID: " + str(user_id))
-        self.get_user_by_id(user_id)
-        result = self.user_dao.delete_user(user_id)
-        logging.info("Finishing SAL method delete user")
-        return result
+        if type(user_id) is not int:
+            logging.warning("Error in SAL method delete user, user ID not an integer")
+            raise CustomError("The user ID field must be an integer, please try again!")
+        else:
+            self.get_user_by_id(user_id)
+            users = self.user_dao.get_all_users()
+            if len(users) == 1:
+                logging.warning("Error in SAL method delete user, last user")
+                raise CustomError("Please create a new user, then try again!")
+            else:
+                result = self.user_dao.delete_user(user_id)
+                logging.info("Finishing SAL method delete user")
+                return result
