@@ -7,5 +7,5 @@ class Item:
     def convert_to_dictionary(self):
         return {
             'itemId': self.item_id,
-            'name': self.item_name
+            'item_name': self.item_name
         }

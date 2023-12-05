@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateUserForm } from '../components';
 
-export const ManageInformation = ({ toast }) => {
+export const ManageUsers = ({ toast }) => {
     document.title = "Manage Information";
 
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ export const ManageInformation = ({ toast }) => {
 
     return (
         <>
-            <h1>Manage Information Below!</h1>
+            <h1>Manage Users</h1>
             <div className="action-btn-container">
                 <CreateUserForm toastRef={toastRef} />
             </div>
@@ -29,6 +29,6 @@ export const ManageInformation = ({ toast }) => {
     )
 };
 
-ManageInformation.propTypes = {
+ManageUsers.propTypes = {
     toast: PropTypes.object.isRequired
 };
