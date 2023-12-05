@@ -1,20 +1,23 @@
-from typing import List
+import json
 
 
 class Order:
 
-    def __init__(self, customer_name: str, item_list: List[dict], description: str, complete: bool, paid: bool):
+    def __init__(self, order_id: int, customer_name: str, item_list: json, description: str, complete: bool,
+                 paid: bool):
+        self.order_id = order_id
         self.customer_name = customer_name
+        self.item_list = item_list
+        self.description = description
         self.complete = complete
         self.paid = paid
-        self.description = description
-        self.item_list = item_list
 
     def convert_to_dictionary(self):
         return {
-            'customer_name': self.customer_name,
+            'orderId': self.order_id,
+            'customerName': self.customer_name,
+            'itemList': self.item_list,
+            'description': self.description,
             'complete': self.complete,
             'paid': self.paid,
-            'description': self.description,
-            'itemList': self.item_list
         }
