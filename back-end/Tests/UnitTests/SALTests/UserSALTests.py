@@ -169,6 +169,22 @@ def test_login_success():
     result = user_sao.login("another@email.com", "password")
     assert result is not None
 
+def test_update_email_user_id_not_integer():
+    try:
+        test_user = User("", "update@email.com", "password")
+        user_sao.update_email(test_user)
+        assert False
+    except CustomError as error:
+        assert str(error) == "The user ID field must be an integer, please try again!"
+
+def test_update_email_user_not_found():
+    try:
+        test_user = User(-573672299, "update@email.com", "password")
+        user_sao.update_email(test_user)
+        assert False
+    except CustomError as error:
+        assert str(error) == "This user cannot be found, please try again!"
+
 def test_update_email_not_string():
     try:
         test_user = User(current_user_id, 0, "password")
@@ -286,6 +302,13 @@ def test_change_password_success():
     result = user_sao.change_password(updated_user, "updated")
     assert result
 
+def test_delete_user_user_id_not_integer():
+    try:
+        user_sao.delete_user("")
+        assert False
+    except CustomError as error:
+        assert str(error) == "The user ID field must be an integer, please try again!"
+
 def test_delete_user_not_found():
     try:
         user_sao.delete_user(-500000)
@@ -296,3 +319,11 @@ def test_delete_user_not_found():
 def test_delete_user_success():
     result = user_sao.delete_user(current_user_id)
     assert result
+
+def test_delete_user_last_user():
+    try:
+        user_sao.delete_user(-2)
+        user_sao.delete_user(-1)
+        assert False
+    except CustomError as error:
+        assert str(error) == "Please create a new user, then try again!"
