@@ -71,7 +71,7 @@ if __name__ == "__main__":
     work_table_sql = '''
         CREATE TABLE Designs.Work (
             work_id SERIAL PRIMARY KEY,
-            name VARCHAR(60) NOT NULL,
+            name VARCHAR(60),
             description TEXT NOT NULL
         );
     '''
