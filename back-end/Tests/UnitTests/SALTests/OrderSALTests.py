@@ -1,14 +1,26 @@
 from DAL.OrderDAL.OrderDALImplementation import OrderDALImplementation
-from Entities.CustomError import CustomError
+from Entities.Item import Item
 from SAL.OrderSAL.OrderSALImplementation import OrderSALImplementation
+from DAL.ItemDAL.ItemDALImplementation import ItemDALImplementation
+from SAL.ItemSAL.ItemSALImplementation import ItemSALImplementation
+from Entities.CustomError import CustomError
 from Entities.Order import Order
 
 order_dao = OrderDALImplementation()
 order_sao = OrderSALImplementation(order_dao)
+item_dao = ItemDALImplementation()
+item_sao = ItemSALImplementation(item_dao)
 
 current_order_id = 1
 test_order = Order(0, "test customer", {1: 2, }, "test description", False, False)
 update_order = Order(current_order_id, "updated customer", {1: 1, }, "updated description", True, True)
+
+def test_get_all_orders_not_found():
+    try:
+        order_sao.get_all_orders()
+        assert False
+    except CustomError as error:
+        assert str(error) == "No orders found, please try again!"
 
 def test_create_order_customer_name_not_string():
     try:
@@ -129,6 +141,7 @@ def test_create_order_paid_not_boolean():
         assert str(error) == "The paid field must be a boolean, please try again!"
 
 def test_create_order_success():
+    item_sao.create_item(Item(0, "test item"))
     result = order_sao.create_order(test_order)
     assert result.order_id != 0
 
@@ -149,13 +162,6 @@ def test_get_order_not_found():
 def test_get_order_success():
     result = order_sao.get_order(current_order_id)
     assert result is not None
-
-def test_get_all_orders_not_found():
-    try:
-        order_sao.get_all_orders()
-        assert False
-    except CustomError as error:
-        assert str(error) == "No orders found, please try again!"
 
 def test_get_all_orders_success():
     result = order_sao.get_all_orders()
@@ -317,4 +323,5 @@ def test_delete_order_not_found():
 
 def test_delete_order_success():
     result = order_sao.delete_order(current_order_id)
+    item_sao.delete_item(1)
     assert result
