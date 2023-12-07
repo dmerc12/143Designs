@@ -99,7 +99,7 @@ class UserSALImplementation(UserSALInterface):
         else:
             user = self.user_dao.get_user_by_email(email)
             if (user.user_id == 0 and user.email == "" and user.password == "") or \
-                    not bcrypt.checkpw(password.encode(), user.password.encode()):
+                    not password.encode('utf-8') == user.password.encode('utf-8'):
                 logging.warning("Error in SAL method login, incorrect email or password")
                 raise CustomError("Either the email or password are incorrect, please try again!")
             else:

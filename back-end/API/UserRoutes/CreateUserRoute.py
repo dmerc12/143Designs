@@ -15,7 +15,7 @@ session_dao = SessionDALImplementation()
 session_sao = SessionSALImplementation(session_dao)
 
 @create_user_route.route("/api/create/user", methods=["POST"])
-def create_user_route():
+def create_user():
     try:
         request_info = request.json
         current_app.logger.info("Beginning API function create user with info: " + str(request_info))
