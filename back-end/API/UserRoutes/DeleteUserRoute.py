@@ -14,7 +14,7 @@ session_dao = SessionDALImplementation()
 session_sao = SessionSALImplementation(session_dao)
 
 @delete_user_route.route("/api/delete/user", methods=["DELETE"])
-def delete_user_route():
+def delete_user():
     try:
         request_info = request.json
         current_app.logger.info("Beginning API function delete user with info: " + str(request_info))

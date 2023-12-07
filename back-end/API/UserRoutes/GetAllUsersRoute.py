@@ -16,7 +16,7 @@ session_dao = SessionDALImplementation()
 session_sao = SessionSALImplementation(session_dao)
 
 @get_users_route.route("/api/get/users", methods=["PATCH"])
-def get_users_route():
+def get_users():
     try:
         session_id = request.json.get("sessionId")
         current_app.logger.info("Beginning API function get all users with session ID: " + str(session_id))
