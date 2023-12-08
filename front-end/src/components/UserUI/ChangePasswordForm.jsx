@@ -1,10 +1,9 @@
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 
-import { Modal } from '../../components';
 import { useState } from 'react';
-import { useFetch } from '../../hooks';
-import { useNavigate } from 'react-router-dom';
+import { Modal } from '../../components';
+import { useFetch, useNavigate } from '../../hooks';
 import { FaSpinner, FaSync } from 'react-icons/fa';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 
@@ -16,26 +15,24 @@ export const ChangePasswordForm = ({ toast }) => {
         password: '',
         confirmationPassword: ''
     });
-    const [formState, setFormState] = useState({
-        loading: false,
-        failedToFetch: false,
-        visible: false
-    });
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [failedToFetch, setFailedToFetch] = useState(false);
 
     const { fetch } = useFetch();
 
     const navigate = useNavigate();
 
     const showModal = () => {
-        setFormState.visible = true;
+        setVisible(true);
     };
 
     const closeModal = () => {
-        setFormState.visible = false;
+        setVisible(false);
     };
 
     const goBack = () => {
-        setFormState.failedToFetch = false;
+        setFailedToFetch(false);
     };
 
     const onChange = (event) => {
@@ -48,18 +45,15 @@ export const ChangePasswordForm = ({ toast }) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        setFormState((prevState) => ({
-            ...prevState,
-            loading: true,
-            failedToFetch: false
-        }));
+        setLoading(true);
+        setFailedToFetch(false);
         try {
             const { responseStatus, data } = await fetch('/api/change/password', 'PUT', changePasswordForm);
 
             if (responseStatus === 200) {
                 closeModal();
-                setFormState.loading = false;
-                toast.success('Information successfully updated!');
+                setLoading (false);
+                toast.current.addToast.success('Information successfully updated!');
             } else if (responseStatus === 400) {
                 throw new Error(`${data.message}`);
             } else {
@@ -69,26 +63,17 @@ export const ChangePasswordForm = ({ toast }) => {
             if (error.message === "No session found, please try again!" || error.message === "Session has expired, please log in!") {
                 Cookies.remove('sessionId');
                 navigate('/login');
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false
-                }));
-                toast.warning(`${error.message}`);
+                setVisible(false);
+                setLoading(false);
+                toast.current.addToast.warning(`${error.message}`);
             } else if (error.message === "Failed to fetch") {
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false,
-                    failedToFetch: true
-                }));
+                setVisible(false);
+                setLoading(false);
+                setFailedToFetch(true);
             } else {
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false
-                }));
-                toast.error(`${error.message}`);
+                setVisible(false);
+                setLoading(false);
+                toast.current.addToast.warning(`${error.message}`);
             }
         }
     };
@@ -99,7 +84,7 @@ export const ChangePasswordForm = ({ toast }) => {
                 <button onClick={showModal} className="action-btn" id="changePasswordModal">Change Password</button>
             </div>
 
-            <Modal visible={formState.visible} onClose={closeModal}>
+            <Modal visible={visible} onClose={closeModal}>
                 {loading ? (
                     <div className='loading-indicator'>
                         <FaSpinner className='spinner' />
@@ -120,7 +105,7 @@ export const ChangePasswordForm = ({ toast }) => {
                         </div>
 
                         <div className="form-field">
-                            <label className="form-label" htmlFor="NewConfirmationPassword">Confirm Password: </label>
+                            <label className="form-label" htmlFor="newConfirmationPassword">Confirm Password: </label>
                             <input className="form-input" type="password" id="newConfirmationPassword" name="confirmationPassword" value={changePasswordForm.confirmationPassword} onChange={onChange}/>
                         </div>
 
