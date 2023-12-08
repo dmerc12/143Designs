@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom';
 import { useNavigate } from '../hooks';
 
 export const Navbar = ({ toast }) => {
@@ -12,7 +11,7 @@ export const Navbar = ({ toast }) => {
     const handleLogout = () => {
         Cookies.remove('sessionId');
         navigate('/login');
-        toast.success('Goodbye!');
+        toast.current.addToast.success('Goodbye!');
     };
     
     return (
@@ -21,16 +20,16 @@ export const Navbar = ({ toast }) => {
                 <div className='nav-left'>
                     {isLoggedIn ? (
                         <>
-                            <Link id='manageRequestsNav' className='nav-item' to='/manage/requests'>Manage Requests</Link>
-                            <Link id='manageReviewsNav' className='nav-item' to='/manage/reviews'>Manage Reviews</Link>
-                            <Link id='managePastWorkNav' className='nav-item' to='/manage/past/work'>Manage Past Work</Link>
-                            <Link id='manageUsersNav' className='nav-item' to='/manage/users'>Manage Users</Link>
+                            <button id='manageRequestsNav' className='nav-item' to='/manage/requests'>Manage Requests</button>
+                            <button id='manageReviewsNav' className='nav-item' to='/manage/reviews'>Manage Reviews</button>
+                            <button id='managePastWorkNav' className='nav-item' to='/manage/past/work'>Manage Past Work</button>
+                            <button id='manageUsersNav' className='nav-item' to='/manage/users'>Manage Users</button>
                         </>
                     ) : (
                         <>
-                            <Link id='contact' className='nav-item' to='/contact'>Contact Us</Link>
-                            <Link id='reviews' className='nav-item' to='/reviews'>Reviews</Link>
-                            <Link id='pastWork' className='nav-item' to='/past/work'>Past Work</Link>
+                            <button id='contact' className='nav-item' to='/contact'>Contact Us</button>
+                            <button id='reviews' className='nav-item' to='/reviews'>Reviews</button>
+                            <button id='pastWork' className='nav-item' to='/past/work'>Past Work</button>
                         </>
                     )}
                 </div>

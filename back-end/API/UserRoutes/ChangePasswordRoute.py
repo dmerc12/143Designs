@@ -17,7 +17,7 @@ session_dao = SessionDALImplementation()
 session_sao = SessionSALImplementation(session_dao)
 
 @change_password_route.route("/api/change/password", methods=["PUT"])
-def change_password_route():
+def change_password():
     try:
         request_info = request.json
         current_app.logger.info("Beginning API function change password with info: " + str(request_info))
