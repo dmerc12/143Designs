@@ -22,6 +22,7 @@ def get_users():
         current_app.logger.info("Beginning API function get all users with session ID: " + str(session_id))
         session = session_sao.get_session(session_id)
         users = user_dao.get_all_users()
+        users = [user.convert_to_dictionary() for user in users]
         session.expiration = datetime.now() + timedelta(minutes=15)
         session_sao.update_session(session)
         current_app.logger.info("Finishing API function get all users")

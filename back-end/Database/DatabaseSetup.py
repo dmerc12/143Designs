@@ -45,6 +45,9 @@ if __name__ == "__main__":
     test_session_2_sql = f"INSERT INTO Designs.Session (session_id, user_id, expiration) " \
                          f"VALUES ('-2', -1, '2029-1-1 1:30:45');"
 
+    test_session_3_sql = f"INSERT INTO Designs.Session (session_id, user_id, expiration) " \
+                         f"VALUES ('-3', -1, '2029-1-1 1:30:45');"
+
     request_table_sql = '''
         CREATE TABLE Designs.Request (
             request_id SERIAL PRIMARY KEY,
@@ -101,6 +104,7 @@ if __name__ == "__main__":
     create_data(session_table_sql, "Session table")
     create_data(test_session_1_sql, "Test session 1")
     create_data(test_session_2_sql, "Test session 2")
+    create_data(test_session_3_sql, "Test session 3")
     create_data(request_table_sql, "Request table")
     create_data(review_table_sql, "Review table")
     create_data(work_table_sql, "Work table")
