@@ -13,10 +13,8 @@ export const LoginForm = ({ toast }) => {
         email: '',
         password: ''
     });
-    const [formState, setFormState] = useState({
-        loading: false,
-        failedToFetch: false
-    });
+    const [loading, setLoading] = useState(false);
+    const [failedToFetch, setFailedToFetch] = useState(false);
 
     const { fetch } = useFetch();
 
@@ -31,22 +29,20 @@ export const LoginForm = ({ toast }) => {
     };
 
     const goBack = () => {
-        setFormState.failedToFetch = false;
+        setFailedToFetch(false)
     };
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        setFormState({
-            loading: true,
-            failedToFetch: false
-        });
+        setLoading(true);
+        setFailedToFetch(false);
         try {
             const { responseStatus, data } = await fetch('/api/login', 'POST', loginForm);
 
             if (responseStatus === 200) {
                 Cookies.set('sessionId', data.sessionId);
-                setFormState.loading = false;
-                toast.success('Welcome!');
+                setLoading(false);
+                toast.current.addToast.success('Welcome!');
                 navigate('/home');
             } else if (responseStatus === 400) {
                 throw new Error(`${data.message}`);
@@ -55,13 +51,11 @@ export const LoginForm = ({ toast }) => {
             }
         } catch (error) {
             if (error.message === "Failed to fetch") {
-                setFormState({
-                    loading: false,
-                    failedToFetch: true
-                });
+                setLoading(false);
+                setFailedToFetch(true);
             } else {
-                setFormState.loading = false;
-                toast.error(`${error.message}`);
+                setLoading(false);
+                toast.current.addToast.error(`${error.message}`);
             }
         }
     };
