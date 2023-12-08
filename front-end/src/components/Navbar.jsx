@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom';
 import { useNavigate } from '../hooks';
 
 export const Navbar = ({ toast }) => {

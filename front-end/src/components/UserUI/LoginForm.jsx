@@ -55,7 +55,7 @@ export const LoginForm = ({ toast }) => {
                 setFailedToFetch(true);
             } else {
                 setLoading(false);
-                toast.current.addToast.error(`${error.message}`);
+                toast.current.addToast.warning(`${error.message}`);
             }
         }
     };
