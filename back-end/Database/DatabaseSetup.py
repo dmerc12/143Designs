@@ -1,12 +1,14 @@
+import bcrypt
+
 from Database.DBConnection import DBConnection
 
 
-def create_data(sql, data_name):
+def create_data(sql, data_name, parameters=None):
     connection = DBConnection.db_connection()
     cursor = connection.cursor()
 
     try:
-        cursor.execute(sql)
+        cursor.execute(sql, parameters)
         connection.commit()
         print(f'{data_name} successfully created!')
     except Exception as error:
@@ -25,10 +27,12 @@ if __name__ == "__main__":
         );
     '''
 
-    test_user_1_sql = "INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-1, 'test@email.com', 'test');"
+    password = bcrypt.hashpw("test".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    test_user_2_sql = "INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-2, " \
-                      "'delete-all-sessions@email.com', 'test');"
+    test_user_1_sql = f"INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-1, 'test@email.com', %s);"
+
+    test_user_2_sql = f"INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-2, " \
+                      f"'delete-all-sessions@email.com', 'test');"
 
     session_table_sql = '''
         CREATE TABLE Designs.Session (
@@ -99,8 +103,8 @@ if __name__ == "__main__":
 
     create_data(schema_sql, "Database schema")
     create_data(user_table_sql, "User table")
-    create_data(test_user_1_sql, "Test user 1")
-    create_data(test_user_2_sql, "Test user 2")
+    create_data(test_user_1_sql, "Test user 1", (password,))
+    create_data(test_user_2_sql, "Test user 2", (password,))
     create_data(session_table_sql, "Session table")
     create_data(test_session_1_sql, "Test session 1")
     create_data(test_session_2_sql, "Test session 2")
