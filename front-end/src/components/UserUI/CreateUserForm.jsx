@@ -2,8 +2,7 @@ import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 
 import { useState } from 'react';
-import { useFetch } from '../../hooks';
-import { useNavigate } from 'react-router-dom';
+import { useFetch, useNavigate } from '../../hooks';
 import { FaSpinner } from 'react-icons/fa';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 
@@ -16,26 +15,24 @@ export const CreateUserForm = ({ toast }) => {
         password: '',
         confirmationPassword: ''
     });
-    const [formState, setFormState] = useState({
-        visible: false,
-        loading: false,
-        failedToFetch: false
-    });
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [failedToFetch, setFailedToFetch] = useState(false);
 
     const { fetch } = useFetch();
 
     const navigate = useNavigate();
 
     const showModal = () => {
-        setFormState.visible = true;
+        setVisible(true);
     };
 
     const closeModal = () => {
-        setFormState.visible = false;
+        setVisible(false);
     };
 
     const goBack = () => {
-        setFormState.failedToFetch = false;
+        setFailedToFetch(false);
     };
 
     const onChange = (event) => {
@@ -48,8 +45,8 @@ export const CreateUserForm = ({ toast }) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        setFormState.loading = true;
-        setFormState.failedToFetch = false;
+        setLoading(true);
+        setFailedToFetch(false);
         try{
             const { responseStatus, data } = await fetch('/api/create/user', 'POST', createUserForm);
 
@@ -60,9 +57,9 @@ export const CreateUserForm = ({ toast }) => {
                     password: '',
                     confirmationPassword: ''
                 });
-                setFormState.loading = false;
+                setLoading(false);
                 closeModal();
-                toast.success("User successfully created!");
+                toast.current.addToast.success("User successfully created!");
             } else if (responseStatus === 400) {
                 throw new Error(`${data.message}`);
             } else {
@@ -72,13 +69,13 @@ export const CreateUserForm = ({ toast }) => {
             if (error.message === "No session found, please try again!" || error.message === "Session has expired, please log in!") {
                 Cookies.remove('sessionId');
                 navigate('/login');
-                toast.warning(`${error.message}`);
+                toast.current.addToast.warning(`${error.message}`);
             } else if (error.message === "Failed to fetch") {
-                setFormState.loading = false;
-                setFormState.failedToFetch = true;
+                setLoading(false);
+                setFailedToFetch(true);
             } else {
-                setFormState.loading = false;
-                toast.error(`${error.message}`);
+                setLoading(false);
+                toast.current.addToast.warning(`${error.message}`);
             }
         }
     };
@@ -89,12 +86,12 @@ export const CreateUserForm = ({ toast }) => {
                 <button onClick={showModal} className='action-btn' id='createUserModal'>Create New User</button>
             </div>
 
-            <Modal visible={formState.visible} onClose={closeModal}>
+            <Modal visible={visible} onClose={closeModal}>
                 {loading ? (
                     <div className='loading-indicator'>
                         <FaSpinner className='spinner' />
                     </div>
-                ) : formState.failedToFetch ? (
+                ) : failedToFetch ? (
                     <div className='failed-to-fetch'>
                         <AiOutlineExclamationCircle className='warning-icon' />
                         <p>Cannot connect to the back-end server.</p>

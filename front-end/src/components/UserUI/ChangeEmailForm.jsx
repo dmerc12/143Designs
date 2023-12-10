@@ -1,55 +1,38 @@
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 
+import { useState } from 'react';
 import { Modal } from '../../components';
-import { useState, useEffect } from 'react';
-import { useFetch } from '../../hooks';
-import { useNavigate } from 'react-router-dom';
+import { useFetch, useNavigate } from '../../hooks';
 import { FaSpinner, FaSync } from 'react-icons/fa';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 
-export const ChangeEmailForm = ({ toast }) => {
+export const ChangeEmailForm = ({ user, toast }) => {
     const sessionId = Cookies.get('sessionId');
 
     const [emailForm, setEmailForm] = useState({
         sessionId: sessionId,
-        email: ''
+        email: user.email
     });
-    const [formState, setFormState] = useState({
-        userPresent: true,
-        loading: false,
-        failedToFetchData: false,
-        failedToFetchSubmission: false,
-        visible: false
-    });
+    const [failedToFetch, setFailedToFetch] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const { fetch } = useFetch();
+    const { fetchData } = useFetch();
 
     const navigate = useNavigate();
 
     const showModal = () => {
-        setFormState.visible = true;
+        setVisible(true);
     };
 
     const closeModal = () => {
-        setFormState.visible = false;
+        setVisible(false);
     };
 
     const goBack = () => {
-        if (formState.userPresent) {
-            setFormState((prevState) => ({
-                ...prevState,
-                failedToFetchData: false,
-                failedToFetchSubmission: false
-            }));
-        } else {
-            setFormState((prevState) => ({
-                ...prevState,
-                visible: false,
-                failedToFetchData: false,
-                failedToFetchSubmission: false
-            }));
-        }
+        setVisible(false);
+        setFailedToFetch(false);
     };
 
     const onChange = (event) => {
@@ -60,72 +43,17 @@ export const ChangeEmailForm = ({ toast }) => {
         }));
     };
 
-    const fetchUser = async () => {
-        setFormState((prevState) => ({
-            ...prevState,
-            loading: true,
-            failedToFetchData: false
-        }));
-        try {
-            const { responseStatus, data } = await fetchData('/api/get/user', 'PATCH', {'sessionId': sessionId});
-
-            if (responseStatus === 200) {
-                setUpdateForm((prevForm) => ({
-                    ...prevForm,
-                    email: data.email
-                }));
-                setFormState((prevForm) => ({
-                    ...prevForm,
-                    userPresent: true,
-                    loading: false
-                }));
-            } else if (responseStatus === 400) {
-                throw new Error(`${data.messsage}`);
-            } else {
-                throw new Error("Something went horribly wrong!");
-            }
-        } catch (error) {
-            if (error.message === "No session found, please try again!" || error.message === "Session has expired, please log in!") {
-                Cookies.remove('sessionId');
-                navigate('/login');
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false
-                }));
-                toast.warning(`${error.message}`);
-            } else if (error.message === "Failed to fetch") {
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false,
-                    failedToFetchData: true
-                }));
-            } else {
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false
-                }));
-                toast.error(`${error.message}`);
-            }
-        } 
-    };
-
     const onSubmit = async (event) => {
         event.preventDefault();
-        setFormState((prevState) => ({
-            ...prevState,
-            loading: true,
-            failedToFetchSubmission: false
-        }));
+        setLoading(true);
+        setFailedToFetch(false);
         try {
             const { responseStatus, data } = await fetchData('/api/update/email', 'PUT', emailForm);
 
             if (responseStatus === 200) {
                 closeModal();
-                setFormState.loading = false;
-                toast.success('Password successfully changed!');
+                setLoading(false);
+                toast.current.addToast.success('Email successfully updated!');
             } else if (responseStatus === 400) {
                 throw new Error(`${data.message}`);
             } else {
@@ -135,36 +63,20 @@ export const ChangeEmailForm = ({ toast }) => {
             if (error.message === "No session found, please try again!" || error.message === "Session has expired, please log in!") {
                 Cookies.remove('sessionId');
                 navigate('/login');
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false
-                }));
-                toast.warning(`${error.message}`);
+                setLoading(false);
+                closeModal();
+                toast.current.addToast.warning(`${error.message}`);
             } else if (error.message === "Failed to fetch") {
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false,
-                    failedToFetchSubmission: true
-                }));
+                setLoading(false);
+                setFailedToFetch(true);
+                closeModal();
             } else {
-                setFormState((prevState) => ({
-                    ...prevState,
-                    loading: false,
-                    visible: false
-                }));
-                toast.error(`${error.message}`);
+                closeModal();
+                setLoading(false);
+                toast.current.addToast.warning(`${error.message}`);
             }
         }
     };
-    
-    useEffect(() => {
-        if (!formState.userPresent) {
-            fetchUser();
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formState.userPresent]);
 
     return (
         <>
@@ -177,15 +89,7 @@ export const ChangeEmailForm = ({ toast }) => {
                     <div className='loading-indicator'>
                         <FaSpinner className='spinner' />
                     </div>
-                ) : formState.failedToFetchData ? (
-                    <div className='failed-to-fetch'>
-                        <AiOutlineExclamationCircle className='warning-icon'/>
-                        <p>Cannot connect to the back end server.</p>
-                        <p>Please check your internet connection and try again.</p>
-                        <button className='retry-button' onClick={fetchUser}><FaSync className='retry-icon'/> Retry</button>
-                        <button className='back-button' onClick={goBack}>Go Back</button>
-                    </div>
-                ) : formState.failedToFetchSubmission ? (
+                ) : failedToFetch ? (
                     <div className='failed-to-fetch'>
                         <AiOutlineExclamationCircle className='warning-icon'/>
                         <p>Cannot connect to the back end server.</p>
