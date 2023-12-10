@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { useEffect } from 'react';
 import { useNavigate } from '../hooks';
-import {  } from '../components';
+import { UserList } from '../components';
 
 export const ManageUsers = ({ toast }) => {
     document.title = "Manage Information";
@@ -23,7 +23,7 @@ export const ManageUsers = ({ toast }) => {
         <>
             <h1>Manage Users</h1>
             <div className="action-btn-container">
-
+                <UserList toast={toast} />
             </div>
         </>
     )
