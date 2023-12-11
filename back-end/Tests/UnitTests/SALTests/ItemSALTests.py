@@ -41,6 +41,15 @@ def test_create_item_name_too_long():
     except CustomError as error:
         assert str(error) == "The item name field cannot exceed 60 characters, please try again!"
 
+def test_create_item_already_exists():
+    try:
+        item = Item(0, "test")
+        item_sao.create_item(item)
+        item_sao.create_item(item)
+        assert False
+    except CustomError as error:
+        assert str(error) == "Item already exists, please try again!"
+
 def test_create_item_success():
     result = item_sao.create_item(test_item)
     assert result.item_id != 0
@@ -109,11 +118,21 @@ def test_update_item_name_too_long():
 
 def test_update_item_nothing_changed():
     try:
-        item = Item(-1, "test")
+        item = Item(current_item_id, test_item.item_name)
         item_sao.update_item(item)
         assert False
     except CustomError as error:
         assert str(error) == "Nothing changed, please try again!"
+
+def test_update_item_already_exists():
+    try:
+        item = Item(0, "test")
+        item_sao.create_item(item)
+        item = Item(current_item_id, "test")
+        item_sao.update_item(item)
+        assert False
+    except CustomError as error:
+        assert str(error) == "Item already exists, please try again!"
 
 def test_update_item_success():
     result = item_sao.update_item(update_item)
