@@ -159,8 +159,9 @@ class UserSALImplementation(UserSALInterface):
             raise CustomError("The passwords don't match, please try again!")
         else:
             current_info = self.get_user_by_id(user.user_id)
-            current_password = current_info.password.encode()
-            if bcrypt.checkpw(user.password.encode("utf-8"), current_password):
+            current_password = current_info.password.encode("utf-8")
+            new_password = user.password.encode("utf-8")
+            if bcrypt.checkpw(new_password, current_password):
                 logging.warning("Error in SAL method change password, nothing changed")
                 raise CustomError("Nothing has changed, please try again!")
             else:

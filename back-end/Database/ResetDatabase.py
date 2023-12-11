@@ -1,3 +1,5 @@
+import bcrypt
+
 from Database.DBConnection import DBConnection
 
 
@@ -18,7 +20,9 @@ if __name__ == "__main__":
     for table in tables_to_restart:
         truncate_table(table)
 
-    cursor.execute("INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-1, 'test@email.com', 'test');")
+    password = bcrypt.hashpw("test".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    cursor.execute(f"INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-1, 'test@email.com', %s);",
+                   (password,))
     cursor.execute("INSERT INTO Designs.User (user_id, email, passwrd) VALUES (-2, "
                    "'delete-all-sessions@email.com', 'test');")
     cursor.execute("INSERT INTO Designs.Session (session_id, user_id, expiration) "
