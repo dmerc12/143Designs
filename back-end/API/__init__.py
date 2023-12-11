@@ -12,6 +12,7 @@ from API.UserRoutes.ChangePasswordRoute import change_password_route
 from API.UserRoutes.DeleteUserRoute import delete_user_route
 
 from API.ItemRoutes.CreateItemRoute import create_item_route
+from API.ItemRoutes.GetAllItemsRoute import get_items_route
 
 def create_back_end_api(config):
     app: Flask = Flask(__name__)
@@ -40,6 +41,7 @@ def create_back_end_api(config):
     app.register_blueprint(delete_user_route)
 
     app.register_blueprint(create_item_route)
+    app.register_blueprint(get_items_route)
 
     return app
     
