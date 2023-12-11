@@ -11,6 +11,8 @@ from API.UserRoutes.UpdateEmailRoute import update_email_route
 from API.UserRoutes.ChangePasswordRoute import change_password_route
 from API.UserRoutes.DeleteUserRoute import delete_user_route
 
+from API.ItemRoutes.CreateItemRoute import create_item_route
+
 def create_back_end_api(config):
     app: Flask = Flask(__name__)
     CORS(app)
@@ -36,6 +38,8 @@ def create_back_end_api(config):
     app.register_blueprint(update_email_route)
     app.register_blueprint(change_password_route)
     app.register_blueprint(delete_user_route)
+
+    app.register_blueprint(create_item_route)
 
     return app
     

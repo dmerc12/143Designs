@@ -67,10 +67,14 @@ class ItemSALImplementation(ItemSALInterface):
             logging.warning("Error in SAL method update item, item name empty")
             raise CustomError("The item name field cannot be left empty, please try again!")
         else:
-            self.get_item(item.item_id)
-            result = self.item_dao.update_item(item)
-            logging.info("Finishing SAL method update item")
-            return result
+            current_item = self.get_item(item.item_id)
+            if current_item.item_name == item.item_name:
+                logging.warning("Error in SAL method update item, nothing changed")
+                raise CustomError("Nothing changed, please try again!")
+            else:
+                result = self.item_dao.update_item(item)
+                logging.info("Finishing SAL method update item")
+                return result
 
     def delete_item(self, item_id: int) -> bool:
         logging.info("Beginning SAL method delete item with item ID: " + str(item_id))

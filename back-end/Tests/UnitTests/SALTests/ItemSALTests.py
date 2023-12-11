@@ -107,6 +107,14 @@ def test_update_item_name_too_long():
     except CustomError as error:
         assert str(error) == "The item name field cannot exceed 60 characters, please try again!"
 
+def test_update_item_nothing_changed():
+    try:
+        item = Item(-1, "test")
+        item_sao.update_item(item)
+        assert False
+    except CustomError as error:
+        assert str(error) == "Nothing changed, please try again!"
+
 def test_update_item_success():
     result = item_sao.update_item(update_item)
     assert result
