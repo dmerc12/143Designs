@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 from flask import Blueprint, current_app, jsonify, request
 
 from DAL.SessionDAL.SessionDALImplementation import SessionDALImplementation
@@ -21,6 +23,8 @@ def delete_user():
         session = session_sao.get_session(request_info["sessionId"])
         session_sao.delete_all_sessions(session.user_id)
         result = user_sao.delete_user(session.user_id)
+        session.expiration = datetime.now() + timedelta(minutes=15)
+        session_sao.update_session(session)
         current_app.logger.info("Finishing API function delete user with result: " + str(result))
         return jsonify(result), 200
     except CustomError as error:
