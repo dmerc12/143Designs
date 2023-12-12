@@ -24,6 +24,11 @@ class ItemSALImplementation(ItemSALInterface):
             logging.warning("Error in SAL method create item, item name empty")
             raise CustomError("The item name field cannot be left empty, please try again!")
         else:
+            current_items = self.item_dao.get_all_items()
+            for current_item in current_items:
+                if current_item.item_name == item.item_name:
+                    logging.warning("Error in SAL method update item, item already exists")
+                    raise CustomError("Item already exists, please try again!")
             item = self.item_dao.create_item(item)
             logging.info("Finishing SAL method create item with item: " + str(item))
             return item
@@ -67,10 +72,19 @@ class ItemSALImplementation(ItemSALInterface):
             logging.warning("Error in SAL method update item, item name empty")
             raise CustomError("The item name field cannot be left empty, please try again!")
         else:
-            self.get_item(item.item_id)
-            result = self.item_dao.update_item(item)
-            logging.info("Finishing SAL method update item")
-            return result
+            current_item = self.get_item(item.item_id)
+            if current_item.item_name == item.item_name:
+                logging.warning("Error in SAL method update item, nothing changed")
+                raise CustomError("Nothing changed, please try again!")
+            else:
+                current_items = self.item_dao.get_all_items()
+                for current_item in current_items:
+                    if current_item.item_name == item.item_name:
+                        logging.warning("Error in SAL method update item, item already exists")
+                        raise CustomError("Item already exists, please try again!")
+                result = self.item_dao.update_item(item)
+                logging.info("Finishing SAL method update item")
+                return result
 
     def delete_item(self, item_id: int) -> bool:
         logging.info("Beginning SAL method delete item with item ID: " + str(item_id))
