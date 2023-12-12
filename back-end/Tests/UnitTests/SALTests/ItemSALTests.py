@@ -1,6 +1,6 @@
 from DAL.ItemDAL.ItemDALImplementation import ItemDALImplementation
-from Entities.CustomError import CustomError
 from SAL.ItemSAL.ItemSALImplementation import ItemSALImplementation
+from Entities.CustomError import CustomError
 from Entities.Item import Item
 
 item_dao = ItemDALImplementation()
