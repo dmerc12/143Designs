@@ -46,9 +46,9 @@
             </div>
             <div class="nav-right">
                 {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'logout' %}">
+                    <form class="nav-item navbar-nav" method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="nav-item nav-link navbar-nav">Logout</button>
+                        <button type="submit" class="nav-link p-2 btn">Logout</button>
                     </form>
                 {% else %}
                     <div></div>
@@ -56,7 +56,7 @@
             </div>
         </div>
     </nav>
-    <div>
+    <div class="align-content-center m-5">
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
