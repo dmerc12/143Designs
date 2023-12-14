@@ -1,0 +1,11 @@
+{% extends "main/template.html" %}
+{% block title %}
+    <title>143 Designs - Manage Items</title>
+{% endblock title %}
+{% block content %}
+    <h1>Manage Items</h1>
+    {% for item in items %}
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'store-item-create' %}">Create Item</a><br>
+        <a href="{% url 'store-item-detail' pk=item.id %}">{{ item.name }}</a><br/>
+    {% endfor %}
+{% endblock content %}
