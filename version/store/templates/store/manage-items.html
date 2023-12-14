@@ -1,0 +1,7 @@
+{% extends "main/template.html" %}
+{% block content %}
+    <h1>Manage Items</h1>
+    {% for item in items %}
+        <a href="{% url 'store-item-detail' pk=item.id %}">{{ item.name }}</a><br/>
+    {% endfor %}
+{% endblock content %}
