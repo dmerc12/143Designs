@@ -1,15 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-
-class Item(models.Model):
-    name = models.CharField(max_length=60)
-
-    def __str__(self):
-        return f'ID: {self.pk} - Name: {self.name} \n'
-
-    def get_absolute_url(self):
-        return reverse('store-manage-items')
+from ..item.modals import Item
 
 class Order(models.Model):
     name = models.CharField(max_length=60)
@@ -26,14 +18,3 @@ class Order(models.Model):
 
     def get_absolute_url(self):
         return reverse('store-manage-orders')
-
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-
-    def __str__(self):
-        return f"ID: {self.pk} - Order Name: {self.order.name} - Item: {self.item.name} - Quantity: {self.quantity} \n"
-
-    def get_absolute_url(self):
-        return reverse('store-manage-order-items')
