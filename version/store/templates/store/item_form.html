@@ -1,4 +1,7 @@
 {% extends "main/template.html" %}
+{% block title %}
+    <title>143 Designs - Manage Item</title>
+{% endblock title %}
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
@@ -9,7 +12,7 @@
                 {{ form|crispy }}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Create or Update Item</button>
+                <button class="btn btn-outline-info" type="submit">Manage Item</button>
             </div>
         </form>
     </div>
