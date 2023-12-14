@@ -5,17 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import ItemCreateForm
 from .modals import Item
-
-
-@login_required
-def home(request):
-    return render(request, 'store/home.html')
+from .middleware import ItemMiddleware
 
 class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Item
     form_class = ItemCreateForm()
     template_name = '/store/item/create.html'
-    success_url = reversed('/store/')
+    success_url = '/store/'
 
     def form_valid(self, form):
         name = form.cleaned_data['name']
@@ -26,13 +22,12 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
             return self.form_invalid(form)
         return super().form_valid(form)
 
-class ItemListView(LoginRequiredMixin, ListView):
-    model = Item
+class ItemHomeView(LoginRequiredMixin, ListView):
     template_name = 'store/home.html'
-    context_object_name = 'item'
 
-    def get_items(self):
-        return Item.objects.all()
+    def get(self, request, *args, **kwargs):
+        items = ItemMiddleware.get_all_items()
+        return render(request, self.template_name, {"items": items})
 
 class ItemDetailView(LoginRequiredMixin, DetailView):
     model = Item

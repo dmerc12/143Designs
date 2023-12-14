@@ -3,11 +3,11 @@
     <title>143 Designs - Store Home</title>
 {% endblock title %}
 {% block content %}
-{% csrf_token %}
     <h1>Store Home</h1>
     <select>
         {% for item in items %}
             <option>{{ item.name }}</option>
         {% endfor %}
     </select>
+    <p>{{ no_items_message }}</p>
 {% endblock content %}

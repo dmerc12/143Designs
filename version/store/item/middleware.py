@@ -6,7 +6,7 @@ from .modals import Item
 class ItemMiddleware:
 
     @staticmethod
-    def create_item(self, name: str) -> Item:
+    def create_item(name: str) -> Item:
         logging.info("Beginning method create item with name: " + str(name))
         if type(name) != str:
             logging.warning("Error in method create item, name not a string")
@@ -27,21 +27,19 @@ class ItemMiddleware:
                 return Item.objects.create(name=name)
 
     @staticmethod
-    def get_all_items(self) -> List[Item]:
+    def get_all_items() -> List[Item]:
         return Item.objects.all()
 
     @staticmethod
-    def get_item(self, item_id: int) -> Item:
+    def get_item(item_id: int) -> Item:
         return Item.objects.get(item_id)
 
-    @staticmethod
     def update_item(self, item_id: int, name: str) -> bool:
         item = self.get_item(item_id)
         item.name = name
         item.save()
         return True
 
-    @staticmethod
     def delete_item(self, item_id: int) -> bool:
         item = self.get_item(item_id)
         item.delete()
