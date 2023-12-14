@@ -4,10 +4,16 @@
 {% endblock title %}
 {% block content %}
     <h1>Store Home</h1>
-    <select>
-        {% for item in items %}
-            <option>{{ item.name }}</option>
-        {% endfor %}
-    </select>
-    <p>{{ no_items_message }}</p>
+    <a class="btn btn-outline-primary" href="{% url 'store-item-create' %}">Create Item</a>
+    <form method="get">
+        <select name="selected_item">
+            <option></option>
+            {% for item in items %}
+                <option>{{ item.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+    {% if items %}
+
+    {% endif %}
 {% endblock content %}

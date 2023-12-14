@@ -19,7 +19,7 @@ class ItemMiddleware:
             raise RuntimeError("The name field cannot be left empty, please try again!")
         else:
             current_items = Item.objects.filter(name=name)
-            if current_items.exists():
+            if current_items:
                 logging.warning("Error in method create item, item already exists")
                 raise RuntimeError("This item already exists, please try again!")
             else:
@@ -28,7 +28,10 @@ class ItemMiddleware:
 
     @staticmethod
     def get_all_items() -> List[Item]:
-        return Item.objects.all()
+        items = Item.objects.all()
+        if not items:
+            raise RuntimeError("No items created yet")
+        return items
 
     @staticmethod
     def get_item(item_id: int) -> Item:

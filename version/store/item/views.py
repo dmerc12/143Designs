@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -9,8 +8,8 @@ from .middleware import ItemMiddleware
 
 class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Item
-    form_class = ItemCreateForm()
-    template_name = '/store/item/create.html'
+    form_class = ItemCreateForm
+    template_name = 'store/item/create.html'
     success_url = '/store/'
 
     def form_valid(self, form):
@@ -20,14 +19,21 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         except RuntimeError as error:
             form.add_error('name', str(error))
             return self.form_invalid(form)
-        return super().form_valid(form)
+        return redirect(self.success_url)
 
 class ItemHomeView(LoginRequiredMixin, ListView):
     template_name = 'store/home.html'
 
     def get(self, request, *args, **kwargs):
         items = ItemMiddleware.get_all_items()
-        return render(request, self.template_name, {"items": items})
+        selected_item = request.GET.get('selected_item', '')
+        show_buttons = selected_item != ''
+        context = {
+            'items': items,
+            'show_buttons': show_buttons,
+            'selected_item': selected_item
+        }
+        return render(request, self.template_name, context)
 
 class ItemDetailView(LoginRequiredMixin, DetailView):
     model = Item

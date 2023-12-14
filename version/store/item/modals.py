@@ -9,4 +9,4 @@ class Item(models.Model):
         return f'ID: {self.pk} - Name: {self.name} \n'
 
     def get_absolute_url(self):
-        return reverse('store-manage-item')
+        return reverse('store')
