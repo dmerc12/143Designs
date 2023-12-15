@@ -1,0 +1,20 @@
+{% extends "main/template.html" %}
+{% block title %}
+    <title>143 Designs - Update Item</title>
+{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="post">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Update Item</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Update Item</button>
+                <a class="btn btn-outline-secondary" href="{% url 'store-home' %}">Go Back</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

@@ -6,7 +6,7 @@ class ItemCreateForm(forms.ModelForm):
         model = Item
         fields = ['name']
 
-class ItemUpdateForm(forms.ModelForm):
+class ItemUpdateForm(ItemCreateForm):
     class Meta:
-        modal = Item
+        model = Item
         fields = ['name']
