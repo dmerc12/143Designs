@@ -27,7 +27,11 @@ class ItemHomeView(LoginRequiredMixin, ListView):
     template_name = 'store/home.html'
 
     def get(self, request, *args, **kwargs):
-        items = ItemMiddleware.get_all_items()
+        try:
+            items = ItemMiddleware.get_all_items()
+        except RuntimeError as error:
+            items = []
+            messages.warning(request, str(error))
         item_id = request.GET.get('selected_item')
         if not item_id and items:
             item_id = items[0].pk
@@ -59,4 +63,11 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
 
 class ItemDeleteView(LoginRequiredMixin,  DeleteView):
     model = Item
-    success_url = '/store/manage-item/'
+    template_name = 'store/item/delete.html'
+    success_url = '/store/'
+
+    def delete(self, request, *args, **kwargs):
+        item = self.get_object()
+        ItemMiddleware.delete_item(item.pk)
+        messages.success(request, "Item Deleted!")
+        return super().delete(request, *args, **kwargs)
