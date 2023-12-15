@@ -20,24 +20,20 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         except RuntimeError as error:
             form.add_error('name', str(error))
             return self.form_invalid(form)
-        messages.success(self.request, f'Item created!')
+        messages.success(self.request, "Item created!")
         return redirect(self.success_url)
 
 class ItemHomeView(LoginRequiredMixin, ListView):
     template_name = 'store/home.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         try:
             items = ItemMiddleware.get_all_items()
         except RuntimeError as error:
             items = []
             messages.warning(request, str(error))
-        item_id = request.GET.get('selected_item')
-        if not item_id and items:
-            item_id = items[0].pk
         context = {
             'items': items,
-            'item_id': item_id
         }
         return render(request, self.template_name, context)
 
@@ -58,16 +54,17 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
         except RuntimeError as error:
             form.add_error('name', str(error))
             return self.form_invalid(form)
-        messages.success(self.request, f'Item updated!')
+        messages.success(self.request, "Item updated!")
         return redirect(self.success_url)
 
 class ItemDeleteView(LoginRequiredMixin,  DeleteView):
     model = Item
     template_name = 'store/item/delete.html'
-    success_url = '/store/'
+    success_url = '/store'
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request):
         item = self.get_object()
         ItemMiddleware.delete_item(item.pk)
-        messages.success(request, "Item Deleted!")
-        return super().delete(request, *args, **kwargs)
+        messages.success(request, "Item deleted!")
+        return redirect(self.success_url)
+

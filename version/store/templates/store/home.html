@@ -6,19 +6,45 @@
     <h1>Store Home</h1>
     <div class="d-flex">
         <a class="btn btn-primary btn-sm btn-outline-primary p-1 mb-2 mt-1" href="{% url 'store-item-create' %}">Create Item</a>
-        <form method="get" class="">
-            <select id="item-select" class="btn btn-sm btn-primary form-select-lg ml-2 {% if items %} mt-1 mb-2 {% else %} mt-2 {% endif %}">
-                {% for item in items %}
-                    <option value="{{ item.pk }}">{{ item.name }}</option>
-                {% endfor %}
-            </select>
-            {% if items %}
-                <a id="item-update-btn" class="btn btn-secondary btn-sm ml-1 mt-1 mb-2 p-1" href="{% if items %}{% url 'store-item-update' item_id %}{% endif %}" style="{% if not items %} disabled {% endif %}">Update Item</a>
-                <a id="item-delete-btn" class="btn btn-danger btn-sm ml-1 mt-1 mb-2 p-1" href="{% if items %}{% url 'store-item-delete' item_id %}{% endif %}" style="{% if not items %} disabled {% endif %}">Delete Item</a>
-            {% endif %}
-        </form>
+        <select name="selected_item" id="item-select" class="btn btn-sm btn-primary form-select-lg ml-1 mt-1 mb-2">
+            {% for item in items %}
+                <option value="{{ item.pk }}">{{ item.name }}</option>
+            {% endfor %}
+        </select>
+        {% if items %}
+            <button id="item-update-btn" class="btn btn-secondary btn-sm ml-1 mt-1 mb-2 p-1" {% if not items %} disabled {% endif %}>Update Item</button>
+            <button id="item-delete-btn" class="btn btn-danger btn-sm ml-1 mt-1 mb-2 p-1" {% if not items %} disabled {% endif %}>Delete Item</button>
+        {% endif %}
     </div>
-    {% if items %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var itemSelect = document.getElementById("item-select");
+            var updateBtn = document.getElementById("item-update-btn");
+            var deleteBtn = document.getElementById("item-delete-btn");
 
-    {% endif %}
+            itemSelect.addEventListener("change", function() {
+                if (itemSelect.value) {
+                    updateBtn.disabled = false;
+                    deleteBtn.disabled = false;
+                } else {
+                    updateBtn.disabled = true;
+                    deleteBtn.disabled = true;
+                }
+            });
+
+            updateBtn.addEventListener("click", function() {
+                var selectedItemId = itemSelect.value;
+                if (selectedItemId) {
+                    window.location.href = `/store/item/${selectedItemId}/update/`;
+                }
+            });
+
+            deleteBtn.addEventListener("click", function() {
+                var selectedItemId = itemSelect.value;
+                if (selectedItemId) {
+                    window.location.href = `/store/item/${selectedItemId}/delete/`;
+                }
+            });
+        });
+    </script>
 {% endblock content %}
