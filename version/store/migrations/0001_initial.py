@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='order',
-            name='items',
+            name='item',
             field=models.ManyToManyField(through='store.OrderItem', to='store.item'),
         ),
     ]
