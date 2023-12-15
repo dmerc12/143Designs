@@ -26,17 +26,17 @@ class ItemHomeView(LoginRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         items = ItemMiddleware.get_all_items()
-        selected_item = request.GET.get('selected_item', '')
-        show_buttons = selected_item != ''
+        item_id = request.GET.get('selected_item')
+        if not item_id and items:
+            item_id = items[0].pk
         context = {
             'items': items,
-            'show_buttons': show_buttons,
-            'selected_item': selected_item
+            'item_id': item_id
         }
         return render(request, self.template_name, context)
 
-class ItemDetailView(LoginRequiredMixin, DetailView):
-    model = Item
+# class ItemDetailView(LoginRequiredMixin, DetailView):
+#     model = Item
 
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
     model = Item

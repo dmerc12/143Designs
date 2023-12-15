@@ -4,15 +4,18 @@
 {% endblock title %}
 {% block content %}
     <h1>Store Home</h1>
-    <a class="btn btn-outline-primary" href="{% url 'store-item-create' %}">Create Item</a>
-    <form method="get">
-        <select name="selected_item">
-            <option></option>
-            {% for item in items %}
-                <option>{{ item.name }}</option>
-            {% endfor %}
-        </select>
-    </form>
+    <div class="d-flex">
+        <a class="btn btn-primary btn-sm btn-outline-primary p-1 mb-2 mt-1" href="{% url 'store-item-create' %}">Create Item</a>
+        <form method="get" class="">
+            <select id="item-select" class="form-select-lg ml-2 mt-1">
+                {% for item in items %}
+                    <option value="{{ item.pk }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+            <a id="item-update-btn" class="btn btn-secondary btn-sm ml-1 mt-1 mb-2 p-1" href="{% url 'store-item-update' item_id %}" style="{% if not items %} disabled {% endif %}">Update Item</a>
+            <a id="item-delete-btn" class="btn btn-danger btn-sm ml-1 mt-1 mb-2 p-1" href="{% url 'store-item-delete' item_id %}" style="{% if not items %} disabled {% endif %}">Delete Item</a>
+        </form>
+    </div>
     {% if items %}
 
     {% endif %}
