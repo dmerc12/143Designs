@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import ItemCreateForm, ItemUpdateForm
-from .modals import Item
+from ..forms import ItemCreateForm, ItemUpdateForm
+from ..models import Item
 from .middleware import ItemMiddleware
 
 class ItemCreateView(LoginRequiredMixin, CreateView):
