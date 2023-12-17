@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.core.exceptions import ValidationError
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..forms import ItemCreateForm, ItemUpdateForm
@@ -23,23 +24,6 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Item created!")
         return redirect(self.success_url)
 
-class ItemHomeView(LoginRequiredMixin, ListView):
-    template_name = 'store/home.html'
-
-    def get(self, request):
-        try:
-            items = ItemMiddleware.get_all_items()
-        except RuntimeError as error:
-            items = []
-            messages.warning(request, str(error))
-        context = {
-            'items': items,
-        }
-        return render(request, self.template_name, context)
-
-# class ItemDetailView(LoginRequiredMixin, DetailView):
-#     model = Item
-
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
     model = Item
     form_class = ItemUpdateForm
@@ -50,7 +34,9 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
         item_id = self.kwargs['pk']
         name = form.cleaned_data['name']
         try:
-            ItemMiddleware.update_item(item_id, name)
+            item = ItemMiddleware.get_item(item_id)
+            item.name = name
+            ItemMiddleware.update_item(item)
         except RuntimeError as error:
             form.add_error('name', str(error))
             return self.form_invalid(form)
@@ -67,4 +53,3 @@ class ItemDeleteView(LoginRequiredMixin,  DeleteView):
         ItemMiddleware.delete_item(item.pk)
         messages.success(request, "Item deleted!")
         return redirect(self.success_url)
-
