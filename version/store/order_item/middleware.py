@@ -10,7 +10,7 @@ class OrderItemMiddleware:
 
     @staticmethod
     def create_order_item(order: Order, item: Item, quantity: int) -> OrderItem:
-        logging.info("Beginning method create order-item with order: " + order.__str() + ", item: " + item.__str__() + ", quantity: " + str(quantity))
+        logging.info("Beginning method create order-item with order: " + order.__str__() + ", item: " + item.__str__() + ", quantity: " + str(quantity))
         if type(order) is not Order:
             logging.warning("Error in method create order-item, order not an order")
             raise RuntimeError("The order field must be an order, please try again!")
@@ -25,7 +25,7 @@ class OrderItemMiddleware:
             raise RuntimeError("The quatity field must be positive, please try again!")
         else:
             OrderMiddleware.get_order(order.pk)
-            ItemMiddleware.get_order(item.pk)
+            ItemMiddleware.get_item(item.pk)
             order_item = OrderItem.objects.create(order=order, item=item, quantity=quantity)
             logging.info("Finishing method create order-item with order-item: " + order_item.__str__())
             return order_item

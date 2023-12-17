@@ -1,0 +1,44 @@
+{% extends "main/template.html" %}
+{% block title %}
+    <title>143 Designs - Update Order</title>
+{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="post">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Update Order</legend>
+                {{ form|crispy }}
+                <div id="order-items">
+                    {{ order_items|crispy }}
+                </div>
+                <button type="button" class="btn btn-success" id="add-order-item">Add Order Item</button>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Update Order</button>
+                <a class="btn btn-outline-secondary" href="{% url 'store-home' %}">Go Back</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var addOrderItemButton = document.getElementById("add-order-item");
+            var orderItemsContainer = document.getElementById("order-items");
+            var orderItemIndex = 0;
+
+            addOrderItemButton.addEventListener("click", function() {
+                var orderItemForm = "{{ order_items.empty_form|crispy|escapejs }}";
+                orderItemForm = orderItemForm.replace(/__prefix__/g, orderItemIndex);
+                orderItemsContainer.insertAdjacentHTML('beforeend', orderItemForm);
+                orderItemIndex++;
+            });
+
+            orderItemsContainer.addEventListener("click", function(event) {
+                if (event.target && event.target.className == "delete-order-item") {
+                    event.target.parentElement.remove();
+                }
+            });
+        });
+    </script>
+{% endblock content %}

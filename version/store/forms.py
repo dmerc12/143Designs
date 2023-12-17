@@ -16,10 +16,10 @@ class OrderCreateForm(forms.ModelForm):
         model = Order
         fields = ['name', 'description', 'paid', 'complete']
 
-OrderItemCreateFormSet = forms.inlineformset_factory(Order, OrderItem, fields=['item', 'quantity'], extra=1, can_delete=True)
+OrderItemCreateFormSet = forms.inlineformset_factory(Order, OrderItem, fields=['item', 'quantity'], extra=1, can_delete=False)
 
 class OrderUpdateForm(OrderCreateForm):
-    orderitem_formset = forms.inlineformset_factory(Order, OrderItem, form=OrderItemCreateFormSet, extra=1, can_delete=True, fields=['item', 'quantity'])
+    orderitem_formset = forms.inlineformset_factory(Order, OrderItem, form=OrderItemCreateFormSet, extra=1, can_delete=False, fields=['item', 'quantity'])
 
     class Meta:
         model = Order

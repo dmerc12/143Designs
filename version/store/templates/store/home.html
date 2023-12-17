@@ -16,7 +16,9 @@
                 </select>
                 {% if items %}
                     <button id="item-update-btn" class="btn btn-secondary btn-sm ml-1 mt-1 mb-2 p-1" {% if not items %} disabled {% endif %}>Update Item</button>
-                    <button id="item-delete-btn" class="btn btn-danger btn-sm ml-1 mt-1 mb-2 p-1" {% if not items %} disabled {% endif %}>Delete Item</button>
+                    {% if not item_has_orders %}
+                        <button id="item-delete-btn" class="btn btn-danger btn-sm ml-1 mt-1 mb-2 p-1" {% if not items %} disabled {% endif %}>Delete Item</button>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
