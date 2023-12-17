@@ -15,6 +15,9 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('store-home')
 
+    def order_items(self):
+        return self.orderitem_set.all()
+
 class Item(models.Model):
     name = models.CharField(max_length=60)
 

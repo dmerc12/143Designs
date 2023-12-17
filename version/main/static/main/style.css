@@ -1,0 +1,26 @@
+.store-heading {
+    color: #333;
+    font-size: 24px;
+}
+
+.order-heading {
+    color: #007bff;
+    font-size: 20px;
+}
+
+.order-link {
+    color: #007bff;
+}
+
+.order-table {
+    font-weight: bold;
+}
+
+.order-item {
+    margin-bottom: 5px;
+}
+
+.no-orders, .no-items {
+    font-style: italic;
+    color: #888;
+}
