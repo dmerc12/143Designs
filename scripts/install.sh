@@ -15,4 +15,11 @@ cd 143Designs
 # install django and other dependencies
 pip install django crispy-bootstrap5 crispy-forms
 # change into django project
-# 
+# create database migrations
+# migrate database
+# take user input for admin username
+# take user input for admin password
+# take user input for admin password confirmation
+# create super user using admin credentials with admin input
+# run unit tests
+# run end to end tests
