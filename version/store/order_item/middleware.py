@@ -42,7 +42,7 @@ class OrderItemMiddleware:
                 logging.warning("Error in method get order-item, no order-item found")
                 raise RuntimeError("No order-item found, please try again!")
             else:
-                logging.info("Finishing method get order-item with order-item: " + order_item.__str())
+                logging.info("Finishing method get order-item with order-item: " + order_item.__str__())
                 return order_item
 
     @staticmethod
@@ -58,7 +58,7 @@ class OrderItemMiddleware:
 
     @staticmethod
     def update_order_item(order_item: OrderItem) -> bool:
-        logging.info("Beginning method update order-item with order: " + order_item.order.__str() + ", item: " + order_item.item.__str__() + ", quantity: " + str(order_item.quantity))
+        logging.info("Beginning method update order-item with order-item: " + order_item.__str__())
         if type(order_item.order) is not Order:
             logging.warning("Error in method update order-item, order not an order")
             raise RuntimeError("The order field must be an order, please try again!")
@@ -74,17 +74,13 @@ class OrderItemMiddleware:
         else:
             current_order_item = OrderItemMiddleware.get_order_item(order_item.pk)
             OrderMiddleware.get_order(order_item.order.pk)
-            ItemMiddleware.get_order(order_item.item.pk)
-            if model_to_dict(current_order_item) == model_to_dict(order_item):
-                logging.warning("Error in method update order-item, nothing changed")
-                raise RuntimeError("Nothing changed!")
-            else:
-                current_order_item.order = order_item.order
-                current_order_item.item = order_item.item
-                current_order_item.quantity = order_item.quantity
-                current_order_item.save()
-                logging.info("Finishing method update order-item with order-item: " + order_item.__str__())
-                return order_item
+            ItemMiddleware.get_item(order_item.item.pk)
+            current_order_item.order = order_item.order
+            current_order_item.item = order_item.item
+            current_order_item.quantity = order_item.quantity
+            current_order_item.save()
+            logging.info("Finishing method update order-item with order-item: " + order_item.__str__())
+            return order_item
 
     @staticmethod
     def delete_order_item(order_item_id: int) -> bool:

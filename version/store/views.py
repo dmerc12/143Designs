@@ -118,12 +118,20 @@ class OrderUpdateView(LoginRequiredMixin, UpdateView):
                     item = order_item_form.cleaned_data['item']
                     quantity = order_item_form.cleaned_data['quantity']
 
-                    try:
-                        order_item = OrderItem(order=order, item=item, quantity=quantity)
-                        OrderItemMiddleware.update_order_item(order_item)
-                    except RuntimeError as error:
-                        form.add_error(None, str(error))
-                        return self.form_invalid(form)
+                    if order_item_form.instance.pk:
+                        try:
+                            existing_order_item = OrderItemMiddleware.get_order_item(order_item_form.instance.pk)
+                            order_item = OrderItem(pk=existing_order_item.pk, order=order, item=item, quantity=quantity)
+                            OrderItemMiddleware.update_order_item(order_item)
+                        except RuntimeError as error:
+                            form.add_error(None, str(error))
+                            return self.form_invalid(form)
+                    else:
+                        try:
+                            OrderItemMiddleware.create_order_item(order=order, item=item, quantity=quantity)
+                        except RuntimeError as error:
+                            form.add_error(None, str(error))
+                            return self.form_invalid(form)
             messages.success(self.request, "Order updated!")
             return redirect(self.success_url)
         else:

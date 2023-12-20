@@ -14,7 +14,7 @@
                     {{ order_items.management_form }}
                     {% for order_item_form in order_items %}
                         <div class="order-item">
-                            {{ order_items|crispy }}
+                            {{ order_item_form|crispy }}
                             <button type="button" class="btn btn-danger delete-order-item">Delete Item</button>
                         </div>
                     {% endfor %}
