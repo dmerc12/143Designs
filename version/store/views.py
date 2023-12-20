@@ -78,7 +78,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
 
 class OrderUpdateView(LoginRequiredMixin, UpdateView):
     model = Order
-    form_class = OrderUpdateForm
+    form_class = OrderCreateForm
     template_name = 'store/order/update.html'
     success_url = '/store/'
 
