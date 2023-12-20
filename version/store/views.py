@@ -7,7 +7,7 @@ from .item.middleware import ItemMiddleware
 from .order.middleware import OrderMiddleware
 from .order_item.middleware import OrderItemMiddleware
 
-from .models import Order
+from .models import Order, OrderItem
 from .forms import OrderCreateForm, OrderItemCreateFormSet, OrderUpdateForm
 
 class HomeView(LoginRequiredMixin, ListView):
@@ -78,7 +78,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
 
 class OrderUpdateView(LoginRequiredMixin, UpdateView):
     model = Order
-    form_class = OrderUpdateForm
+    form_class = OrderCreateForm
     template_name = 'store/order/update.html'
     success_url = '/store/'
 
@@ -119,7 +119,8 @@ class OrderUpdateView(LoginRequiredMixin, UpdateView):
                     quantity = order_item_form.cleaned_data['quantity']
 
                     try:
-                        OrderItemMiddleware.update_order_item(order=order, item=item, quantity=quantity)
+                        order_item = OrderItem(order=order, item=item, quantity=quantity)
+                        OrderItemMiddleware.update_order_item(order_item)
                     except RuntimeError as error:
                         form.add_error(None, str(error))
                         return self.form_invalid(form)

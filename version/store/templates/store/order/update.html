@@ -11,13 +11,19 @@
                 <legend class="border-bottom mb-4">Update Order</legend>
                 {{ form|crispy }}
                 <div id="order-items">
-                    {{ order_items|crispy }}
+                    {{ order_items.management_form }}
+                    {% for order_item_form in order_items %}
+                        <div class="order-item">
+                            {{ order_items|crispy }}
+                            <button type="button" class="btn btn-danger delete-order-item">Delete Item</button>
+                        </div>
+                    {% endfor %}
                 </div>
                 <button type="button" class="btn btn-success" id="add-order-item">Add Item</button>
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Update Order</button>
-                <a class="btn btn-outline-secondary" href="{% url 'store-home' %}">Go Back</a>
+                <a class="btn btn-outline-secondary" href="{% url 'store-order-detail' object.pk %}">No, Cancel</a>
             </div>
         </form>
     </div>

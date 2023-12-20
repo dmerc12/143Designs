@@ -22,7 +22,7 @@ class Item(models.Model):
     name = models.CharField(max_length=60)
 
     def __str__(self):
-        return "Item - " + str(self.pk)
+        return str(self.name)
 
     def get_absolute_url(self):
         return reverse('store-home')
