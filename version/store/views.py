@@ -54,21 +54,16 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
 
             try:
                 order = OrderMiddleware.create_order(name=name, description=description, complete=complete, paid=paid)
+                order_items.instance = order
+                for order_item_form in order_items.forms:
+                    if order_item_form.cleaned_data:
+                        item = order_item_form.cleaned_data['item']
+                        quantity = order_item_form.cleaned_data['quantity']
+
+                        OrderItemMiddleware.create_order_item(order=order, item=item, quantity=quantity)
             except RuntimeError as error:
                 form.add_error('name', str(error))
                 return self.form_invalid(form)
-
-            order_items.instance = order
-            for order_item_form in order_items:
-                if order_item_form.cleaned_data:
-                    item = order_item_form.cleaned_data['item']
-                    quantity = order_item_form.cleaned_data['quantity']
-
-                    try:
-                        OrderItemMiddleware.create_order_item(order=order, item=item, quantity=quantity)
-                    except RuntimeError as error:
-                        form.add_error(None, str(error))
-                        return self.form_invalid(form)
 
             messages.success(self.request, "Order created!")
             return redirect(self.success_url)

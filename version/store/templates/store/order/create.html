@@ -13,7 +13,7 @@
                 <div id="order-items">
                     {{ order_items.management_form }}
                     {% for order_item_form in order_items %}
-                        <div class="order-item">
+                        <div class="item">
                             {{ order_item_form|crispy }}
                         </div>
                     {% endfor %}
