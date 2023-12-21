@@ -89,17 +89,13 @@ class OrderMiddleware:
             raise RuntimeError("The paid field must be a boolean, please try again!")
         else:
             current_order = OrderMiddleware.get_order(order.pk)
-            if model_to_dict(current_order) == model_to_dict(order):
-                logging.warning("Error in method update order, nothing changed")
-                raise RuntimeError("Nothing changed!")
-            else:
-                current_order.name = order.name
-                current_order.description = order.description
-                current_order.complete = order.complete
-                current_order.paid = order.paid
-                current_order.save()
-                logging.info("Finishing method update order")
-                return True
+            current_order.name = order.name
+            current_order.description = order.description
+            current_order.complete = order.complete
+            current_order.paid = order.paid
+            current_order.save()
+            logging.info("Finishing method update order")
+            return True
 
     @staticmethod
     def delete_order(order_id: int) -> bool:

@@ -33,7 +33,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField()
 
     def __str__(self):
-        return "OrderItem - " + str(self.pk)
+        return "Order - " + str(self.order.pk) + " - Item - " + str(self.item.name) + " - Quantity - " + str(self.quantity)
 
     def get_absolute_url(self):
         return reverse('store-home')
