@@ -15,7 +15,7 @@
                     {% for order_item_form in order_items %}
                         <div class="order-item">
                             {{ order_item_form|crispy }}
-                            <button type="button" class="btn btn-danger delete-order-item">Delete Item</button>
+                            <button id="delete-order-item" type="button" class="btn btn-danger">Delete Item</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -41,8 +41,8 @@
             });
 
             orderItemsContainer.addEventListener("click", function(event) {
-                if (event.target && event.target.className == "delete-order-item") {
-                    event.target.parentElement.remove();
+                if (event.target && event.target.id == "delete-order-item") {
+                    event.target.parentNode.remove();
                 }
             });
         });
