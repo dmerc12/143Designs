@@ -36,7 +36,7 @@ def update_user(request):
 @login_required
 def change_password(request):
     if request.method == 'POST':
-        form = ChangePasswordForm(request.POST, user=request.user)
+        form = ChangePasswordForm(user=request.user, data=request.POST)
         if form.is_valid():
             middleware.change_password(request, form)
             return redirect('user-home')

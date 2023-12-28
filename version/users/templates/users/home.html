@@ -6,7 +6,6 @@
 {% block content %}
     <h1 class="text-center pb-2">User Home</h1>
     <div class="d-flex justify-content-center pb-2">
-        <!-- add user button -->
         <a class="btn btn-primary btn-sm btn-outline-primary p-1 mb-2 mt-1 ml-1" href="{% url 'add-user' %}">Add User</a>
         <!-- update user button -->
         <a class="btn btn-primary btn-sm btn-outline-secondary p-1 mb-2 mt-1 ml-1" href="{% url 'update-user' %}">Update User</a>
@@ -16,11 +15,12 @@
         <a class="btn btn-primary btn-sm btn-outline-danger p-1 mb-2 mt-1 ml-1" href="{% url 'delete-user' %}">Delete User</a>
     </div>
     <div>
-        <!-- user list -->
         <h3 class="text-primary text-center blue">Current Users</h3>
         <table class="table d-flex justify-content-center">
             {% for user in users %}
-                <td>{{ user.username }} - {{ user.email }}</td>
+                <tr>
+                    <td>{{ user.username }} - {{ user.email }}</td>
+                </tr>
             {% endfor %}
         </table>
     </div>

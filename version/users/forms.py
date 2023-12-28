@@ -7,10 +7,12 @@ class AddUserForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
-class UpdateUserForm(UserChangeForm):
+class UpdateUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email']
 
 class ChangePasswordForm(PasswordChangeForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        del self.fields['old_password']
