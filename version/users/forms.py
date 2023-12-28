@@ -5,7 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 class AddUserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'confirmation_password']
+        fields = ['username', 'email', 'password1', 'password2']
 
 class UpdateUserForm(forms.ModelForm):
     class Meta:
