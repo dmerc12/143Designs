@@ -8,6 +8,16 @@
     font-size: 20px;
 }
 
+.user-home-heading {
+    color: #333;
+    font-size: 24px;
+}
+
+.user-table-heading {
+    color: #007bff;
+    font-size: 20px;
+}
+
 .order-link {
     color: #007bff;
 }

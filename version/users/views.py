@@ -17,7 +17,7 @@ def add_user(request):
         form = AddUserForm(request.POST)
         if form.is_valid():
             middleware.create_user(request, form)
-            return redirect('manage-users')
+            return redirect('user-home')
     else:
         form = AddUserForm()
     return render(request, 'users/register.html', {'form':  form})
@@ -28,7 +28,7 @@ def update_user(request):
         form = UpdateUserForm(request.POST, instance=request.user)
         if form.is_valid():
             middleware.update_user(request, form)
-            return redirect('manage-users')
+            return redirect('user-home')
     else:
         form = UpdateUserForm(instance=request.user)
     return render(request, 'users/update.html', {'form': form})
@@ -39,7 +39,7 @@ def change_password(request):
         form = ChangePasswordForm(request.POST, user=request.user)
         if form.is_valid():
             middleware.change_password(request, form)
-            return redirect('manage-users')
+            return redirect('user-home')
     else:
         form = ChangePasswordForm(user=request.user)
     return render(request, 'users/change_password.html', {'form': form})
@@ -48,6 +48,5 @@ def change_password(request):
 def delete_user(request):
     if request.method == 'POST':
         middleware.delete_user(request)
-        return redirect('manage-users')
+        return redirect('user-home')
     return render(request, 'users/delete.html')
-    

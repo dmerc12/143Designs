@@ -4,5 +4,22 @@
 {% endblock title %}
 {% load crispy_forms_tags %}
 {% block content %}
-<h1>Users Home</h1>
+    <h1 class="user-home-heading text-center">User Home</h1>
+    <div class="d-flex justify-content-center">
+        <!-- add user button -->
+        <a class="btn btn-primary btn-sm btn-outline-primary p-1 mb-2 mt-1 ml-1" href="{% url 'add-user' %}">Add User</a>
+        <!-- update user button -->
+        <a class="btn btn-primary btn-sm btn-outline-secondary p-1 mb-2 mt-1 ml-1" href="{% url 'update-user' %}">Update User</a>
+        <!-- change password button -->
+        <a class="btn btn-primary btn-sm btn-outline-secondary p-1 mb-2 mt-1 ml-1" href="{% url 'change-password' %}">Change Password</a>
+        <!-- delete user button -->
+        <a class="btn btn-primary btn-sm btn-outline-danger p-1 mb-2 mt-1 ml-1" href="{% url 'delete-user' %}">Delete User</a>
+    </div>
+    <!-- user list -->
+    <h2 class="users-table-heading text-center">Current Users</h2>
+    <table class="table d-flex justify-content-center">
+        {% for user in users %}
+            <td>{{ user.username }} - {{ user.email }}</td>
+        {% endfor %}
+    </table>
 {% endblock content %}

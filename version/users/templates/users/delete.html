@@ -1,0 +1,13 @@
+{% extends "main/template.html" %}
+{% block title %}
+    <title>143 Designs - Delete User</title>
+{% endblock title %}
+{% block content %}
+    <h1>Delete User</h1>
+    <p>Are you sure you want to delete your account?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete my account</button>
+    </form>
+    <a href="{% url 'user-home' %}">Cancel</a>
+{% endblock content %}

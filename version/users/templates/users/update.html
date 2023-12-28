@@ -2,18 +2,11 @@
 {% block title %}
     <title>143 Designs - Update User</title>
 {% endblock title %}
-{% load crispy_forms_tags %}
 {% block content %}
-    <div class="content-section">
-        <form method="post">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Update User</legend>
-                {{ update_form|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Update User</button>
-            </div>
-        </form>
-    </div>
+    <h1>Update User</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit">Update User</button>
+    </form>
 {% endblock content %}
