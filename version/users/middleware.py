@@ -1,5 +1,5 @@
-from django.contrib.auth.models import User
 from django.contrib import messages
+
 class UserMiddleware:
 
     @staticmethod
@@ -24,4 +24,3 @@ class UserMiddleware:
     def delete_user(request):
         request.user.delete()
         messages.success(request, 'Your account has been deleted, goodbye!')
-        
