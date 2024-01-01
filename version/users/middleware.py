@@ -1,5 +1,6 @@
 import logging
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 class UserMiddleware:
 
@@ -114,5 +115,11 @@ class UserMiddleware:
 
     @staticmethod
     def delete_user(request):
-        request.user.delete()
-        messages.success(request, 'Your account has been deleted, goodbye!')
+        logging.info('Beginning user middleware method delete user')
+        if User.objects.exclude(pk=request.user.pk).exists():
+            logging.info('Finishing user middleware method delete user')
+            request.user.delete()
+            messages.success(request, 'Your account has been deleted, goodbye!')
+        else:
+            logging.warning('Error in user middleware method delete user, current user is the last user in the database')
+            raise RuntimeError('Another user must be created before your profile can be deleted')
