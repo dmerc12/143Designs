@@ -10,7 +10,7 @@ class Work(models.Model):
 class Review(models.Model):
     name = models.CharField(max_length=60)
     text = models.TextField(max_length=255)
-    rating = models.DecimalField(max_digits=2, decimal_places=1)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
 
     def __str__(self):
         return f"Name: {self.name} - Text: {self.text} - Rating: {self.rating} \n"
