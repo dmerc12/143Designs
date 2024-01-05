@@ -5,34 +5,34 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <h1 class="text-center pb-2">Manage Review Below</h1>
-    <form method="POST" action="{% url 'update_review' review.id %}">
+    <form method="POST" action="{% url 'update-review' review.id %}">
         {% csrf_token %}
-        <label>Rating: </label>
         <div class="rate">
-            <input type="radio" name="rating" id="rating1" value="0.5" disabled><label for="rating1" title="0.5" class="half"></label>
-            <input type="radio" name="rating" id="rating2" value="1" disabled><label for="rating2" title="1"></label>
-            <input type="radio" name="rating" id="rating3" value="1.5" disabled><label for="rating3" title="1.5" class="half"></label>
-            <input type="radio" name="rating" id="rating4" value="2" disabled><label for="rating4" title="2"></label>
-            <input type="radio" name="rating" id="rating5" value="2.5" disabled><label for="rating5" title="2.5" class="half"></label>
-            <input type="radio" name="rating" id="rating6" value="3" disabled><label for="rating6" title="3"></label>
-            <input type="radio" name="rating" id="rating7" value="3.5" disabled><label for="rating7" title="3.5" class="half"></label>
-            <input type="radio" name="rating" id="rating8" value="4" disabled><label for="rating8" title="4"></label>
-            <input type="radio" name="rating" id="rating9" value="4.5" disabled><label for="rating9" title="4.5" class="half"></label>
-            <input type="radio" name="rating" id="rating10" value="5" disabled><label for="rating10" title="5"></label>
-        </div>
-        <input type="text" class="form-control" name="first_name" disabled>
-        <label>First Name: </label>
-        <label>Last Name: </label>
-        <input type="text" class="form-control" name="last_name" disabled>
+            <input type="radio" name="rating" id="rating10" value="10" {% if review.rating == 10 %}checked{% endif %} disabled/><label for="rating10" title="10"></label>
+            <input type="radio" name="rating" id="rating9" value="9" {% if review.rating == 9 %}checked{% endif %} disabled/><label for="rating9" title="9"></label>
+            <input type="radio" name="rating" id="rating8" value="8" {% if review.rating == 8 %}checked{% endif %} disabled/><label for="rating8" title="8"></label>
+            <input type="radio" name="rating" id="rating7" value="7" {% if review.rating == 7 %}checked{% endif %} disabled/><label for="rating7" title="7"></label>
+            <input type="radio" name="rating" id="rating6" value="6" {% if review.rating == 6 %}checked{% endif %} disabled/><label for="rating6" title="6"></label>
+            <input type="radio" name="rating" id="rating5" value="5" {% if review.rating == 5 %}checked{% endif %} disabled/><label for="rating5" title="5"></label>
+            <input type="radio" name="rating" id="rating4" value="4" {% if review.rating == 4 %}checked{% endif %} disabled/><label for="rating4" title="4"></label>
+            <input type="radio" name="rating" id="rating3" value="3" {% if review.rating == 3 %}checked{% endif %} disabled/><label for="rating3" title="3"></label>
+            <input type="radio" name="rating" id="rating2" value="2" {% if review.rating == 2 %}checked{% endif %} disabled/><label for="rating2" title="2"></label>
+            <input type="radio" name="rating" id="rating1" value="1" {% if review.rating == 1 %}checked{% endif %} disabled/><label for="rating1" title="1"></label>
+        </div>        
         <br>
-        <label>Review Title: </label>
-        <input type="text" class="form-control" name="subject" disabled>
+        First Name: 
+        <input type="text" class="form-control" name="first_name" value="{{  review.first_name }}" readonly>
+        Last Name: 
+        <input type="text" class="form-control" name="last_name" value="{{  review.last_name }}" readonly>
         <br>
-        <label>Review: </label>
-        <textarea name="text" rows="4" disabled></textarea>
+        Review Title:
+        <input type="text" class="form-control" name="subject" value="{{  review.subject }}" readonly>
         <br>
-        <label>Would you like to display this review?</label>
-        <input type="checkbox" class="form-control" name="status" required>
+        Review: 
+        <textarea name="text" rows="4" readonly class="w-100">{{ review.text }}</textarea>
+        <br>
+        Would you like to display this review?
+        <input type="checkbox" class="form-control" name="status">
         <br>
         <button type="submit" class="btn btn-primary">Submit Review</button>
         <a href="{% url 'review-detail' review.id %}" class="btn btn-secondary">Cancel</a>

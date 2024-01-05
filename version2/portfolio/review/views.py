@@ -28,12 +28,12 @@ def update_review(request, review_id):
     if request.method == 'POST':
         form = UpdateReviewForm(request.POST, instance=review)
         if form.is_valid():
-            ReviewMiddleware.update_review(request, form, review_id)
-            return redirect('review-list')
+            ReviewMiddleware.update_review(request, form, review.id)
+            return redirect('portfolio-home')
     else:
         form = UpdateReviewForm(instance=review)
 
-    return render(request, 'portfolio/review/update.html', {'form': form, 'action': 'Update'})
+    return render(request, 'portfolio/review/update.html', {'form': form, 'action': 'Update', 'review': review})
 
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)

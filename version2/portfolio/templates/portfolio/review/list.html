@@ -4,15 +4,12 @@
 {% endblock title %}
 {% block content %}
     <h1 class="text-center pb-2">Manage Reviews</h1>
-    <div class="d-flex justify-content-center pb-2">
-        <a class="btn btn-primary btn-sm btn-outline-primary p-1 mb-2 mt-1 ml-1" href="{% url 'review-create' %}">Add Review</a>
-    </div>
     <div>
         <h3 class="text-primary text-center blue">All Reviews</h3>
         <table class="table d-flex justify-content-center">
             {% for review in reviews %}
                 <tr>
-                    <td><a href="{% url 'review-detail' review.id %}">{{ review.name }}</a> - {{ review.text }} - Rating: {{ review.rating }}</td>
+                    <td><a href="{% url 'review-detail' review.id %}">{{ review.first_name }} {{ review.last_name }}</a> - {{ review.text }} - Rating: {{ review.rating }}</td>
                 </tr>
             {% endfor %}
         </table>
