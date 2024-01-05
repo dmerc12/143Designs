@@ -50,11 +50,10 @@
     cursor: pointer;
 }
 
-/* half star */
-.rate .half:before {
-    content: "\f089";
-    position: absolute;
-    padding-right: 0;
+/* hover behavior */
+.rate label:hover:before {
+    content: "\f005";
+    color: #ffb503;
 }
 
 /* click and hover */

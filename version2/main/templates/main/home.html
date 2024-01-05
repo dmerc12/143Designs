@@ -3,38 +3,39 @@
     <title>143 Designs - Home</title>
 {% endblock title %}
 {% block content %}
-    <h1>Home</h1>
+    <h1 class="text-center pb-2">Home</h1>
         <!-- create review form -->
         {% load crispy_forms_tags %}
             <h2 class="text-center pb-2">Leave Us A Review Below</h2>
-            <form method="POST" action="{% url 'create_review' %}">
+            <form method="POST" action="{% url 'create-review' %}">
                 {% csrf_token %}
-                <label>Rating: </label>
                 <div class="rate">
-                    <input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
-                    <input type="radio" name="rating" id="rating2" value="1" required><label for="rating2" title="1"></label>
-                    <input type="radio" name="rating" id="rating3" value="1.5" required><label for="rating3" title="1.5" class="half"></label>
-                    <input type="radio" name="rating" id="rating4" value="2" required><label for="rating4" title="2"></label>
-                    <input type="radio" name="rating" id="rating5" value="2.5" required><label for="rating5" title="2.5" class="half"></label>
-                    <input type="radio" name="rating" id="rating6" value="3" required><label for="rating6" title="3"></label>
-                    <input type="radio" name="rating" id="rating7" value="3.5" required><label for="rating7" title="3.5" class="half"></label>
-                    <input type="radio" name="rating" id="rating8" value="4" required><label for="rating8" title="4"></label>
-                    <input type="radio" name="rating" id="rating9" value="4.5" required><label for="rating9" title="4.5" class="half"></label>
-                    <input type="radio" name="rating" id="rating10" value="5" required><label for="rating10" title="5"></label>
+                    <input type="radio" name="rating" id="rating10" value="10" required/><label for="rating10" title="10"></label>
+                    <input type="radio" name="rating" id="rating9" value="9" required/><label for="rating9" title="9"></label>
+                    <input type="radio" name="rating" id="rating8" value="8" required/><label for="rating8" title="8"></label>
+                    <input type="radio" name="rating" id="rating7" value="7" required/><label for="rating7" title="7"></label>
+                    <input type="radio" name="rating" id="rating6" value="6" required/><label for="rating6" title="6"></label>
+                    <input type="radio" name="rating" id="rating5" value="5" required/><label for="rating5" title="5"></label>
+                    <input type="radio" name="rating" id="rating4" value="4" required/><label for="rating4" title="4"></label>
+                    <input type="radio" name="rating" id="rating3" value="3" required/><label for="rating3" title="3"></label>
+                    <input type="radio" name="rating" id="rating2" value="2" required/><label for="rating2" title="2"></label>
+                    <input type="radio" name="rating" id="rating1" value="1" required/><label for="rating1" title="1"></label>
                 </div>
+                <br>
+                First Name:
                 <input type="text" class="form-control" name="first_name" required>
-                <label>First Name: </label>
-                <label>Last Name: </label>
+                <br>
+                Last Name:
                 <input type="text" class="form-control" name="last_name" required>
                 <br>
-                <label>Review Title: </label>
+                Review Title:
                 <input type="text" class="form-control" name="subject" required>
                 <br>
-                <label>Review: </label>
-                <textarea name="text" rows="4" required></textarea>
+                Review:
+                <br>
+                <textarea name="text" rows="4" class="w-100" required></textarea>
                 <br>
                 <button type="submit" class="btn btn-primary">Submit Review</button>
-                <a href="{% url 'home' %}" class="btn btn-secondary">Go Back</a>
             </form>
         <!-- end of create review form -->
 {% endblock content %}
