@@ -5,7 +5,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <h1 class="text-center pb-2">Leave Us A Review Below</h1>
-    <form method="POST">
+    <form method="POST" action="{% url create_review %}">
         {% csrf_token %}
         <!-- rating stars -->
         <label>Rating: </label>
