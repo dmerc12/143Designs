@@ -1,0 +1,40 @@
+{% extends "main/template.html" %}
+{% block title %}
+    <title>143 Designs - Manage A Review</title>
+{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h1 class="text-center pb-2">Manage Review Below</h1>
+    <form method="POST" action="{% url 'update_review' review.id %}">
+        {% csrf_token %}
+        <label>Rating: </label>
+        <div class="rate">
+            <input type="radio" name="rating" id="rating1" value="0.5" disabled><label for="rating1" title="0.5" class="half"></label>
+            <input type="radio" name="rating" id="rating2" value="1" disabled><label for="rating2" title="1"></label>
+            <input type="radio" name="rating" id="rating3" value="1.5" disabled><label for="rating3" title="1.5" class="half"></label>
+            <input type="radio" name="rating" id="rating4" value="2" disabled><label for="rating4" title="2"></label>
+            <input type="radio" name="rating" id="rating5" value="2.5" disabled><label for="rating5" title="2.5" class="half"></label>
+            <input type="radio" name="rating" id="rating6" value="3" disabled><label for="rating6" title="3"></label>
+            <input type="radio" name="rating" id="rating7" value="3.5" disabled><label for="rating7" title="3.5" class="half"></label>
+            <input type="radio" name="rating" id="rating8" value="4" disabled><label for="rating8" title="4"></label>
+            <input type="radio" name="rating" id="rating9" value="4.5" disabled><label for="rating9" title="4.5" class="half"></label>
+            <input type="radio" name="rating" id="rating10" value="5" disabled><label for="rating10" title="5"></label>
+        </div>
+        <input type="text" class="form-control" name="first_name" disabled>
+        <label>First Name: </label>
+        <label>Last Name: </label>
+        <input type="text" class="form-control" name="last_name" disabled>
+        <br>
+        <label>Review Title: </label>
+        <input type="text" class="form-control" name="subject" disabled>
+        <br>
+        <label>Review: </label>
+        <textarea name="text" rows="4" disabled></textarea>
+        <br>
+        <label>Would you like to display this review?</label>
+        <input type="checkbox" class="form-control" name="status" required>
+        <br>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+        <a href="{% url 'review-detail' review.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock content %}

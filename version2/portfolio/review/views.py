@@ -20,7 +20,7 @@ def create_review(request):
     else:
         form = CreateReviewForm()
 
-    return render(request, 'portfolio/review/form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'main/home.html', {'form': form, 'action': 'create'})
 
 def update_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
@@ -33,7 +33,7 @@ def update_review(request, review_id):
     else:
         form = UpdateReviewForm(instance=review)
 
-    return render(request, 'portfolio/review/form.html', {'form': form, 'action': 'Update'})
+    return render(request, 'portfolio/review/update.html', {'form': form, 'action': 'Update'})
 
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
