@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from ..models import Review
-from .forms import ReviewForm 
+from .forms import CreateReviewForm, UpdateReviewForm
 from .middleware import ReviewMiddleware
 
 def review_list(request):
@@ -11,31 +11,31 @@ def review_detail(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     return render(request, 'portfolio/review/detail.html', {'review': review})
 
-def review_create(request):
+def create_review(request):
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        form = CreateReviewForm(request.POST)
         if form.is_valid():
             ReviewMiddleware.create_review(request, form)
-            return redirect('review-list')
+            return redirect('home')
     else:
-        form = ReviewForm()
+        form = CreateReviewForm()
 
-    return render(request, 'portfolio/review/form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'main/home.html', {'form': form, 'action': 'create'})
 
-def review_update(request, review_id):
+def update_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST, instance=review)
+        form = UpdateReviewForm(request.POST, instance=review)
         if form.is_valid():
-            ReviewMiddleware.update_review(request, form)
+            ReviewMiddleware.update_review(request, form, review_id)
             return redirect('review-list')
     else:
-        form = ReviewForm(instance=review)
+        form = UpdateReviewForm(instance=review)
 
-    return render(request, 'portfolio/review/form.html', {'form': form, 'action': 'Update'})
+    return render(request, 'portfolio/review/update.html', {'form': form, 'action': 'Update'})
 
-def review_delete(request, review_id):
+def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
 
     if request.method == 'POST':
