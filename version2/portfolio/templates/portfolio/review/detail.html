@@ -3,13 +3,24 @@
     <title>143 Designs - Review Detail</title>
 {% endblock title %}
 {% block content %}
-    <h1 class="text-center pb-2">{{ review.name }} - Review Detail</h1>
+    <h1 class="text-center pb-2">{{ review.first_name }} {{ review.last_name}} - {{ review.subject }}</h1>
     <div>
+        <div class="rate">
+            <input type="radio" name="rating" id="rating10" value="10" {% if review.rating == 10 %}checked{% endif %} disabled/><label for="rating10" title="10"></label>
+            <input type="radio" name="rating" id="rating9" value="9" {% if review.rating == 9 %}checked{% endif %} disabled/><label for="rating9" title="9"></label>
+            <input type="radio" name="rating" id="rating8" value="8" {% if review.rating == 8 %}checked{% endif %} disabled/><label for="rating8" title="8"></label>
+            <input type="radio" name="rating" id="rating7" value="7" {% if review.rating == 7 %}checked{% endif %} disabled/><label for="rating7" title="7"></label>
+            <input type="radio" name="rating" id="rating6" value="6" {% if review.rating == 6 %}checked{% endif %} disabled/><label for="rating6" title="6"></label>
+            <input type="radio" name="rating" id="rating5" value="5" {% if review.rating == 5 %}checked{% endif %} disabled/><label for="rating5" title="5"></label>
+            <input type="radio" name="rating" id="rating4" value="4" {% if review.rating == 4 %}checked{% endif %} disabled/><label for="rating4" title="4"></label>
+            <input type="radio" name="rating" id="rating3" value="3" {% if review.rating == 3 %}checked{% endif %} disabled/><label for="rating3" title="3"></label>
+            <input type="radio" name="rating" id="rating2" value="2" {% if review.rating == 2 %}checked{% endif %} disabled/><label for="rating2" title="2"></label>
+            <input type="radio" name="rating" id="rating1" value="1" {% if review.rating == 1 %}checked{% endif %} disabled/><label for="rating1" title="1"></label>
+        </div> 
         <p><strong>Text:</strong> {{ review.text }}</p>
-        <p><strong>Rating:</strong> {{ review.rating }}</p>
     </div>
     <div class="d-flex justify-content-center pb-2">
-        <a class="btn btn-primary btn-sm btn-outline-secondary p-1 mb-2 mt-1 ml-1" href="{% url 'review-update' review.id %}">Update Review</a>
-        <a class="btn btn-primary btn-sm btn-outline-danger p-1 mb-2 mt-1 ml-1" href="{% url 'review-delete' review.id %}">Delete Review</a>
+        <a class="btn btn-primary btn-sm btn-outline-secondary p-1 mb-2 mt-1 ml-1" href="{% url 'update-review' review.id %}">Update Review</a>
+        <a class="btn btn-primary btn-sm btn-outline-danger p-1 mb-2 mt-1 ml-1" href="{% url 'delete-review' review.id %}">Delete Review</a>
     </div>
 {% endblock content %}
