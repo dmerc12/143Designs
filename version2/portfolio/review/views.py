@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from ..models import Review
 from .forms import CreateReviewForm, UpdateReviewForm
 from .middleware import ReviewMiddleware
+from django.contrib import messages
+from ..models import Review
 
 def review_list(request):
     reviews = Review.objects.all()
@@ -28,12 +29,12 @@ def update_review(request, review_id):
     if request.method == 'POST':
         form = UpdateReviewForm(request.POST, instance=review)
         if form.is_valid():
-            ReviewMiddleware.update_review(request, form, review.id)
+            ReviewMiddleware.update_review(request, form, review.pk)
             return redirect('portfolio-home')
     else:
         form = UpdateReviewForm(instance=review)
 
-    return render(request, 'portfolio/review/update.html', {'form': form, 'action': 'Update', 'review': review})
+    return render(request, 'portfolio/review/update.html', {'form': form, 'action': 'update', 'review': review})
 
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)

@@ -1,5 +1,6 @@
 from ..models import Review
 from django.contrib import messages
+from django.shortcuts import redirect
 
 class ReviewMiddleware:
 
@@ -16,10 +17,15 @@ class ReviewMiddleware:
 
     @staticmethod
     def update_review(request, form, review_id):
-        review = Review.objects.get(pk=review_id)
-        review.status = form.cleaned_data['status']
-        review.save()
-        messages.success(request, 'The status of this review has been updated!')
+        try:
+            review = Review.objects.get(pk=review_id)
+            print(f"Current status: {review.status}")
+            review.status = form.cleaned_data['status']
+            review.save(update_fields=['status'])
+            print(f"Updated status: {review.status}")
+            messages.success(request, 'The status of this review has been updated!')
+        except Exception as error:
+            messages.error(request, str(error))
 
     @staticmethod
     def delete_review(request, review):

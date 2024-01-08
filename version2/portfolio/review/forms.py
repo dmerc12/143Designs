@@ -6,7 +6,7 @@ class CreateReviewForm(forms.ModelForm):
         model = Review
         fields = ['first_name', 'last_name', 'subject', 'text', 'rating']
 
-class UpdateReviewForm(forms.ModelForm):
+class UpdateReviewForm(CreateReviewForm):
     class Meta:
         model = Review
         fields = ['first_name', 'last_name', 'subject', 'text', 'rating', 'status']

@@ -32,7 +32,10 @@
         <textarea name="text" rows="4" readonly class="w-100">{{ review.text }}</textarea>
         <br>
         Would you like to display this review?
-        <input type="checkbox" class="form-control" name="status">
+        Yes:
+        <input type="radio" class="f-right" name="status" {% if review.status == True %}checked{% endif %} value="True">
+        No:
+        <input type="radio" class="f-right" name="status" {% if review.status == False %}checked{% endif %} value="False">
         <br>
         <button type="submit" class="btn btn-primary">Submit Review</button>
         <a href="{% url 'review-detail' review.id %}" class="btn btn-secondary">Cancel</a>
