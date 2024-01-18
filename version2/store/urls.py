@@ -1,17 +1,16 @@
 from django.urls import path
-from .item.views import ItemCreateView, ItemUpdateView, ItemDeleteView
-from .order.views import OrderDetailView, OrderDeleteView
-from .views import HomeView, OrderCreateView, OrderUpdateView
+from .item import views as item_views
+from .order import views as order_views
+from . import views 
 
 urlpatterns = [
-    path('', HomeView.as_view(), name='store-home'),
-    # path('item/<int:pk>/', ItemDetailView.as_view(), name='store-item-detail'),
-    path('item/new/', ItemCreateView.as_view(), name='store-item-create'),
-    path('item/<int:pk>/update/', ItemUpdateView.as_view(), name='store-item-update'),
-    path('item/<int:pk>/delete/', ItemDeleteView.as_view(), name='store-item-delete'),
+    path('', views.home, name='store-home'),
+    path('item/new/', item_views.create_item, name='store-item-create'),
+    path('item/<int:pk>/update/', item_views.update_item, name='store-item-update'),
+    path('item/<int:pk>/delete/', item_views.delete_item, name='store-item-delete'),
 
-    path('order/new/', OrderCreateView.as_view(), name='store-order-create'),
-    path('order/<int:pk>/', OrderDetailView.as_view(), name='store-order-detail'),
-    path('order/<int:pk>/update/', OrderUpdateView.as_view(), name='store-order-update'),
-    path('order/<int:pk>/delete/', OrderDeleteView.as_view(), name='store-order-delete'),
+    path('order/new/', order_views.create_order, name='store-order-create'),
+    path('order/<int:pk>/', order_views.order_detail, name='store-order-detail'),
+    path('order/<int:pk>/update/', order_views.update_order, name='store-order-update'),
+    path('order/<int:pk>/delete/', order_views.delete_order, name='store-order-delete'),
 ]
