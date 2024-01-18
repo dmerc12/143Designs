@@ -11,12 +11,7 @@
                 <legend class="border-bottom mb-4">Create Order</legend>
                 {{ form|crispy }}
                 <div id="order-items">
-                    {{ order_items.management_form }}
-                    {% for order_item_form in order_items %}
-                        <div class="item">
-                            {{ order_item_form|crispy }}
-                        </div>
-                    {% endfor %}
+                        {{ formset|crispy }}
                 </div>
                 <button type="button" class="btn btn-success" id="add-order-item">Add Item</button>
             </fieldset>
@@ -33,7 +28,7 @@
             var orderItemIndex = 0;
 
             addOrderItemButton.addEventListener("click", function() {
-                var orderItemForm = "{{ order_items.empty_form|crispy|escapejs }}";
+                var orderItemForm = "{{ formset.empty_form|crispy|escapejs }}";
                 orderItemForm = orderItemForm.replace(/__prefix__/g, orderItemIndex);
                 orderItemsContainer.insertAdjacentHTML('beforeend', orderItemForm);
                 orderItemIndex++;

@@ -2,24 +2,24 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from ..forms import OrderForm, OrderItemFormSet
 from django.contrib import messages
-from ..models import Order
+from ..models import Order, OrderItem
 
 @login_required
 def create_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
-        order_items = OrderItemFormSet(request.POST, instance=Order())
-        if form.is_valid() and order_items.is_valid():
-            saved_order = form.save(commit=False)
-            order_items.instance = saved_order
-            saved_order.save()
-            order_items.save()
+        formset = OrderItemFormSet(request.POST, queryset=OrderItem.objects.none())
+        if form.is_valid() and formset.is_valid():
+            order = form.save(commit=False)
+            order.save()
+            for form in formset:
+                OrderItem.objects.create(order=order, **form.cleaned_data)
             messages.success(request, 'Order successfully created!')
             return redirect('store-home')
     else:
         form = OrderForm()
-        order_items = OrderItemFormSet(instance=Order())
-    return render(request, 'store/order/create.html', {'form': form})
+    formset = OrderItemFormSet()
+    return render(request, 'store/order/create.html', {'form': form, 'formset': formset})
 
 @login_required
 def order_detail(request, order_id):
