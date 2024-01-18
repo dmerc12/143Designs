@@ -1,21 +1,49 @@
+from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from ..forms import OrderForm, OrderItemFormSet
 from django.contrib import messages
-from django.shortcuts import redirect
-from django.views.generic import DetailView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
-
 from ..models import Order
-from .middleware import OrderMiddleware
 
-class OrderDetailView(LoginRequiredMixin, DetailView):
-    model = Order
+@login_required
+def create_order(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        order_items = OrderItemFormSet(request.POST, instance=Order())
+        if form.is_valid() and order_items.is_valid():
+            saved_order = form.save(commit=False)
+            order_items.instance = saved_order
+            saved_order.save()
+            order_items.save()
+            messages.success(request, 'Order successfully created!')
+            return redirect('store-home')
+    else:
+        form = OrderForm()
+        order_items = OrderItemFormSet(instance=Order())
+    return render(request, 'store/order/create.html', {'form': form})
 
-class OrderDeleteView(LoginRequiredMixin,  DeleteView):
-    model = Order
-    template_name = 'store/order/delete.html'
-    success_url = '/store'
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    return render(request, 'store/order/detail.html', {'order': order})
 
-    def delete(self, request):
-        order = self.get_object()
-        OrderMiddleware.delete_order(order.pk)
-        messages.success(request, "Order deleted!")
-        return redirect(self.success_url)
+@login_required
+def update_order(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Order successfully updated!')
+            return redirect('store-home')
+    else:
+        form = OrderForm(instance=order)
+    return render(request, 'store/order/update.html', {'form': form})
+
+@login_required
+def delete_order(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    if request.method == 'POST':
+        order.delete()
+        messages.success(request, 'Order successfully deleted!')
+        return redirect('store-home')
+    return render(request, 'store/order/delete.html', {'order': order})

@@ -12,20 +12,11 @@ class Order(models.Model):
     def __str__(self):
         return "Order - " + str(self.pk)
 
-    def get_absolute_url(self):
-        return reverse('store-home')
-
-    def order_items(self):
-        return self.orderitem_set.all()
-
 class Item(models.Model):
     name = models.CharField(max_length=60)
 
     def __str__(self):
         return str(self.name)
-
-    def get_absolute_url(self):
-        return reverse('store-home')
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -34,6 +25,3 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return "Order - " + str(self.order.pk) + " - Item - " + str(self.item.name) + " - Quantity - " + str(self.quantity)
-
-    def get_absolute_url(self):
-        return reverse('store-home')
