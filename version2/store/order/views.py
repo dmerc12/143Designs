@@ -8,17 +8,20 @@ from ..models import Order, OrderItem
 def create_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
-        formset = OrderItemFormSet(request.POST, queryset=OrderItem.objects.none())
+        formset = OrderItemFormSet(request.POST, prefix='order_items')
         if form.is_valid() and formset.is_valid():
-            order = form.save(commit=False)
-            order.save()
+            order = form.save()
             for form in formset:
-                OrderItem.objects.create(order=order, **form.cleaned_data)
+                if form.cleaned_data:
+                    item = form.cleaned_data['item']
+                    quantity = form.cleaned_data['quantity']
+                    order_item = OrderItem.objects.create(item=item, quantity=quantity, order=order)
+                    order_item.save()
             messages.success(request, 'Order successfully created!')
             return redirect('store-home')
     else:
         form = OrderForm()
-    formset = OrderItemFormSet()
+        formset = OrderItemFormSet(prefix='order_items')
     return render(request, 'store/order/create.html', {'form': form, 'formset': formset})
 
 @login_required
@@ -31,13 +34,16 @@ def update_order(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
     if request.method == 'POST':
         form = OrderForm(request.POST, instance=order)
-        if form.is_valid():
-            form.save()
+        formset = OrderItemFormSet(request.POST, queryset=OrderItem.objects.filter(order=order))
+        if form.is_valid() and formset.is_valid():
+            order = form.save()
+            for form in formset:
+                pass
             messages.success(request, 'Order successfully updated!')
             return redirect('store-home')
     else:
         form = OrderForm(instance=order)
-    return render(request, 'store/order/update.html', {'form': form})
+    return render(request, 'store/order/update.html', {'form': form, 'order': order})
 
 @login_required
 def delete_order(request, order_id):
