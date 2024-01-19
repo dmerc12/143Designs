@@ -11,7 +11,6 @@
                 <legend class="border-bottom mb-4">Update Order</legend>
                 {{ form|crispy }}
                 <div id="order-items">
-                    {{ order_items.management_form }}
                     {% for order_item_form in order_items %}
                         <div class="order-item">
                             {{ order_item_form|crispy }}
@@ -23,7 +22,7 @@
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Update Order</button>
-                <a class="btn btn-outline-secondary" href="{% url 'store-order-detail' object.pk %}">No, Cancel</a>
+                <a class="btn btn-outline-secondary" href="{% url 'store-order-detail' order.id %}">No, Cancel</a>
             </div>
         </form>
     </div>

@@ -12,7 +12,7 @@
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
-                <a class="btn btn-outline-secondary" href="{% url 'store-order-detail' object.pk %}">No, Cancel</a>
+                <a class="btn btn-outline-secondary" href="{% url 'store-order-detail' order.id %}">No, Cancel</a>
             </div>
         </form>
     </div>

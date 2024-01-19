@@ -7,12 +7,19 @@
     <div class="content-section">
         <form method="post">
             {% csrf_token %}
+            {{ formset.management_form }}
+            {{ formset.management_form.non_form_errors }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Create Order</legend>
                 {{ form|crispy }}
-                <div id="order-items">
-                        {{ formset|crispy }}
-                </div>
+                    <div id="order-items">
+                        {% for form in formset %}
+                            <div class="item">
+                                {{ form|crispy}}
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 <button type="button" class="btn btn-success" id="add-order-item">Add Item</button>
             </fieldset>
             <div class="form-group">
@@ -25,7 +32,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             var addOrderItemButton = document.getElementById("add-order-item");
             var orderItemsContainer = document.getElementById("order-items");
-            var orderItemIndex = 0;
+            var orderItemIndex = {{ formset.total_form_count}};
 
             addOrderItemButton.addEventListener("click", function() {
                 var orderItemForm = "{{ formset.empty_form|crispy|escapejs }}";
