@@ -18,5 +18,3 @@ class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
         fields = ['item', 'quantity']
-
-OrderItemFormSet = forms.models.formset_factory(OrderItemForm)
