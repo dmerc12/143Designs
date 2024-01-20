@@ -9,34 +9,30 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Create Order</legend>
-                {{ order_form|crispy }}
-                    <div id="order-items">
-                        {% for form in order_item_forms %}
-                            <div class="item">
-                                {{ form|crispy}}
-                            </div>
-                        {% endfor %}
+                {{ form|crispy }}
+                    <div id="order-item">
+                        {% include 'store/order_item/form.html' %}
                     </div>
-                <button type="button" class="btn btn-success" id="add-order-item">Add Item</button>
+                <button type="button" 
+                    class="btn btn-success" 
+                    id="add-order-item" 
+                    hx-get="{% url 'store-order-item-create' %}" 
+                    hx-target="#order-item"
+                    hx-swap="beforeend">
+                        Add Item
+                </button>
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Create Order</button>
-                <a class="btn btn-outline-secondary" href="{% url 'store-home' %}">No, Cancel</a>
+                <button class="btn btn-outline-info" 
+                    type="submit"
+                    id="create-order-button">
+                        Create Order
+                </button>
+                <a class="btn btn-outline-secondary" 
+                    href="{% url 'store-home' %}">
+                        No, Cancel
+                </a>
             </div>
         </form>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var addOrderItemButton = document.getElementById("add-order-item");
-            var orderItemsContainer = document.getElementById("order-items");
-            var orderItemIndex = {{ formset.total_form_count}};
-
-            addOrderItemButton.addEventListener("click", function() {
-                var orderItemForm = "{{ formset.empty_form|crispy|escapejs }}";
-                orderItemForm = orderItemForm.replace(/__prefix__/g, orderItemIndex);
-                orderItemsContainer.insertAdjacentHTML('beforeend', orderItemForm);
-                orderItemIndex++;
-            });
-        });
-    </script>
 {% endblock content %}

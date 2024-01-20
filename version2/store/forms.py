@@ -18,3 +18,7 @@ class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
         fields = ['item', 'quantity']
+        widgets = {
+            'item': forms.Select(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'})
+        }
