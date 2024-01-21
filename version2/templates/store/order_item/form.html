@@ -1,19 +1,22 @@
-<form hx-post="{% url 'store-order-item-create' %}"
+<form hx-post="{% url 'store-order-create' %}"
     hx-trigger="click from:#create-order-button all">
-    <div class="row">
+    {% csrf_token %}
+    <div class="row mb-3">
+        <input type="hidden" name="create_order_item" value="True">
         <div class="col-4 col-md-3">
-            <label for="{{ form.item.id_for_label }}">{{ form.item.label }}</label>
-            {{ form.item }}
+            <label for="{{ form.item.id_for_label }}">{{ order_item_form.item.label }}</label>
+            {{ order_item_form.item }}
         </div>
         <div class="col-4 col-md-3">
-            <label for="{{ form.quantity.id_for_label }}">{{ form.quantity.label }}</label>
-            {{ form.quantity }}
+            <label for="{{ form.quantity.id_for_label }}">{{ order_item_form.quantity.label }}</label>
+            {{ order_item_form.quantity }}
         </div>
         <div class="col-4 col-md-3 align-self-end">
             <button type="button" 
                 class="btn btn-danger"
-                hx-on="click: this.closest('form').remove()"
-                >Remove Item</button>
+                hx-on="click: this.closest('form').remove()">
+                    Remove Item
+            </button>
         </div>
     </div>
 </form>

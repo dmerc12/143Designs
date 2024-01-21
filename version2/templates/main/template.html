@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block title %}{% endblock title %}
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">143 Designs</a>

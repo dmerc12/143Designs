@@ -9,12 +9,18 @@ def create_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            form.save()
+            order = form.save()
+            order_item_forms = request.POST.getlist('order_item_form')
+            for item_form_data in order_item_forms:
+                item_form = OrderItemForm(item_form_data)
+                if item_form.is_valid():
+                    order_item = OrderItem.objects.create(order=order, item=order_item.cleaned_data['item'], quantity=order_item.cleaned_data['quantity'])
             messages.success(request, 'Order successfully created!')
             return redirect('store-home')
     else:
         order_form = OrderForm()
-    return render(request, 'store/order/create.html', {'order_form': order_form})
+        order_item_form = OrderItemForm()
+    return render(request, 'store/order/create.html', {'order_form': order_form, 'order_item_form': order_item_form})
 
 @login_required
 def order_detail(request, order_id):

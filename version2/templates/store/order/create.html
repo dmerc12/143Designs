@@ -9,10 +9,10 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Create Order</legend>
-                {{ form|crispy }}
-                    <div id="order-item">
-                        {% include 'store/order_item/form.html' %}
-                    </div>
+                {{ order_form|crispy }}
+                 <div id="order-item">
+                    {% include 'store/order_item/form.html' %}
+                </div>
                 <button type="button" 
                     class="btn btn-success" 
                     id="add-order-item" 
