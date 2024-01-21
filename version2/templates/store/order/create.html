@@ -11,7 +11,9 @@
                 <legend class="border-bottom mb-4">Create Order</legend>
                 {{ order_form|crispy }}
                  <div id="order-item">
-                    {% include 'store/order_item/form.html' %}
+                    {% for item_form in order_item_forms %}
+                        {% include 'store/order_item/form.html' with order_item_form=item_form %}
+                    {% endfor %}
                 </div>
                 <button type="button" 
                     class="btn btn-success" 
