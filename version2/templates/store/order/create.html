@@ -5,15 +5,17 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
-        <form method="post">
+        <form method="POST" id="create-order-form" action="{% url 'store-order-create' %}">
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Create Order</legend>
                 {{ order_form|crispy }}
+                <div class="form-group">
+                    <label for="num_items">Number of Different Items:</label>
+                    <input type="number" name="num_items" id="num_items" class="form-control" min="1" value="1">
+                </div>
                  <div id="order-item">
-                    {% for item_form in order_item_forms %}
-                        {% include 'store/order_item/form.html' with order_item_form=item_form %}
-                    {% endfor %}
+                    {% include 'store/order_item/form.html' with order_item_form=order_item_form %}
                 </div>
                 <button type="button" 
                     class="btn btn-success" 

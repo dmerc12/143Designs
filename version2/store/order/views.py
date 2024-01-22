@@ -2,19 +2,18 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from ..forms import OrderForm, OrderItemForm
 from django.contrib import messages
-from django.forms import formset_factory
 from ..models import Order, OrderItem
 
 @login_required
 def create_order(request):
-    OrderItemFormSet = formset_factory(OrderItemForm, extra=1)
     if request.method == 'POST':
+        num_items = int(request.POST.get('num_items'))
         order_form = OrderForm(request.POST)
-        order_item_forms = OrderItemFormSet(request.POST)
-        if order_form.is_valid():
+        order_item_forms = [OrderItemForm(request.POST) for i in range(0, num_items)]
+        if order_form.is_valid()and [form.is_valid() for form in order_item_forms]:
             order = order_form.save()
             for item_form in order_item_forms:
-                if item_form.is_valid():
+                if item_form.cleaned_data:
                     item = item_form.cleaned_data['item']
                     quantity = item_form.cleaned_data['quantity']
                     OrderItem.objects.create(order=order, item=item, quantity=quantity)
@@ -22,10 +21,10 @@ def create_order(request):
             return redirect('store-home')
     else:
         order_form = OrderForm()
-        order_item_forms = OrderItemFormSet()
+        order_item_form = OrderItemForm()
     context = {
         'order_form': order_form, 
-        'order_item_forms': order_item_forms
+        'order_item_form': order_item_form
     }
     return render(request, 'store/order/create.html', context)
 
