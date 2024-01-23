@@ -1,0 +1,29 @@
+<div class="item-form">
+    <div class="row mb-3">
+        <div class="col-4 col-md-3 {% if form.item.required %}{{ order_form.required_css_class }}{% endif %}">
+            <label for="{{ form.item.id_for_label }}">{{ form.item.label }}</label>
+            {{ form.item.errors }}
+            {{ form.item }}
+        </div>
+        <div class="col-4 col-md-3 {% if form.quantity.required %}{{ order_form.required_css_class }}{% endif %}">
+            <label for="{{ form.quantity.id_for_label }}">{{ form.quantity.label }}</label>
+            {{ form.quantity.errors }}
+            {{ form.quantity }}
+        </div>
+        <div class="col-4 col-md-3 align-self-end">
+            <button type="button" 
+                class="btn btn-danger"
+                hx-on="click: removeItemForm(this)">
+                    Remove Item
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+    function removeItemForm(button) {
+        const itemForm = button.closest('.item-form');
+        if (itemForm) {
+            itemForm.remove();
+        }
+    }
+</script>

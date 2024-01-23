@@ -11,7 +11,7 @@ urlpatterns = [
     path('item/<int:item_id>/update/', item_views.update_item, name='store-item-update'),
     path('item/<int:item_id>/delete/', item_views.delete_item, name='store-item-delete'),
 
-    path('order/new/', order_views.CreateOrder.as_view(), name='store-order-create'),
+    path('order/new/', order_views.create_order, name='store-order-create'),
     path('order/<int:order_id>/', order_views.order_detail, name='store-order-detail'),
     path('order/<int:order_id>/update/', order_views.update_order, name='store-order-update'),
     path('order/<int:order_id>/delete/', order_views.delete_order, name='store-order-delete'),

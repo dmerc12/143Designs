@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_htmx',
     'crispy_forms',
     'crispy_bootstrap5',
     'users.apps.UsersConfig',
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -194,3 +196,5 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
+
+HTMX_ALLOWED_HOSTS = ['*']
