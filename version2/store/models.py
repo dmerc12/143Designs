@@ -4,8 +4,8 @@ from django.urls import reverse
 class Order(models.Model):
     name = models.CharField(max_length=60)
     description = models.TextField(max_length=255)
-    complete = models.BooleanField()
-    paid = models.BooleanField()
+    complete = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 

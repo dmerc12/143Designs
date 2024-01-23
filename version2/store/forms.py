@@ -41,5 +41,3 @@ class OrderItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['item'].widget.attrs.update({'class': 'form-control'})
         self.fields['quantity'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Quantity'})
-
-OrderItemFormSet = forms.modelformset_factory(OrderItem, form=OrderItemForm, extra=0)

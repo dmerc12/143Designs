@@ -30,26 +30,6 @@
                 {{ order_form.description.errors}}
                 {{ order_form.description }}
             </div>
-            {% if item_forms %}
-                <h2>Items:</h2>
-                {{ item_forms.management_form }}
-                <div class="item-list">
-                    {% for form in item_forms %}
-                        {% include 'store/partials/form.html' %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <div id='empty-form' style='display:none'>{{ item_forms.empty_form }}</div>
-            <div class="form-group">
-                <button type="button" 
-                    class="btn btn-success" 
-                    id="add-item-button"
-                    hx-get="{% url 'store-order-create' %}" 
-                    hx-trigger="click"
-                    hx-swap="beforebegin">
-                        Add Item
-                </button>
-            </div>
             <div class="form-group">
                 <button class="btn btn-outline-info" 
                     type="submit"
