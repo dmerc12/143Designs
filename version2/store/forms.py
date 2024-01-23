@@ -22,3 +22,5 @@ class OrderItemForm(forms.ModelForm):
             'item': forms.Select(attrs={'class': 'form-control'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control'})
         }
+
+OrderItemFormSet = forms.inlineformset_factory(Order, OrderItem, form=OrderItemForm)

@@ -9,20 +9,32 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Create Order</legend>
-                {{ order_form|crispy }}
-                <div class="form-group">
-                    <label for="num_items">Number of Different Items:</label>
-                    <input type="number" name="num_items" id="num_items" class="form-control" min="1" value="1">
-                </div>
+                {{ form|crispy }}
+                {{ items.management_form }}
                  <div id="order-item">
-                    {% include 'store/order_item/form.html' with order_item_form=order_item_form %}
+                    {% for form in items %}
+                        <div class="row mb-3">
+                            <div class="col-4 col-md-3">
+                                <label for="{{ form.item.id_for_label }}">{{ form.item.label }}</label>
+                                {{ form.item }}
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <label for="{{ form.quantity.id_for_label }}">{{ form.quantity.label }}</label>
+                                {{ form.quantity }}
+                            </div>
+                            <div class="col-4 col-md-3 align-self-end">
+                                <button type="button" 
+                                    class="btn btn-danger"
+                                    onclick="removeOrderItem(this)">
+                                        Remove Item
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
                 <button type="button" 
                     class="btn btn-success" 
-                    id="add-order-item" 
-                    hx-get="{% url 'store-order-item-create' %}" 
-                    hx-target="#order-item"
-                    hx-swap="beforeend">
+                    id="add-item-button">
                         Add Item
                 </button>
             </fieldset>
@@ -39,4 +51,26 @@
             </div>
         </form>
     </div>
+    <script>
+        const totalItemForms = document.getElementById('id_form-TOTAL_FORMS')
+        const currentItemForms = document.getElementsByClassName('item-form')
+        
+        document.getElementById('add-item-button').addEventListener('click', function() {
+            var orderItemContainer = document.getElementById('order-item');
+            var template = orderItemContainer.firstElementChild.cloneNode(true);
+            template.querySelectorAll('input, select').forEach(function(field) {
+                field.value = '';
+            });
+            orderItemContainer.appendChild(template);
+
+        });
+
+        function removeOrderItem(button) {
+            var orderItemContainer = document.getElementById('order-item');
+            var rowToRemove = button.closest('.row');
+            if (orderItemContainer.childElementCount > 1) {
+                orderItemContainer.removeChild(rowToRemove);
+            }
+        }
+    </script>
 {% endblock content %}
