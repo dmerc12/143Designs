@@ -40,11 +40,11 @@ class UpdateOrderForm(forms.ModelForm):
     def __init__(self, * args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['name'].label = 'Customer Name'
-        self.fields['name'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Customer Name'})
+        self.fields['name'].widget.attrs.update({'class': 'form-control col-9', 'placeholder': 'Customer Name'})
         self.fields['description'].label = 'Order Description'
-        self.fields['description'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Order Description', 'cols': '5', 'rows': '4'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control col-lg-11 ml-2', 'placeholder': 'Order Description', 'cols': '5', 'rows': '4'})
         self.fields['total'].label = 'Order Total'
-        self.fields['total'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Order Total'})
+        self.fields['total'].widget.attrs.update({'class': 'form-control col-9', 'placeholder': 'Order Total'})
 
 class OrderItemForm(forms.ModelForm):
     error_class = 'error-field'

@@ -5,8 +5,8 @@
 {% block content %}
     <h1>Name: {{ order.name }}</h1>
     <p>Description: {{ order.description }}</p>
-    <p>Status: {% if order.complete %}Complete{% else %}Incomplete{% endif %}</p>
     <p>Total: {{ order.total }}</p>
+    <p>Status: {% if order.complete %}Complete{% else %}Incomplete{% endif %}</p>
     <p>Paid: {% if order.paid %}Yes{% else %}No{% endif %}</p>
     <h2>Order Items: </h2>
     {% if order.order_items.all %}

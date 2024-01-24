@@ -30,8 +30,8 @@
                     <tr>
                         <th class="order-table">Name</th>
                         <th class="order-table">Description</th>
-                        <th class="order-table">Status</th>
                         <th class="order-table">Total</th>
+                        <th class="order-table">Status</th>
                         <th class="order-table">Paid</th>
                         <th class="order-table">Order Items</th>
                     </tr>
@@ -41,8 +41,8 @@
                         <tr>
                             <td><a href="{% url 'store-order-detail' order.pk %}" class="order-link order-table">{{ order.name }}</a></td>
                             <td><a href="{% url 'store-order-detail' order.pk %}" class="order-link order-table">{{ order.description }}</a></td>
-                            <td><a href="{% url 'store-order-detail' order.pk %}" class="order-link order-table">{% if order.complete %}Complete{% else %}Incomplete{% endif %}</a></td>
                             <td><a href="{% url 'store-order-detail' order.pk %}" class="order-link order-table">{{ order.total }}</a></td>
+                            <td><a href="{% url 'store-order-detail' order.pk %}" class="order-link order-table">{% if order.complete %}Complete{% else %}Incomplete{% endif %}</a></td>
                             <td><a href="{% url 'store-order-detail' order.pk %}" class="order-link order-table">{% if order.paid %}Yes{% else %}No{% endif %}</a></td>
                             <td class="order-items">
                                 <a href="{% url 'store-order-detail' order.pk %}" class="order-link">

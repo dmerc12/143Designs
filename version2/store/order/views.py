@@ -17,7 +17,7 @@ def create_order(request):
 @login_required
 def update_order(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
-    order_form = UpdateOrderForm(request.POST or None, include_total_field=True, instance=order)
+    order_form = UpdateOrderForm(request.POST or None, instance=order)
     item_form = OrderItemForm()
     context = {
         'item_form': item_form,
