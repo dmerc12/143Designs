@@ -28,7 +28,7 @@ def update_order(request, order_id):
     if order_form.is_valid():
         order = order_form.save()
         messages.success(request, 'Order Successfully Updated!')
-        return redirect('store-home')
+        return redirect('store-order-update', order.pk)
     return render(request, 'store/order/update.html', context)
 
 @login_required

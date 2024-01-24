@@ -13,10 +13,18 @@
                     id="update-order-button">
                         Update Order
                 </button>
-                <a class="btn btn-outline-secondary" 
+                <a class="btn btn-outline-secondary mr-2" 
                     href="{% url 'store-home' %}">
                         No, Cancel
                 </a>
+                <button type="button" 
+                    class="btn btn-success" 
+                    id="add-item-button"
+                    hx-get="{% url 'store-new-form' %}" 
+                    hx-target="#item-forms"
+                    hx-swap="beforebegin">
+                        Add Item
+                </button>
             </div>
             <div class="form-group row mb-3">
                 <div class="col-4 col-md-3 mr-3 {% if order_form.name.required %}{{ order_form.required_css_class }}{% endif %}">
