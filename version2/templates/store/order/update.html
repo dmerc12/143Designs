@@ -7,6 +7,17 @@
         <form method="POST" id="create-order-form">
             {% csrf_token %}
             <h1 class="border-bottom mb-4">Update Order</h1>
+            <div class="form-group">
+                <button class="btn btn-outline-info mr-2" 
+                    type="submit"
+                    id="update-order-button">
+                        Update Order
+                </button>
+                <a class="btn btn-outline-secondary" 
+                    href="{% url 'store-home' %}">
+                        No, Cancel
+                </a>
+            </div>
             <div class="form-group row mb-3">
                 <div class="col-4 col-md-3 mr-3 {% if order_form.name.required %}{{ order_form.required_css_class }}{% endif %}">
                     <label for="{{ order_form.name.id_for_label }}">{{ order_form.name.label }}</label>
@@ -34,17 +45,13 @@
                 {{ order_form.description.errors}}
                 {{ order_form.description }}
             </div>
-            <div class="form-group">
-                <button class="btn btn-outline-info mr-2" 
-                    type="submit"
-                    id="update-order-button">
-                        Update Order
-                </button>
-                <a class="btn btn-outline-secondary" 
-                    href="{% url 'store-home' %}">
-                        No, Cancel
-                </a>
-            </div>
         </form>
+        <div id="item-forms" class="form-group mb-3">
+            {% if item_forms %}
+                {% for item_form in item_forms %}
+                    {% include 'store/partials/form.html' %}
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 {% endblock content %}
