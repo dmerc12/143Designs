@@ -16,5 +16,8 @@ urlpatterns = [
     path('order/<int:order_id>/update/', order_views.update_order, name='store-order-update'),
     path('order/<int:order_id>/delete/', order_views.delete_order, name='store-order-delete'),
 
-    path('order/item/new', order_item_views.create_order_item, name='store-order-item-create')
+    path('htmx/order/item/', order_item_views.get_item_form, name='store-new-form'),
+    path('order/item/<int:order_id>/', order_item_views.create_order_item, name='store-order-item-create'),
+    path('order/item/<int:order_item_id>/', order_item_views.update_order_item, name='store-order-item-update'),
+    
 ]

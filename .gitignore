@@ -163,3 +163,4 @@ __pycache__
 .DS_Store
 back-end/Logs/*
 version/logs/*
+/migrations/*

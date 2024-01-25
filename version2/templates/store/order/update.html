@@ -2,48 +2,64 @@
 {% block title %}
     <title>143 Designs - Update Order</title>
 {% endblock title %}
-{% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
-        <form method="post">
+        <form method="POST" id="create-order-form">
             {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Update Order</legend>
-                {{ form|crispy }}
-                <div id="order-items">
-                    {% for order_item_form in order_items %}
-                        <div class="order-item">
-                            {{ order_item_form|crispy }}
-                            <button id="delete-order-item" type="button" class="btn btn-danger">Delete Item</button>
-                        </div>
-                    {% endfor %}
-                </div>
-                <button type="button" class="btn btn-success" id="add-order-item">Add Item</button>
-            </fieldset>
+            <h1 class="border-bottom mb-4">Update Order</h1>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Update Order</button>
-                <a class="btn btn-outline-secondary" href="{% url 'store-order-detail' order.id %}">No, Cancel</a>
+                <button class="btn btn-outline-info mr-2" 
+                    type="submit"
+                    id="update-order-button">
+                        Update Order
+                </button>
+                <a class="btn btn-outline-secondary mr-2" 
+                    href="{% url 'store-home' %}">
+                        No, Cancel
+                </a>
+                <button type="button" 
+                    class="btn btn-success" 
+                    id="add-item-button"
+                    hx-get="{% url 'store-new-form' %}" 
+                    hx-target="#item-forms"
+                    hx-swap="beforeend">
+                        Add Item
+                </button>
+            </div>
+            <div class="form-group row mb-3">
+                <div class="col-4 col-md-3 mr-3 {% if order_form.name.required %}{{ order_form.required_css_class }}{% endif %}">
+                    <label for="{{ order_form.name.id_for_label }}">{{ order_form.name.label }}</label>
+                    {{ order_form.name.errors }}
+                    {{ order_form.name }}
+                </div>
+                <div class="form-group mb-3 mr-2 {% if order_form.total.required %}{{ order_form.required_css_class }}{% endif %}">
+                    <label for="{{ order_form.total.id_for_label }}">{{ order_form.total.label }}</label>
+                    {{ order_form.total.errors}}
+                    {{ order_form.total }}
+                </div>
+                <div class="col-4 col-md-1 mr-2 {% if order_form.complete.required %}{{ order_form.required_css_class }}{% endif %}">
+                    <label for="{{ order_form.complete.id_for_label }}">{{ order_form.complete.label }}</label><br>
+                    {{ order_form.complete.errors }}
+                    {{ order_form.complete }}
+                </div>
+                <div class="col-4 col-md-1 {% if order_form.paid.required %}{{ order_form.required_css_class }}{% endif %}">
+                    <label for="{{ order_form.paid.id_for_label }}">{{ order_form.paid.label }}</label><br>
+                    {{ order_form.paid.errors }}
+                    {{ order_form.paid }}
+                </div>
+            </div>
+            <div class="form-group row mb-3 {% if order_form.description.required %}{{ order_form.required_css_class }}{% endif %}">
+                <label for="{{ order_form.description.id_for_label }}" class="ml-2">{{ order_form.description.label }}</label>
+                {{ order_form.description.errors}}
+                {{ order_form.description }}
             </div>
         </form>
+        <div id="item-forms" class="form-group mb-3">
+            {% if item_forms %}
+                {% for item_form in item_forms %}
+                    {% include 'store/partials/form.html' %}
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var addOrderItemButton = document.getElementById("add-order-item");
-            var orderItemsContainer = document.getElementById("order-items");
-            var orderItemIndex = 0;
-
-            addOrderItemButton.addEventListener("click", function() {
-                var orderItemForm = "{{ order_items.empty_form|crispy|escapejs }}";
-                orderItemForm = orderItemForm.replace(/__prefix__/g, orderItemIndex);
-                orderItemsContainer.insertAdjacentHTML('beforeend', orderItemForm);
-                orderItemIndex++;
-            });
-
-            orderItemsContainer.addEventListener("click", function(event) {
-                if (event.target && event.target.id == "delete-order-item") {
-                    event.target.parentNode.remove();
-                }
-            });
-        });
-    </script>
 {% endblock content %}

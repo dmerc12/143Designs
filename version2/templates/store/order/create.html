@@ -5,23 +5,31 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
-        <form method="post">
+        <form method="POST" id="create-order-form" action="{% url 'store-order-create' %}">
             {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Create Order</legend>
-                {{ form|crispy }}
-                    <div id="order-item">
-                        {% include 'store/order_item/form.html' %}
-                    </div>
-                <button type="button" 
-                    class="btn btn-success" 
-                    id="add-order-item" 
-                    hx-get="{% url 'store-order-item-create' %}" 
-                    hx-target="#order-item"
-                    hx-swap="beforeend">
-                        Add Item
-                </button>
-            </fieldset>
+            <h1 class="border-bottom mb-4">Create Order</h1>
+            <div class="form-group row mb-3">
+                <div class="col-4 col-md-3 {% if order_form.name.required %}{{ order_form.required_css_class }}{% endif %}">
+                    <label for="{{ order_form.name.id_for_label }}">{{ order_form.name.label }}</label>
+                    {{ order_form.name.errors }}
+                    {{ order_form.name }}
+                </div>
+                <div class="col-4 col-md-3 {% if order_form.complete.required %}{{ order_form.required_css_class }}{% endif %}">
+                    <label for="{{ order_form.complete.id_for_label }}">{{ order_form.complete.label }}</label><br>
+                    {{ order_form.complete.errors }}
+                    {{ order_form.complete }}
+                </div>
+                <div class="col-4 col-md-3 {% if order_form.paid.required %}{{ order_form.required_css_class }}{% endif %}">
+                    <label for="{{ order_form.paid.id_for_label }}">{{ order_form.paid.label }}</label><br>
+                    {{ order_form.paid.errors }}
+                    {{ order_form.paid }}
+                </div>
+            </div>
+            <div class="form-group row mb-3 {% if order_form.description.required %}{{ order_form.required_css_class }}{% endif %}">
+                <label for="{{ order_form.description.id_for_label }}">{{ order_form.description.label }}</label>
+                {{ order_form.description.errors}}
+                {{ order_form.description }}
+            </div>
             <div class="form-group">
                 <button class="btn btn-outline-info" 
                     type="submit"

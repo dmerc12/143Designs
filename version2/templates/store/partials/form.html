@@ -1,0 +1,27 @@
+<form class="item-form" method="POST" action="{% url 'store-order-item-create' order.pk %}">
+    {% csrf_token %}
+    <div class="row mb-3">
+        <div class="col-4 col-md-3 {% if item_form.item.required %}{{ item_form.required_css_class }}{% endif %}">
+            <label for="{{ item_form.item.id_for_label }}">{{ item_form.item.label }}</label>
+            {{ item_form.item.errors }}
+            {{ item_form.item }}
+        </div>
+        <div class="col-4 col-md-3 {% if item_form.quantity.required %}{{ item_form.required_css_class }}{% endif %}">
+            <label for="{{ item_form.quantity.id_for_label }}">{{ item_form.quantity.label }}</label>
+            {{ item_form.quantity.errors }}
+            {{ item_form.quantity }}
+        </div>
+        <div class="col-2 col-md-1 mr-3 align-self-end">
+            <button type="submit" 
+                class="btn btn-primary">
+                    Submit
+            </button>
+        </div>
+        <div class="col-1 col-md-1 align-self-end">
+            <button type="button" 
+                class="btn btn-danger">
+                    Remove Item
+            </button>
+        </div>
+    </div>
+</form>
