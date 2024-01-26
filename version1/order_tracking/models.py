@@ -17,6 +17,9 @@ class Item(models.Model):
 
     def __str__(self):
         return f"{self.material} {self.name} - {self.size} - {self.price}"
+    
+    get_verbose_name = 'Item'
+    get_verbose_name_plural = 'Items'
 
 class Order(models.Model):
     name = models.CharField(max_length=60)
@@ -31,6 +34,9 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.pk} - {self.total} - {self.short_description}"
+    
+    get_verbose_name = 'Order'
+    get_verbose_name_plural = 'Orders'
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

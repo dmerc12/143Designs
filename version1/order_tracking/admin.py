@@ -7,12 +7,11 @@ admin.site.unregister(User)
 
 class ItemInline(admin.TabularInline):
     model = Order.item.through
+    extra = 0
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [ItemInline]
-
-admin.site.register(OrderItem)
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
