@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import Customer
 
 item_size_choices = {
     'SM': 'Small',
@@ -10,7 +11,8 @@ item_size_choices = {
 }
 
 class Item(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
+    description = models.TextField(max_length=100)
     size = models.CharField(max_length=4, choices=item_size_choices)
     price = models.DecimalField(max_digits=999999999, decimal_places=2)
     material = models.CharField(max_length=100)
@@ -22,7 +24,7 @@ class Item(models.Model):
     get_verbose_name_plural = 'Items'
 
 class Order(models.Model):
-    name = models.CharField(max_length=60)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     short_description = models.CharField(max_length=150)
     description = models.TextField(max_length=300)
     total = models.DecimalField(max_digits=999999999, decimal_places=2, default=0)
