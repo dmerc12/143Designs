@@ -1,50 +1,55 @@
-from django.db import models
 from users.models import Customer
+from django.db import models
 
-item_size_choices = {
-    'SM': 'Small',
-    'MD': 'Medium',
-    'LG': 'Large',
-    'XL': 'XL',
-    'XXL': 'XXL',
-    'XXXL': 'XXXL'
-}
+class Size(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
 
 class Item(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField(max_length=100)
-    size = models.CharField(max_length=4, choices=item_size_choices)
-    price = models.DecimalField(max_digits=999999999, decimal_places=2)
-    material = models.CharField(max_length=100)
+    name = models.CharField(max_length=50, help_text='Enter a name for the item. (i.e. Shirt, Hat, Sticker)')
+    material = models.CharField(max_length=100, help_text='Enter the material of the item. (i.e. Cotton, Vinyl, Hemp)')
+    description = models.TextField(max_length=100, help_text='Enter a description for the item.')
+    size = models.ForeignKey(Size, on_delete=models.CASCADE, help_text='Choose the size of the item.')
+    price = models.DecimalField(max_digits=999999999, decimal_places=2, help_text='Enter a price for the item. When added to an order, this will update the total.')
 
     def __str__(self):
         return f"{self.material} {self.name} - {self.size} - {self.price}"
-    
-    get_verbose_name = 'Item'
-    get_verbose_name_plural = 'Items'
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    short_description = models.CharField(max_length=150)
-    description = models.TextField(max_length=300)
-    total = models.DecimalField(max_digits=999999999, decimal_places=2, default=0)
-    complete = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, help_text='Choose a customer for the order.')
+    short_description = models.CharField(max_length=150, help_text='Enter a short description for the order.')
+    description = models.TextField(max_length=300, help_text='Enter a description for the order.')
+    total = models.DecimalField(max_digits=999999999, decimal_places=2, default=0, help_text='The total of the order will update with the items, or you can override it here.')
+    complete = models.BooleanField(default=False, help_text='Indicate if the order is complete.')
+    paid = models.BooleanField(default=False, help_text='Indicate if the order has been paid for.')
+    item = models.ManyToManyField(Item, through="OrderItem")
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-    item = models.ManyToManyField(Item, through="OrderItem")
+
+    def calculate_total(self):
+        order_items = OrderItem.objects.filter(order=self)
+        total = sum(order_item.quantity * order_item.item.price for order_item in order_items)
+        self.total = total
+        self.save()
 
     def __str__(self):
-        return f"{self.pk} - {self.total} - {self.short_description}"
-    
-    get_verbose_name = 'Order'
-    get_verbose_name_plural = 'Orders'
+        return f"134D{self.pk} - {self.short_description} - ${self.total}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, help_text='Choose an item being ordered.')
+    quantity = models.PositiveIntegerField(help_text='Enter the quantity of the item being ordered.')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.order.calculate_total()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        self.order.calculate_total()
 
     def __str__(self):
         return f"{self.order} - {self.quantity} of {self.item}"
-
+    
