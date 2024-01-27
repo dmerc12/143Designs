@@ -35,7 +35,7 @@ class Order(models.Model):
         self.save()
 
     def __str__(self):
-        return f"134D{self.pk} - {self.short_description} - ${self.total}"
+        return f"143D{self.pk} - {self.short_description} - ${self.total}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
