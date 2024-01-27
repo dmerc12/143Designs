@@ -1,15 +1,24 @@
 from django.contrib.auth.models import User, Group
-from .models import Order, Item, Size
+from .models import Order, Item, Size, OrderItem
 from django.contrib import admin
+from django import forms
 
 admin.site.unregister(Group)
 admin.site.unregister(User)
 
 admin.site.register(Size)
 
+class OrderItemForm(forms.ModelForm):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+
 class ItemInline(admin.TabularInline):
     model = Order.item.through
+    form = OrderItemForm
     extra = 1
+    verbose_name = 'Item'
+    verbose_name_plural = 'Items'
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

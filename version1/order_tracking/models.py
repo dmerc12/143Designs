@@ -10,6 +10,7 @@ class Size(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=50, help_text='Enter a name for the item. (i.e. Shirt, Hat, Sticker)')
     material = models.CharField(max_length=100, help_text='Enter the material of the item. (i.e. Cotton, Vinyl, Hemp)')
+    color = models.CharField(max_length=60, help_text='Enter the color of the item. (i.e. Blue, Red,  Purple)')
     description = models.TextField(max_length=100, help_text='Enter a description for the item.')
     size = models.ForeignKey(Size, on_delete=models.CASCADE, help_text='Choose the size of the item.')
     price = models.DecimalField(max_digits=999999999, decimal_places=2, help_text='Enter a price for the item. When added to an order, this will update the total.')
@@ -39,8 +40,12 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, help_text='Choose an item being ordered.')
-    quantity = models.PositiveIntegerField(help_text='Enter the quantity of the item being ordered.')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    class Meta:
+        verbose_name = 'Item'
+        verbose_name_plural = 'Items'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
