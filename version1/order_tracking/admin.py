@@ -26,6 +26,7 @@ class ItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer', 'short_description', 'total', 'complete', 'paid', 'last_modified', 'created']
     list_filter = ['created', 'last_modified', 'customer__first_name', 'customer__last_name', 'complete', 'paid', 'item']
+    search_fields = ['created', 'last_modified', 'id', 'customer__first_name', 'customer__last_name', 'customer__email', 'customer__phone_number']
     date_hierarchy = 'created'
     inlines = [ItemInline]
     fieldsets = (
