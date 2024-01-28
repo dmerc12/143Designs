@@ -6,8 +6,11 @@ admin.site.register(Admin, UserAdmin)
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['first_name', 'last_name', 'email', 'phone_number']
+    search_fields = ['first_name', 'last_name', 'email', 'phone_number']
 
 @admin.register(Supplier)
 class SupplierAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'location', 'notes']
+    list_filter = ['location']
+    search_fields = ['name', 'location']

@@ -6,7 +6,9 @@ from django import forms
 admin.site.unregister(Group)
 admin.site.unregister(User)
 
-admin.site.register(Size)
+@admin.register(Size)
+class SizeAdmin(admin.ModelAdmin):
+    list_display = ['name']
 
 class OrderItemForm(forms.ModelForm):
     class Meta:
@@ -37,4 +39,5 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'material', 'color', 'size', 'price']
+    list_filter = ['name', 'material', 'color', 'size']
