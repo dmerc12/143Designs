@@ -1,4 +1,6 @@
+from django.db.models.signals import post_save
 from inventory_tracking.models import Product
+from django.dispatch import receiver
 from users.models import Customer
 from django.db import models
 
