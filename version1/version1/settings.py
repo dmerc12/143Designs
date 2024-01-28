@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'order_tracking.apps.OrderTrackingConfig',
+    'inventory_tracking.apps.InventoryTrackingConfig',
     'users.apps.UsersConfig',
     'phonenumber_field',
 ]
@@ -110,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Chicago'
 
 USE_I18N = True
 
