@@ -1,23 +1,12 @@
 from django.contrib.auth.models import User, Group
-from .models import Order, Item, Size, OrderItem
 from django.contrib import admin
-from django import forms
+from .models import Order
 
 admin.site.unregister(Group)
 admin.site.unregister(User)
 
-@admin.register(Size)
-class SizeAdmin(admin.ModelAdmin):
-    list_display = ['name']
-
-class OrderItemForm(forms.ModelForm):
-    class Meta:
-        model = OrderItem
-        fields = '__all__'
-
-class ItemInline(admin.TabularInline):
+class ProductInline(admin.TabularInline):
     model = Order.item.through
-    form = OrderItemForm
     extra = 1
     verbose_name = 'Item'
     verbose_name_plural = 'Items'
@@ -28,7 +17,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['created', 'last_modified', 'customer__first_name', 'customer__last_name', 'complete', 'paid', 'item']
     search_fields = ['created', 'last_modified', 'id', 'customer__first_name', 'customer__last_name', 'customer__email', 'customer__phone_number']
     date_hierarchy = 'created'
-    inlines = [ItemInline]
+    inlines = [ProductInline]
     fieldsets = (
         (None, {
             'fields': ('customer', 'short_description', 'description')
@@ -37,8 +26,3 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('complete', 'paid', 'total')
         }),
     )
-
-@admin.register(Item)
-class ItemAdmin(admin.ModelAdmin):
-    list_display = ['name', 'material', 'color', 'size', 'price']
-    list_filter = ['name', 'material', 'color', 'size']

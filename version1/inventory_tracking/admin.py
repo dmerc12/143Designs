@@ -1,6 +1,10 @@
-from .models import Product, Purchase, PurchaseProduct
+from .models import Product, Purchase, PurchaseProduct, Size
 from django.contrib import admin
 from django import forms
+
+@admin.register(Size)
+class SizeAdmin(admin.ModelAdmin):
+    list_display = ['name']
 
 class ProductForm(forms.ModelForm):
     class Meta:
