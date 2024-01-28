@@ -32,3 +32,16 @@ class Customer(models.Model):
     class Meta:
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
+
+class Supplier(models.Model):
+    name = models.CharField(max_length=100, help_text='Enter the name of the supplier.')
+    location = models.CharField(max_length=150, help_text='Enter the location of the supplier.')
+    notes = models.TextField(max_length=300, help_text='Enter any relevant notes about the supplier.')
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Supplier'
+        verbose_name_plural = 'Suppliers'
+        

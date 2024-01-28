@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'order_tracking.apps.OrderTrackingConfig',
-    'inventory_tracking.apps.InventoryTrackingConfig'
+    'inventory_tracking.apps.InventoryTrackingConfig',
     'users.apps.UsersConfig',
     'phonenumber_field',
 ]
