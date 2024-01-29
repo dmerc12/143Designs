@@ -1,13 +1,11 @@
-from django.db.models.signals import post_save
 from inventory_tracking.models import Product
-from django.dispatch import receiver
 from users.models import Customer
 from django.db import models
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, help_text='Choose a customer for the order.')
     short_description = models.CharField(max_length=150, help_text='Enter a short description for the order.')
-    description = models.TextField(max_length=300, help_text='Enter a description for the order.')
+    description = models.TextField(max_length=300, null=True, blank=True, help_text='Enter a description for the order.')
     total = models.DecimalField(max_digits=999999999, decimal_places=2, default=0, help_text='The total of the order will update with the items, or you can override it here.')
     complete = models.BooleanField(default=False, help_text='Indicate if the order is complete.')
     paid = models.BooleanField(default=False, help_text='Indicate if the order has been paid for.')

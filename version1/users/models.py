@@ -36,7 +36,7 @@ class Customer(models.Model):
 class Supplier(models.Model):
     name = models.CharField(max_length=100, help_text='Enter the name of the supplier.')
     location = models.CharField(max_length=150, help_text='Enter the location of the supplier.')
-    notes = models.TextField(max_length=300, help_text='Enter any relevant notes about the supplier.')
+    notes = models.TextField(max_length=300, null=True, blank=True, help_text='Enter any relevant notes about the supplier.')
 
     def __str__(self):
         return self.name
