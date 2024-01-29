@@ -21,19 +21,28 @@ class CustomAdminAdmin(UserAdmin):
             'fields': ('username', 'first_name', 'last_name', 'email', 'password1', 'password2'),
         }),
     )
-    list_display = ['first_name', 'last_name', 'username', 'email', 'date_joined']
-    list_filter = ['date_joined',]
-    search_fields = ['first_name', 'last_name', 'username', 'email', 'date_joined']
+    list_display = ['first_name', 'last_name', 'username', 'email']
+    search_fields = ['first_name', 'last_name', 'username', 'email']
 
 admin.site.register(Admin, CustomAdminAdmin)
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'email', 'phone_number']
-    search_fields = ['first_name', 'last_name', 'email', 'phone_number']
+    list_display = ['custom_id', 'first_name', 'last_name', 'email', 'phone_number']
+    search_fields = ['id', 'first_name', 'last_name', 'email', 'phone_number']
+
+    def custom_id(self, obj):
+        return f'143DCUS{obj.id}'
+    
+    custom_id.short_description = 'Customer ID'
 
 @admin.register(Supplier)
 class SupplierAdmin(admin.ModelAdmin):
-    list_display = ['name', 'location', 'notes']
+    list_display = ['custom_id', 'name', 'location', 'notes']
     list_filter = ['location']
-    search_fields = ['name', 'location']
+    search_fields = ['id', 'name', 'location']
+
+    def custom_id(self, obj):
+        return f'143DSUP{obj.id}'
+    
+    custom_id.short_description = 'Supplier ID'

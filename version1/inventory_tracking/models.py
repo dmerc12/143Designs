@@ -34,8 +34,8 @@ class Design(models.Model):
 class Purchase(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     notes = models.TextField(max_length=150, null=True, blank=True)
-    products = models.ManyToManyField(Product, through='PurchaseProduct', null=True, blank=True)
-    designs = models.ManyToManyField(Design, through='PurchaseDesign', null=True, blank=True)
+    products = models.ManyToManyField(Product, through='PurchaseProduct')
+    designs = models.ManyToManyField(Design, through='PurchaseDesign')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
@@ -43,8 +43,7 @@ class Purchase(models.Model):
         purchase_products = PurchaseProduct.objects.filter(purchase=self)
         purchase_designs = PurchaseDesign.objects.filter(purchase=self)
         purchase_items = list(chain(purchase_products, purchase_designs))
-        subtotal = sum(purchase_item.quantity * (
-        purchase_item.product.price if isinstance(purchase_item, PurchaseProduct) else purchase_item.design.price)for purchase_item in purchase_items)
+        subtotal = sum(purchase_item.quantity * (purchase_item.product.price if isinstance(purchase_item, PurchaseProduct) else purchase_item.design.price)for purchase_item in purchase_items)
         self.subtotal = subtotal
         self.save()
     
