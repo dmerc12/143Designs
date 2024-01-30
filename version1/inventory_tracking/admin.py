@@ -16,22 +16,10 @@ class SizeAdmin(admin.ModelAdmin):
     
     custom_id.short_description = 'Size ID'
 
-class SizeNameFilter(admin.SimpleListFilter):
-    title = 'size'
-    parameter_name = 'size_name'
-
-    def lookups(self, request, model_admin):
-        return Size.objects.values_list('name', 'name').distinct()
-
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(size__name=self.value())
-        return queryset
-    
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['custom_id', 'name', 'material', 'color', 'size', 'price', 'cost', 'total_quantity_in_stock']
-    list_filter = ['id', 'name', 'material', 'color', SizeNameFilter]
+    list_filter = ['id', 'name', 'material', 'color', 'size__name']
     search_fields = ['name', 'material', 'color', 'size__name', 'price', 'cost']
 
     def custom_id(self, obj):

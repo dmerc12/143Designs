@@ -1,5 +1,5 @@
-from .admin import SizeAdmin, ProductAdmin, DesignAdmin, PurchaseAdmin, SizeNameFilter
 from .models import Size, Product, Design, Purchase, PurchaseProduct, PurchaseDesign
+from .admin import SizeAdmin, ProductAdmin, DesignAdmin, PurchaseAdmin
 from order_tracking.models import OrderProduct, Order
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
@@ -80,20 +80,6 @@ class TestInventoryTrackingAdmin(TestCase):
         size_admin = SizeAdmin(Size, self.site)
         size = Size.objects.create(name='test')
         self.assertEqual(size_admin.custom_id(size), f'143DS{size.pk}')
-
-    def test_size_admin_filter_lookup(self):
-        size_admin = SizeAdmin(Size, self.site)
-        size_name_filter = SizeNameFilter(request=None, params={}, model=Size, model_admin=size_admin)
-        lookups = size_name_filter.lookups(request=self.factory.get('/admin/'), model_admin=size_admin)
-        expected_lookups = [(size.name, size.name) for size in Size.objects.all()]
-        self.assertEqual(list(lookups), expected_lookups)
-
-    def test_size_admin_filter_queryset(self):
-        size_admin = SizeAdmin(Size, self.site)
-        size_name_filter = SizeNameFilter(request=self.factory.get('/admin/'), params={}, model=Size, model_admin=size_admin)
-        size = Size.objects.create(name='test')
-        queryset = size_name_filter.queryset(None, Size.objects.all())
-        self.assertEqual(list(queryset), [size])
 
     def test_product_admin_custom_id(self):
         product_admin = ProductAdmin(Product, self.site)
