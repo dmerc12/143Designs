@@ -19,7 +19,7 @@ class Order(models.Model):
         order_designs = OrderDesign.objects.filter(order=self)
         order_products = OrderProduct.objects.filter(order=self)
         order_items = list(chain(order_designs, order_products))
-        total = sum(order_item.product.price if isinstance(order_item, OrderProduct) else order_item.design.price for order_item in order_items)
+        total = sum(order_item.item.price if isinstance(order_item, OrderProduct) else order_item.design.price for order_item in order_items)
         self.total = total
         self.save()
 
@@ -64,5 +64,5 @@ class OrderDesign(models.Model):
         self.order.calculate_total()
 
     def __str__(self):
-        return f"{self.order} - {self.quantity} of {self.item}"
+        return f"{self.order} - {self.quantity} of {self.design}"
     

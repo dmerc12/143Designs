@@ -92,6 +92,6 @@ class PurchaseAdmin(admin.ModelAdmin):
     ]
 
     def custom_id(self, obj):
-        return f'143DORD{obj.id}'
+        return f'143DPUR{obj.id}'
 
     custom_id.short_description = 'Purchase Number'
