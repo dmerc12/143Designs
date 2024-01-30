@@ -48,7 +48,7 @@ class Purchase(models.Model):
         self.save()
     
     def __str__(self):
-        return f'143DORD{self.pk}'
+        return f'143DPUR{self.pk}'
     
 class PurchaseProduct(models.Model):
     purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
@@ -67,9 +67,6 @@ class PurchaseProduct(models.Model):
         super().delete(*args, **kwargs)
         self.purchase.calculate_subtotal()
 
-    def __str__(self):
-        return f'{self.quantity} x {self.product.name}'
-
 class PurchaseDesign(models.Model):
     purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
     design = models.ForeignKey(Design, on_delete=models.CASCADE)
@@ -86,6 +83,3 @@ class PurchaseDesign(models.Model):
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
         self.purchase.calculate_subtotal()
-
-    def __str__(self):
-        return f'{self.quantity} x {self.design.name}'
