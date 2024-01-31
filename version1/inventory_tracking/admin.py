@@ -1,4 +1,4 @@
-from .models import Product, Purchase, PurchaseProduct, PurchaseDesign, Size, Design
+from .models import Product, Purchase, PurchaseProduct, PurchaseDesign, ProductSize, Design
 from order_tracking.models import OrderProduct
 from django.utils.html import format_html
 from django.db.models import Sum
@@ -6,21 +6,16 @@ from django.contrib import admin
 from django.db import models
 from django import forms
 
-@admin.register(Size)
-class SizeAdmin(admin.ModelAdmin):
-    list_display = ['custom_id', 'name']
-    search_fields = ['id', 'name']
-
-    def custom_id(self, obj):
-        return f'143DS{obj.id}'
-    
-    custom_id.short_description = 'Size ID'
+class ProductSizeInline(admin.TabularInline):
+    model = ProductSize
+    extra = 1
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['custom_id', 'name', 'material', 'color', 'size', 'price', 'cost', 'total_quantity_in_stock']
-    list_filter = ['id', 'name', 'material', 'color', 'size__name']
-    search_fields = ['name', 'material', 'color', 'size__name', 'price', 'cost']
+    list_display = ['custom_id', 'name', 'material', 'color', 'total_quantity_in_stock']
+    list_filter = ['id', 'name', 'material', 'color']
+    search_fields = ['name', 'material', 'color']
+    inlines = [ProductSizeInline]
 
     def custom_id(self, obj):
         return f'143DPROD{obj.id}'
@@ -28,8 +23,8 @@ class ProductAdmin(admin.ModelAdmin):
     custom_id.short_description = 'Product ID'
 
     def total_quantity_in_stock(self, obj):
-        purchase_quantity = PurchaseProduct.objects.filter(product=obj).aggregate(Sum('quantity'))['quantity__sum'] or 0
-        order_quantity = OrderProduct.objects.filter(item=obj, order__complete=True).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        purchase_quantity = PurchaseProduct.objects.filter(product=obj).aggregate(Sum('product_size__quantity'))['product_size__quantity__sum'] or 0
+        order_quantity = OrderProduct.objects.filter(item=obj, order__complete=True).aggregate(Sum('product_size__quantity'))['product_size__quantity__sum'] or 0
         total_quantity = purchase_quantity - order_quantity
         return total_quantity
     
