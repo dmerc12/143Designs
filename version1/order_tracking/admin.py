@@ -52,6 +52,6 @@ class OrderAdmin(admin.ModelAdmin):
     )
 
     def custom_id_display(self, obj):
-        return format_html(f'143D{obj.id}')
+        return format_html(f'143DORD{obj.id}')
     
     custom_id_display.short_description = 'Order Number'
