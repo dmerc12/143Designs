@@ -1,5 +1,5 @@
 from .models import Product, Purchase, PurchaseProduct, PurchaseDesign, ProductSize, Design
-from order_tracking.models import OrderProduct
+from order_tracking.models import OrderProduct, OrderDesign
 from django.utils.html import format_html
 from django.db.models import Sum
 from django.contrib import admin
@@ -12,7 +12,7 @@ class ProductSizeInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['custom_id', 'name', 'material', 'color', 'total_quantity_in_stock']
+    list_display = ['custom_id', 'name', 'material', 'color', 'total_quantity_in_stock', 'display_sizes']
     list_filter = ['id', 'name', 'material', 'color']
     search_fields = ['name', 'material', 'color']
     inlines = [ProductSizeInline]
@@ -28,9 +28,21 @@ class ProductAdmin(admin.ModelAdmin):
         total_quantity = purchase_quantity - order_quantity
         return total_quantity
     
+    def display_sizes(self, obj):
+        sizes_info = []
+        product_sizes = ProductSize.objects.filter(product=obj)
+        for size in product_sizes:
+            purchase_quantity = PurchaseProduct.objects.filter(product_size=size).aggregate(Sum('quantity'))['quantity__sum'] or 0
+            order_quantity = OrderProduct.objects.filter(size=size, order__complete=True).aggregate(Sum('quantity'))['quantity__sum'] or 0
+            quantity_in_stock = purchase_quantity - order_quantity
+            sizes_info.append(f'{size.size}: {quantity_in_stock}')
+        return format_html("<br>".join(sizes_info))
+
+    display_sizes.short_description = 'Stock'
+
 @admin.register(Design)
 class DesignAdmin(admin.ModelAdmin):
-    list_display = ['custom_id', 'name', 'description', 'image_preview']
+    list_display = ['custom_id', 'name', 'description', 'image_preview', 'total_quantity_in_stock']
     search_fields = ['id', 'name', 'description']
     fields = ['name', 'description', 'image', 'image_preview', 'price', 'cost']
     readonly_fields = ['image_preview',]
@@ -38,6 +50,12 @@ class DesignAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ImageField: {'widget': forms.FileInput(attrs={'accept': 'image/*'})},
     }
+
+    def total_quantity_in_stock(self, obj):
+        purchase_quantity = PurchaseDesign.objects.filter(design=obj).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        order_quantity = OrderDesign.objects.filter(design=obj, order__complete=True).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        total_quantity = purchase_quantity - order_quantity
+        return total_quantity
 
     def custom_id(self, obj):
         return f'143DDES{obj.id}'
