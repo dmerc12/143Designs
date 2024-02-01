@@ -62,11 +62,6 @@ class DesignAdmin(admin.ModelAdmin):
     
     custom_id.short_description = 'Design ID'
 
-    def image_preview(self, obj):
-        return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
-
-    image_preview.short_description = "Design Preview"
-
 class PurchaseProductInline(admin.TabularInline):
     model = PurchaseProduct
     extra = 1

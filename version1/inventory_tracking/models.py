@@ -1,3 +1,4 @@
+from django.utils.html import format_html
 from users.models import Supplier
 from django.db import models
 from itertools import chain
@@ -29,6 +30,9 @@ class Design(models.Model):
 
     def __str__(self):
         return f'{self.name} - ${self.price}'
+    
+    def image_preview(self):
+        return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(self.image.url))
 
 class Purchase(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)

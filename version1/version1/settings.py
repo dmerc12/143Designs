@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'order_tracking.apps.OrderTrackingConfig',
     'inventory_tracking.apps.InventoryTrackingConfig',
     'users.apps.UsersConfig',
+    'store.apps.StoreConfig',
     'phonenumber_field',
 ]
 
