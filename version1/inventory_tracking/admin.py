@@ -23,8 +23,8 @@ class ProductAdmin(admin.ModelAdmin):
     custom_id.short_description = 'Product ID'
 
     def total_quantity_in_stock(self, obj):
-        purchase_quantity = PurchaseProduct.objects.filter(product=obj).aggregate(Sum('product_size__quantity'))['product_size__quantity__sum'] or 0
-        order_quantity = OrderProduct.objects.filter(item=obj, order__complete=True).aggregate(Sum('product_size__quantity'))['product_size__quantity__sum'] or 0
+        purchase_quantity = PurchaseProduct.objects.filter(product=obj).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        order_quantity = OrderProduct.objects.filter(item=obj, order__complete=True).aggregate(Sum('quantity'))['quantity__sum'] or 0
         total_quantity = purchase_quantity - order_quantity
         return total_quantity
     
