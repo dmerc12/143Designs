@@ -1,3 +1,4 @@
+from django.utils.html import format_html
 from users.models import Supplier
 from django.db import models
 from itertools import chain
@@ -12,24 +13,26 @@ class Product(models.Model):
         return f'{self.color} {self.material} {self.name}'
 
 class ProductSize(models.Model):
-    name = models.CharField(max_length=50)
+    size = models.CharField(max_length=50)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Enter the price to sell the product for.')
     cost = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Enter the cost of the product.')
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Enter the price to sell the product for.')
 
     def __str__(self):
-        return f'{self.name} {self.product.name} - ${self.price}'
+        return f'{self.size} ${self.price}'
     
 class Design(models.Model):
     name = models.CharField(max_length=50, help_text='Enter a name for the design.')
     description = models.TextField(max_length=150, null=True, blank=True, help_text='Enter a description or notes for the design.')
     image = models.ImageField(upload_to='inventory-tracking/designs/', help_text='Upload an image for the design.')
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Enter the price to sell the product for.')
     cost = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Enter the cost of the product.')
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Enter the price to sell the product for.')
 
     def __str__(self):
         return f'{self.name} - ${self.price}'
+    
+    def image_preview(self):
+        return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(self.image.url))
 
 class Purchase(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
@@ -43,7 +46,7 @@ class Purchase(models.Model):
         purchase_products = PurchaseProduct.objects.filter(purchase=self)
         purchase_designs = PurchaseDesign.objects.filter(purchase=self)
         purchase_items = list(chain(purchase_products, purchase_designs))
-        subtotal = sum(purchase_item.quantity * (purchase_item.product.price if isinstance(purchase_item, PurchaseProduct) else purchase_item.design.price)for purchase_item in purchase_items)
+        subtotal = sum(purchase_item.quantity * (purchase_item.product_size.cost if isinstance(purchase_item, PurchaseProduct) else purchase_item.design.cost)for purchase_item in purchase_items)
         self.subtotal = subtotal
         self.save()
     
@@ -54,6 +57,7 @@ class PurchaseProduct(models.Model):
     purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = 'Item'

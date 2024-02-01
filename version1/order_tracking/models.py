@@ -1,4 +1,4 @@
-from inventory_tracking.models import Product, Design
+from inventory_tracking.models import Product, Design, ProductSize
 from users.models import Customer
 from django.db import models
 from itertools import chain
@@ -19,16 +19,17 @@ class Order(models.Model):
         order_designs = OrderDesign.objects.filter(order=self)
         order_products = OrderProduct.objects.filter(order=self)
         order_items = list(chain(order_designs, order_products))
-        total = sum(order_item.item.price if isinstance(order_item, OrderProduct) else order_item.design.price for order_item in order_items)
+        total = sum(order_item.size.price if isinstance(order_item, OrderProduct) else order_item.design.price for order_item in order_items)
         self.total = total
         self.save()
 
     def __str__(self):
-        return f"143D{self.pk} - {self.short_description} - ${self.total}"
+        return f'143D{self.pk}'
 
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     item = models.ForeignKey(Product, on_delete=models.CASCADE)
+    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
