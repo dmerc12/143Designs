@@ -23,7 +23,7 @@ Admin._meta.get_field('user_permissions').remote_field.related_name = 'admin_use
 class Customer(models.Model):
     first_name = models.CharField(max_length=100, help_text='Enter the first name of the customer.')
     last_name = models.CharField(max_length=100, help_text='Enter the last name of the customer.')
-    email = models.EmailField(unique=True, help_text='Enter an email address for the customer.')
+    email = models.EmailField(max_length=250, unique=True, help_text='Enter an email address for the customer.')
     phone_number = PhoneNumberField(help_text='Enter a phone number for the customer.')
 
     def __str__(self):
