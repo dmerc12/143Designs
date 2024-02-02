@@ -7,3 +7,6 @@ def home(request):
         'items': items
     }
     return render(request, 'home.html', context)
+
+def contact(request):
+    return render(request, 'contact.html')
