@@ -119,7 +119,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
-    'show_ui_builder': False,
+    "site_brand": "143 Designs Admin",
+    "show_ui_builder": False,
+    "related_modal_active": True,
 }
 
 JAZZMIN_UI_TWEAKS = {
