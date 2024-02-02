@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>143 Designs - Home</title>
+{% endblock title %}
+{% block content %}
+<header class="bg-dark py-5">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center my-5">
+                    <h1 class="display-5 fw-bolder text-white mb-2">143 Custom Designs</h1>
+                    <p class="text-primary mb-4">We're here for all your custom design needs, whether that be with on a hat, shirt, or a piece of decor. Shop from our store collection, or if you're wanting something more custom contact us!</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3 mr-2" href="#">View Shop</a>
+                        <a class="btn btn-outline-light btn-lg px-4" href="{% url 'contact' %}">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Features section-->
+<section class="py-5 border-bottom" id="features">
+    <div class="container px-5 my-5">
+        <div class="row gx-5">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-collection"></i></div>
+                <h2 class="h4 fw-bolder">Clothing and personal items</h2>
+                <p>We can put custom designs onto many kinds of clothing and personal items including shirts, hoodies, jackets, hats, aprons, water bottles, notebooks, and so much more!</p>
+                <a class="text-decoration-none" href="{% url 'contact' %}">Contact us with your request!<i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-building"></i></div>
+                <h2 class="h4 fw-bolder">Home decor and accessories</h2>
+                <p>We can put custom designs onto many kinds of home decor and accessories including tote bags, phone cases, mugs, coasters, ornaments, and banners. There really is no limit!</p>
+                <a class="text-decoration-none" href="{% url 'contact' %}">Contact us with your request!<i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="col-lg-4">
+                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-toggles2"></i></div>
+                <h2 class="h4 fw-bolder">Stickers and decals</h2>
+                <p>We can make custom designs in many kinds of stickers and decals including those for cars, motercycles, dirt bikes, and windows. Your only limitation is your own imagination!</p>
+                <a class="text-decoration-none" href="{% url 'contact' %}">Contact us with your request!<i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonials section-->
+<section class="py-5 border-bottom">
+    <div class="container px-5 my-5 px-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder">Customer testimonials</h2>
+            <p class="lead mb-0">We're dedicated to customer satisfaction</p>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <!-- Testimonial 1-->
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                            <div class="ms-4">
+                                <p class="mb-1">Thank you for putting together such a great product. We loved working with you and the whole team, and we will be recommending you to others!</p>
+                                <div class="small text-muted">- Client Name, Location</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonial 2-->
+                <div class="card">
+                    <div class="card-body p-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                            <div class="ms-4">
+                                <p class="mb-1">The whole team was a huge help with putting things together for our company and brand. We will be hiring them again in the near future for additional work!</p>
+                                <div class="small text-muted">- Client Name, Location</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
