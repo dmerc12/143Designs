@@ -25,12 +25,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
     'order_tracking.apps.OrderTrackingConfig',
     'inventory_tracking.apps.InventoryTrackingConfig',
     'users.apps.UsersConfig',
     'store.apps.StoreConfig',
     'site_management.apps.SiteManagementConfig',
-    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -119,9 +119,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
-    "site_brand": "143 Designs Admin",
-    "show_ui_builder": False,
-    "related_modal_active": True,
+    'show_ui_builder': True
 }
 
 JAZZMIN_UI_TWEAKS = {
@@ -129,15 +127,15 @@ JAZZMIN_UI_TWEAKS = {
     "footer_small_text": False,
     "body_small_text": False,
     "brand_small_text": False,
-    "brand_colour": "navbar-secondary",
+    "brand_colour": "navbar-gray",
     "accent": "accent-indigo",
     "navbar": "navbar-indigo navbar-dark",
     "no_navbar_border": False,
-    "navbar_fixed": False,
+    "navbar_fixed": True,
     "layout_boxed": False,
     "footer_fixed": False,
     "sidebar_fixed": False,
-    "sidebar": "sidebar-light-indigo",
+    "sidebar": "sidebar-dark-indigo",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": False,
@@ -153,6 +151,5 @@ JAZZMIN_UI_TWEAKS = {
         "warning": "btn-warning",
         "danger": "btn-danger",
         "success": "btn-success"
-    },
-    "actions_sticky_top": False
+    }
 }
