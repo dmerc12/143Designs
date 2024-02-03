@@ -25,12 +25,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
     'order_tracking.apps.OrderTrackingConfig',
     'inventory_tracking.apps.InventoryTrackingConfig',
     'users.apps.UsersConfig',
     'store.apps.StoreConfig',
     'site_management.apps.SiteManagementConfig',
-    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -118,10 +118,42 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 JAZZMIN_SETTINGS = {
-    "site_brand": "143 Designs Admin",
-    "show_ui_builder": False,
-    "related_modal_active": True,
+    'site_title': '143 Designs Admin',
+    'site_header': '143 Designs Admin',
+    'site_brand': '143 Designs Admin',
+    'site_logo': '143Designs.png',
+    'login_logo_dark': '143Designs.png',
+    'site_logo_classes': 'img-circle',
+    'site_icon': '143Designs.png',
+    'welcome_sign': 'Welcome to the 143 Designs admin',
+    'copyright': '143 Designs',
+    'show_ui_builder': False,
+    'related_modal_active': True,
+    'icons': {
+        'users': 'fas fa-users-cog',
+        'users.admin': 'fas fa-user',
+        'users.customer': 'fas fa-user',
+        'users.supplier': 'fas fa-user',
+
+        'inventory_tracking': 'fas fa-warehouse',
+        'inventory_tracking.product': 'fas fa-warehouse',
+        'inventory_tracking.design': 'fas fa-drafting-compass',
+        'inventory_tracking.purchase': 'fas fa-file-invoice',
+
+        'order_tracking': 'fas fa-shopping-bag',
+        'order_tracking.order': 'fas fa-shopping-bag',
+
+        'site_management': '',
+        'site_management.message': '',
+        'site_management.testimonial': '',
+
+        'store': 'fas fa-shirt',
+        'store.category': 'fas fa-list',
+        'store.item': 'fas fa-tshirt',
+    }
 }
 
 JAZZMIN_UI_TWEAKS = {
@@ -129,15 +161,15 @@ JAZZMIN_UI_TWEAKS = {
     "footer_small_text": False,
     "body_small_text": False,
     "brand_small_text": False,
-    "brand_colour": "navbar-secondary",
+    "brand_colour": "navbar-gray",
     "accent": "accent-indigo",
     "navbar": "navbar-indigo navbar-dark",
     "no_navbar_border": False,
-    "navbar_fixed": False,
+    "navbar_fixed": True,
     "layout_boxed": False,
     "footer_fixed": False,
     "sidebar_fixed": False,
-    "sidebar": "sidebar-light-indigo",
+    "sidebar": "sidebar-dark-indigo",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": False,
@@ -153,6 +185,5 @@ JAZZMIN_UI_TWEAKS = {
         "warning": "btn-warning",
         "danger": "btn-danger",
         "success": "btn-success"
-    },
-    "actions_sticky_top": False
+    }
 }
