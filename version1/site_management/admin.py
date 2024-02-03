@@ -4,10 +4,10 @@ from django.contrib import admin
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['custom_id', 'name', 'email', 'phone_number', 'title']
-    view_only_fields = ['name', 'email', 'phone_number', 'title', 'message']
-    list_filter = ['name', 'email', 'phone_number']
-    search_fields = ['pk', 'name', 'email', 'phone_number', 'title__starts_with', 'title__contains', 'message__contains']
+    list_display = ['custom_id', 'first_name', 'last_name', 'email', 'phone_number', 'title']
+    view_only_fields = ['first_name', 'last_name', 'email', 'phone_number', 'title', 'message']
+    list_filter = ['first_name', 'last_name', 'email', 'phone_number']
+    search_fields = ['pk', 'first_name', 'last_name', 'email', 'phone_number', 'title__starts_with', 'title__contains', 'message__contains']
 
     def custom_id(self, obj):
         return format_html(f'143DMES{obj.id}')
