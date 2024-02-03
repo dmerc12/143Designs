@@ -118,6 +118,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 JAZZMIN_SETTINGS = {
     'site_title': '143 Designs Admin',
     'site_header': '143 Designs Admin',
@@ -129,6 +131,7 @@ JAZZMIN_SETTINGS = {
     'welcome_sign': 'Welcome to the 143 Designs admin',
     'copyright': '143 Designs',
     'show_ui_builder': False,
+    'related_modal_active': True,
     'icons': {
         'users': 'fas fa-users-cog',
         'users.admin': 'fas fa-user',
