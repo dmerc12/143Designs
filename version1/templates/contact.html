@@ -11,36 +11,7 @@
             <div class="col-lg-6">
                 <form id="contactForm" method="POST" action="{% url 'contact' %}">
                     {% csrf_token %}
-                    <!-- First ame input -->
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="first_name" id="first_name" placeholder="John" required>
-                        <label for="first_name">{{ form.first_name.label }}</label>
-                    </div>
-                    <!-- Last ame input -->
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Doe" required>
-                        <label for="last_name">{{ form.last_name.label }}</label>
-                    </div>
-                    <!-- Email address input -->
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="email" type="email" name='email' placeholder="name@example.com" />
-                        <label for="email">{{ form.email.label }}</label>
-                    </div>
-                    <!-- Phone number input -->
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="phone_number" type="tel" name='phone_number' placeholder="+12345678910" />
-                        <label for="phone">{{ form.phone_number.label }}</label>
-                    </div>
-                    <!-- Title input -->
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="title" type="text" name='title' placeholder="Enter a title for your message here..." />
-                        <label for="message">{{ form.title.label }}</label>
-                    </div>
-                    <!-- Message input -->
-                    <div class="form-floating mb-3">
-                        <textarea class="form-control" id="message" type="text" placeholder="Enter your message here..." style="height: 10rem"></textarea>
-                        <label for="message">{{ form.message.label }}</label>
-                    </div>
+                    {{ form }}
                     <!-- Submit Button -->
                     <div class="d-grid"><button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button></div>
                 </form>

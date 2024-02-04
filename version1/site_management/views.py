@@ -10,16 +10,16 @@ def home(request):
 
 def contact(request):
     try:
+        form = ContactForm()
         if request.method == 'POST':
             form = ContactForm(request.POST)
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Your message has been successfully sent and we will be in contact soon!')
                 return redirect('store-home')
-        else:
-            raise Exception('invalid form')
-            form = ContactForm()
         context = {'form': form}
         return render(request, 'contact.html', context)
     except Exception as error:
         messages.error(request, str(error))
+        raise Exception(str(error))
+    
