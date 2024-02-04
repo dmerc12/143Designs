@@ -3,7 +3,8 @@ from users.models import Customer
 from django.db import models
 
 class Message(models.Model):
-    name = models.CharField(max_length=200, help_text='Enter your name.')
+    first_name = models.CharField(max_length=100, help_text='Enter your first name.')
+    last_name = models.CharField(max_length=100, help_text='Enter your last name.')
     email = models.EmailField(max_length=250, help_text='Enter your email address.')
     phone_number = PhoneNumberField(help_text='Enter your phone number.')
     title = models.CharField(max_length=250, help_text='Enter a title for your message.')

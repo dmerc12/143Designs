@@ -40,9 +40,17 @@
                 </div>
             </div>
         </nav>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         {% block content %}{% endblock content %}
         <footer class="py-5 bg-dark">
             <div class="container px-5"><p class="m-0 text-center text-white">Copyright &copy; 143 Designs 2024</p></div>
+            <div class="container px-5"><p class="m-0 text-center text-white"><a aria-current="page" href="{% url 'admin:index' %}">Admin Login</a></p></div>
         </footer>
     </body>
 </html>
