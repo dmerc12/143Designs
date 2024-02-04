@@ -11,8 +11,37 @@
             <div class="col-lg-6">
                 <form id="contactForm" method="POST" action="{% url 'contact' %}">
                     {% csrf_token %}
-                    {{ form }}
-                    <!-- Submit Button -->
+                    <!-- First name input-->
+                    <div class="form-floating mb-3">
+                        {{ form.first_name }}
+                        <label>{{ form.first_name.label }}</label>
+                    </div>
+                    <!-- Last name input-->
+                    <div class="form-floating mb-3">
+                        {{ form.last_name }}
+                        <label>{{ form.last_name.label}}</label>
+                    </div>
+                    <!-- Email address input-->
+                    <div class="form-floating mb-3">
+                        {{ form.email }}
+                        <label>{{ form.email.label }}</label>
+                    </div>
+                    <!-- Phone number input-->
+                    <div class="form-floating mb-3">
+                        {{ form.phone_number}}
+                        <label>{{ form.phone_number.label }}</label>
+                    </div>
+                    <!-- Title input-->
+                    <div class="form-floating mb-3">
+                        {{ form.title }}
+                        <label>{{ form.title.label }}</label>
+                    </div>
+                    <!-- Message input-->
+                    <div class="form-floating mb-3">
+                        {{ form.message }}
+                        <label>{{ form.message.label }}</label>
+                    </div>
+                    <!-- Submit Button-->
                     <div class="d-grid"><button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button></div>
                 </form>
             </div>
