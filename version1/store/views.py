@@ -9,11 +9,12 @@ def store_home(request):
 
 def item_detail(request, item_id):
     item = Item.objects.get(id=item_id)
-    related_items = Item.objects.filter(category=item.category)
+    related_items = Item.objects.filter(category=item.category)[:4]
     sizes = {}
     for size in item.product.get_product_sizes():
         size_price = size.price + item.design.price
         sizes[size.size] = size_price
+    sizes = dict(sorted(sizes.items(), key=lambda item: item[1]))
     context = {
         'item': item,
         'sizes': sizes,
