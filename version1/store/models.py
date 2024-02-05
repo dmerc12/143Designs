@@ -23,7 +23,8 @@ class Item(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, help_text='Choose a category for the item.')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, help_text='Choose a product for the item.')
     design = models.ForeignKey(Design, on_delete=models.CASCADE, help_text='Choose a design for the item.')
-    status = models.BooleanField(default=False)
+    featured = models.BooleanField(default=True, help_text='Choose if you would like the item to be featured on the store home page.')
+    sale = models.BooleanField(default=False, help_text='Indicate if you would like the item to be on sale.')
 
     class Meta:
         verbose_name = 'Item'
@@ -34,6 +35,19 @@ class Item(models.Model):
     
     def image_preview(self):
         return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(self.image.url))
+    
+    @property
+    def min_price(self):
+        sizes = self.product.get_product_sizes()
+        min_price = min(size.price for size in sizes)
+        total_min_price = min_price + self.design.price
+        return total_min_price
+    @property
+    def max_price(self):
+        sizes = self.product.get_product_sizes()
+        max_price = max(size.price for size in sizes)
+        total_max_price = max_price + self.design.price
+        return total_max_price
     
 class ItemImages(models.Model):
     images = models.ImageField(upload_to='store/item-images')

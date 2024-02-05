@@ -20,8 +20,8 @@ class ItemImagesInline(admin.TabularInline):
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
     inlines = [ItemImagesInline]
-    list_display = ['custom_id', 'name', 'category', 'status', 'image_preview']
-    list_filter = ['category', 'status']
+    list_display = ['custom_id', 'name', 'category', 'featured', 'sale', 'image_preview']
+    list_filter = ['category', 'featured', 'sale']
     
     def custom_id(self, obj):
         return format_html(f'143DIT{obj.id}')
