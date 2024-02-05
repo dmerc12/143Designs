@@ -11,6 +11,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.color} {self.material} {self.name}'
+    
+    def get_product_sizes(self):
+        return ProductSize.objects.filter(product=self)
 
 class ProductSize(models.Model):
     size = models.CharField(max_length=50)
