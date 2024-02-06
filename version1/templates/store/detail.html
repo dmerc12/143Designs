@@ -6,25 +6,33 @@
             <div class="row gx-4 gx-lg-5 align-items-center">
                 <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{ item.image.url }}" alt="{{ item.name }}" /></div>
                 <div class="col-md-6">
+                    <!-- Product name -->
                     <h1 class="display-5 fw-bolder">{{ item.name }}</h1>
-                    <div class="small mb-1">{{ item.category }}</div>
-                    <div class="fs-5 mb-5">
+                    <!-- Product color -->
+                    <div class="small mb-1">Color: {{ item.product.color }}</div>
+                    <<!-- Product material -->
+                    <div class="small mb-1">Material: {{ item.product.material }}</div>
+                    <!-- Product category-->
+                    <div class="small mb-1">Category: {{ item.category }}</div>
+                    <div class="fs-5 mb-3">
                         <!-- Display sizes as buttons -->
                         <h4>Sizes:</h4>
                         <div class="btn-group" role="group">
                             {% for size, price in sizes.items %}
-                                <button type="button" class="btn btn-secondary size-btn" data-size="{{ size }}" data-price="{{ price }}">{{ size }}</button>
+                                <button type="button" class="btn btn-secondary size-btn {% if forloop.first %}active{% endif %}" data-size="{{ size }}" data-price="{{ price }}">{{ size }}</button>
                             {% endfor %}
                         </div>
                         <!-- Display selected size and price -->
                         <div id="selected-size">
-                            <p>Selected Size: <span id="selected-size-value">{{ sizes|dictsort:"0"|first.1 }}</span></p>
-                            <p>Price: $<span id="selected-price">{{ sizes|dictsort:"0"|first.0 }}</span></p>
+                            <p>Selected Size: <span id="selected-size-value"></span></p>
+                            <p>Price: $<span id="selected-price"></span></p>
                         </div>
                     </div>
+                    <!-- Product description -->
+                    <h4>Description:</h4>
                     <p class="lead">{{ item.description }}</p>
                     <div class="d-flex">
-                        <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                        <input class="form-control text-center me-3 mr-1" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
                         <button class="btn btn-outline-dark flex-shrink-0" type="button">
                             <i class="bi-cart-fill me-1"></i>
                             Add to cart
@@ -42,15 +50,17 @@
                 {% for related_item in related_items %}
                     <div class="col mb-5">
                         <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                            {% if related_item.sale %}
+                                <!-- Sale badge-->
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                            {% endif %}
                             <!-- Product image-->
                             <img class="card-img-top" src="{{ related_item.image.url }}" alt="{{ related_item.name }}" />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ related_item.name }}</h5>
+                                    <h5 class="fw-bolder"><a href="{% url 'item-detail' item.pk %}">{{ related_item.name }}</a></h5>
                                     <!-- Product reviews-->
                                     <div class="d-flex justify-content-center small text-warning mb-2">
                                         <div class="bi-star-fill"></div>
@@ -77,4 +87,29 @@
             </div>
         </div>
     </section>
+    <script>
+        // JavaScript to handle size buttons
+        const sizeButtons = document.querySelectorAll('.size-btn');
+        const selectedSizeValue = document.getElementById('selected-size-value');
+        const selectedPrice = document.getElementById('selected-price');
+    
+        // Function to update selected size and price
+        function updateSelectedSizeAndPrice(button) {
+            selectedSizeValue.textContent = button.getAttribute('data-size');
+            selectedPrice.textContent = button.getAttribute('data-price');
+        }
+
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update selected size and price
+                updateSelectedSizeAndPrice(button);
+
+                // Toggle active class among size buttons
+                sizeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+
+        updateSelectedSizeAndPrice(sizeButtons[0]);
+    </script>
 {% endblock content %}

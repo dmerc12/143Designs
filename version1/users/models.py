@@ -2,6 +2,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+# Admin users for the admin site
 class Admin(AbstractUser):
     pass
 
@@ -20,11 +21,15 @@ class Admin(AbstractUser):
 Admin._meta.get_field('groups').remote_field.related_name = 'admin_user_groups'
 Admin._meta.get_field('user_permissions').remote_field.related_name = 'admin_user_user_permissions'
 
+# Customers 
 class Customer(models.Model):
     first_name = models.CharField(max_length=100, help_text='Enter the first name of the customer.')
     last_name = models.CharField(max_length=100, help_text='Enter the last name of the customer.')
     email = models.EmailField(max_length=250, unique=True, help_text='Enter an email address for the customer.')
+    password = models.CharField(max_length=100, null=True, blank=True, help_text='Enter a password!')
     phone_number = PhoneNumberField(help_text='Enter a phone number for the customer.')
+    address = models.CharField(max_length=255, null=True, blank=True, help_text='Enter an address fot your order to be shipped to.')
+    notes = models.TextField(max_length=300, null=True, blank=True, help_text='Enter any relevant notes about the supplier.')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -33,6 +38,7 @@ class Customer(models.Model):
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
 
+# Suppliers
 class Supplier(models.Model):
     name = models.CharField(max_length=100, help_text='Enter the name of the supplier.')
     location = models.CharField(max_length=150, help_text='Enter the location of the supplier.')
