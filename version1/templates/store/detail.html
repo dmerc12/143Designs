@@ -6,9 +6,13 @@
             <div class="row gx-4 gx-lg-5 align-items-center">
                 <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{ item.image.url }}" alt="{{ item.name }}" /></div>
                 <div class="col-md-6">
+                    <!-- Product name -->
                     <h1 class="display-5 fw-bolder">{{ item.name }}</h1>
+                    <!-- Product color -->
                     <div class="small mb-1">Color: {{ item.product.color }}</div>
+                    <<!-- Product material -->
                     <div class="small mb-1">Material: {{ item.product.material }}</div>
+                    <!-- Product category-->
                     <div class="small mb-1">Category: {{ item.category }}</div>
                     <div class="fs-5 mb-3">
                         <!-- Display sizes as buttons -->
@@ -24,6 +28,7 @@
                             <p>Price: $<span id="selected-price"></span></p>
                         </div>
                     </div>
+                    <!-- Product description -->
                     <h4>Description:</h4>
                     <p class="lead">{{ item.description }}</p>
                     <div class="d-flex">
@@ -55,7 +60,7 @@
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ related_item.name }}</h5>
+                                    <h5 class="fw-bolder"><a href="{% url 'item-detail' item.pk %}">{{ related_item.name }}</a></h5>
                                     <!-- Product reviews-->
                                     <div class="d-flex justify-content-center small text-warning mb-2">
                                         <div class="bi-star-fill"></div>

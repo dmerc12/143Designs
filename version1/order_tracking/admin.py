@@ -6,17 +6,11 @@ from .models import Order
 admin.site.unregister(Group)
 admin.site.unregister(User)
 
-class OrderProductInline(admin.TabularInline):
+class OrderItemInline(admin.TabularInline):
     model = Order.item.through
     extra = 1
     verbose_name = 'Item'
     verbose_name_plural = 'Items'
-
-class OrderDesignInline(admin.TabularInline):
-    model = Order.design.through
-    extra = 1
-    verbose_name = 'Design'
-    verbose_name_plural = 'Designs'
 
 @admin.action(description='Mark selected orders as complete')
 def mark_complete(modeladmin, request, queryset):
@@ -41,7 +35,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['created', 'last_modified', 'customer__first_name', 'customer__last_name', 'customer__email', 'customer__phone_number']
     actions = [mark_complete, mark_incomplete, mark_paid, mark_unpaid]
     date_hierarchy = 'created'
-    inlines = [OrderProductInline, OrderDesignInline]
+    inlines = [OrderItemInline]
     fieldsets = (
         (None, {
             'fields': ('customer', 'short_description', 'description')
