@@ -18,7 +18,7 @@
                         <div class="card h-100">
                             {% if item.sale %}
                                 <!-- Sale badge-->
-                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Currently On Sale! {{ item.sale_percentage }}% Off!</div>
                             {% endif %}
                             <!-- Product image-->
                             <img class="card-img-top" src="{{ item.image.url }}" alt="{{ item.name }}" />
@@ -36,10 +36,20 @@
                                         <div class="bi-star-fill"></div>
                                     </div>
                                     <!-- Product price-->
-                                    {% if item.min_price == item.max_price %}
-                                        <p>${{ item.min_price }}</p>
+                                    {% if item.sale %}
+                                        {% if item.sale_min_price == item.sale_max_price %}
+                                            <p><span style="text-decoration: line-through;">${{ item.min_price }}</span></p>
+                                            <p style="color: red;">${{ item.sale_min_price }}</p>
+                                        {% else %}
+                                            <p><span style="text-decoration: line-through;">${{ item.min_price }}</span> - <span style="text-decoration: line-through;">${{ item.max_price }}</span></p>
+                                            <p style="color: red;">${{ item.sale_min_price }} - ${{ item.sale_max_price }}</p>
+                                        {% endif %}
                                     {% else %}
-                                        <p>${{ item.min_price }} - ${{ item.max_price}}</p>
+                                        {% if item.min_price == item.max_price %}
+                                            <p>${{ item.min_price }}</p>
+                                        {% else %}
+                                            <p>${{ item.min_price }} - ${{ item.max_price}}</p>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                             </div>
