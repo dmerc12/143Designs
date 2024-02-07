@@ -1,6 +1,7 @@
 from inventory_tracking.models import Product, Design
 from django.utils.html import format_html
 from django.db import models
+from decimal import Decimal
 
 # Categories for store items
 class Category(models.Model):
@@ -27,7 +28,7 @@ class Item(models.Model):
     design = models.ForeignKey(Design, on_delete=models.CASCADE, help_text='Choose a design for the item.')
     featured = models.BooleanField(default=True, help_text='Choose if you would like the item to be featured on the store home page.')
     sale = models.BooleanField(default=False, help_text='Indicate if you would like the item to be on sale.')
-    sale_percentage = models.DecimalField(default=0, decimal_places=2, max_digits=3, null=True, blank=True, help_text='Input discount percentage as a decimal.')
+    sale_percentage = models.PositiveIntegerField(default=0, help_text='Input discount percentage as an integer.')
 
     class Meta:
         verbose_name = 'Item'
@@ -40,6 +41,16 @@ class Item(models.Model):
     def image_preview(self):
         return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(self.image.url))
     
+    # Returns the min sale price of an item based on the sale percentage
+    @property
+    def sale_min_price(self):
+        return (self.min_price - (self.min_price * Decimal(self.sale_percentage / 100))).quantize(Decimal('0.01'))
+
+    # Returns the max sale price of an item based on the sale percentage
+    @property
+    def sale_max_price(self):
+        return (self.max_price - (self.max_price * Decimal(self.sale_percentage / 100))).quantize(Decimal('0.01'))
+
     # Returns the minimum price of an item based on the sizes available
     @property
     def min_price(self):
