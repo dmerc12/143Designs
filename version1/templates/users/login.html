@@ -1,40 +1,24 @@
-{% extends "base.html" %}
-<!-- Custom page title -->
-{% block title %}
-    <title>143 Designs - Login</title>
-{% endblock title %}
-{% block content %}
-    <!-- Header -->
-    <header class="bg-dark py-5">
-        <div class="container px-5">
+{% extends 'base.html' %}
+{% block content%}
+<section class="bg-light py-5">
+    <div class="container px-5 my-5 px-5">
+        <div class="text-center mb-5">
+            <!-- Header -->
+            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
+                <h2 class="fw-bolder">Login</h2>
+                <p class="lead mb-0">Login below</p>
+            </div>
             <div class="row gx-5 justify-content-center">
-                <div class="col-lg-6">
-                    <div class="text-center my-5">
-                        <h1 class="display-5 fw-bolder text-white mb-2">143 Custom Designs</h1>
-                        <p class="text-primary mb-4">Login Below!</p>
-                    </div>
-                </div>
+            <div class="col-lg-6">
+                <form id="loginForm" method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <!-- Form -->
+                    {{ form.as_p }}
+                    <!-- Submit Button -->
+                    <div class="d-grid"><button class="btn btn-primary" id="submitButton" type="submit">Login</button></div>
+                </form>
             </div>
         </div>
-    </header>
-    <!-- Login form -->
-    <div class="container">
-        <form method="POST" action="{% url 'login' %}">
-            {% csrf_token %}
-            <!-- Username field -->
-            <div class="form-group text-center">
-                <label for="username">Username: </label>
-                <input type="text" class="form-control w-50 mx-auto" name="username" placeholder="Enter Your Username">
-            </div>
-            <!-- Password field -->
-            <div class="form-group text-center">
-                <label for="password">Password: </label>
-                <input type="password" class="form-control w-50 mx-auto" name="password" placeholder="Enter Your Password">
-            </div>
-            <!-- Submit button -->
-            <div class="form-group text-center">
-                <button class="btn btn-secondary" type="submit">Login</button>
-            </div>
-        </form>
     </div>
+</section>
 {% endblock content %}
