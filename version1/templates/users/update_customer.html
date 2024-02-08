@@ -5,17 +5,17 @@
         <div class="text-center mb-5">
             <!-- Header -->
             <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
-                <h2 class="fw-bolder">Register</h2>
-                <p class="lead mb-0">Register your account below</p>
+                <h2 class="fw-bolder">Update Profile</h2>
+                <p class="lead mb-0">Update your profile below</p>
             </div>
             <div class="row gx-5 justify-content-center">
             <div class="col-lg-6">
-                <form id="registerForm" method="POST" action="{% url 'register' %}">
+                <form id="updateCustomerForm" method="POST" action="{% url 'update-customer' %}">
                     {% csrf_token %}
                     <!-- Form -->
                     {{ form.as_p }}
                     <!-- Submit Button -->
-                    <div class="d-grid"><button class="btn btn-secondary" id="submitButton" type="submit">Register</button></div>
+                    <div class="d-grid"><button class="btn btn-secondary" id="submitButton" type="submit">Update Profile</button></div>
                 </form>
             </div>
         </div>
