@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 from .forms import LoginForm, SignUpForm, UpdateCustomerForm, ChangePasswordForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 # Login view for customer side of website
 def login_customer(request):
@@ -41,7 +40,6 @@ def register_customer(request):
             form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            # log in user
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, 'You Have Registered Successfully! Welcome!')

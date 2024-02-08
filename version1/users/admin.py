@@ -1,8 +1,13 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
 from .models import Admin, Customer, Supplier
 from django.contrib import admin
 from django import forms
+
+# Unregisters default group and user models from admin site
+admin.site.unregister(Group)
+admin.site.unregister(User)
 
 # Admin creation form
 class CustomAdminCreationForm(UserCreationForm):
@@ -28,12 +33,19 @@ class CustomAdminAdmin(UserAdmin):
 
 # Registers admin users with admin site
 admin.site.register(Admin, CustomAdminAdmin)
+ 
+# Create customer form
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'address1', 'address2', 'city', 'state', 'zipcode', 'country']
 
 # Registers customers with admin site
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
+    form = CustomerForm
     list_display = ['custom_id', 'first_name', 'last_name', 'email', 'phone_number']
-    search_fields = ['id', 'first_name', 'last_name', 'email', 'phone_number']
+    search_fields = ['id', 'user__first_name', 'user__last_name', 'user__email', 'phone_number']
 
     # Displays a custom ID for the customers
     def custom_id(self, obj):

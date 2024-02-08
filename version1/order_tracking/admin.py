@@ -1,11 +1,6 @@
-from django.contrib.auth.models import User, Group
 from django.utils.html import format_html
 from django.contrib import admin
 from .models import Order
-
-# Unregisters default group and user models from admin site
-admin.site.unregister(Group)
-admin.site.unregister(User)
 
 # Inline for items in an order in the admin site
 class OrderItemInline(admin.TabularInline):
@@ -38,8 +33,8 @@ def mark_unpaid(modeladmin, request, queryset):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['custom_id_display', 'customer', 'short_description', 'total', 'complete', 'paid', 'last_modified', 'created']
-    list_filter = ['created', 'last_modified', 'customer__first_name', 'customer__last_name', 'complete', 'paid', 'item']
-    search_fields = ['created', 'last_modified', 'customer__first_name', 'customer__last_name', 'customer__email', 'customer__phone_number']
+    list_filter = ['created', 'last_modified', 'customer__user__first_name', 'customer__user__last_name', 'customer__user__email', 'customer__user__username', 'complete', 'paid', 'item']
+    search_fields = ['created', 'last_modified', 'customer__user__first_name', 'customer__user__last_name', 'customer__user__email', 'customer__user__username']
     actions = [mark_complete, mark_incomplete, mark_paid, mark_unpaid]
     date_hierarchy = 'created'
     inlines = [OrderItemInline]

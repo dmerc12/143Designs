@@ -21,8 +21,8 @@ class MessageAdmin(admin.ModelAdmin):
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ['custom_id', 'customer', 'featured', 'review']
-    list_filter = ['customer__first_name', 'customer__last_name', 'featured']
-    search_fields = ['pk', 'customer__first_name', 'customer__last_name', 'review', 'review__contains']
+    list_filter = ['customer__user__first_name', 'customer__user__last_name', 'featured']
+    search_fields = ['pk', 'customer__user__first_name', 'customer__user__last_name', 'customer____user__email', 'customer__user__phone_number', 'review', 'review__contains']
 
     # Displays a custom ID for the testimonials
     def custom_id(self, obj):
