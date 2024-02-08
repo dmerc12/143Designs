@@ -1,17 +1,39 @@
-{% extends "main/template.html" %}
+{% extends "base.html" %}
+<!-- Custom page title -->
 {% block title %}
     <title>143 Designs - Login</title>
 {% endblock title %}
 {% block content %}
-    <div class="content-section">
-        <form method="post">
+    <!-- Header -->
+    <header class="bg-dark py-5">
+        <div class="container px-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-6">
+                    <div class="text-center my-5">
+                        <h1 class="display-5 fw-bolder text-white mb-2">143 Custom Designs</h1>
+                        <p class="text-primary mb-4">Login Below!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Login form -->
+    <div class="container">
+        <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log In</legend>
-                {{ form|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Sign In</button>
+            <!-- Username field -->
+            <div class="form-group text-center">
+                <label for="username">Username: </label>
+                <input type="text" class="form-control w-50 mx-auto" name="username" placeholder="Enter Your Username">
+            </div>
+            <!-- Password field -->
+            <div class="form-group text-center">
+                <label for="password">Password: </label>
+                <input type="password" class="form-control w-50 mx-auto" name="password" placeholder="Enter Your Password">
+            </div>
+            <!-- Submit button -->
+            <div class="form-group text-center">
+                <button class="btn btn-secondary" type="submit">Login</button>
             </div>
         </form>
     </div>

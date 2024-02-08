@@ -3,6 +3,7 @@
 <section class="bg-light py-5">
     <div class="container px-5 my-5 px-5">
         <div class="text-center mb-5">
+            <!-- Header -->
             <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
                 <h2 class="fw-bolder">Get in touch</h2>
                 <p class="lead mb-0">We'd love to hear from you</p>
@@ -11,37 +12,37 @@
             <div class="col-lg-6">
                 <form id="contactForm" method="POST" action="{% url 'contact' %}">
                     {% csrf_token %}
-                    <!-- First name input-->
+                    <!-- First name input -->
                     <div class="form-floating mb-3">
                         {{ form.first_name }}
                         <label>{{ form.first_name.label }}</label>
                     </div>
-                    <!-- Last name input-->
+                    <!-- Last name input -->
                     <div class="form-floating mb-3">
                         {{ form.last_name }}
                         <label>{{ form.last_name.label}}</label>
                     </div>
-                    <!-- Email address input-->
+                    <!-- Email address input -->
                     <div class="form-floating mb-3">
                         {{ form.email }}
                         <label>{{ form.email.label }}</label>
                     </div>
-                    <!-- Phone number input-->
+                    <!-- Phone number input -->
                     <div class="form-floating mb-3">
                         {{ form.phone_number}}
                         <label>{{ form.phone_number.label }}</label>
                     </div>
-                    <!-- Title input-->
+                    <!-- Title input -->
                     <div class="form-floating mb-3">
                         {{ form.title }}
                         <label>{{ form.title.label }}</label>
                     </div>
-                    <!-- Message input-->
+                    <!-- Message input -->
                     <div class="form-floating mb-3">
                         {{ form.message }}
                         <label>{{ form.message.label }}</label>
                     </div>
-                    <!-- Submit Button-->
+                    <!-- Submit Button -->
                     <div class="d-grid"><button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button></div>
                 </form>
             </div>
