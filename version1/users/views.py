@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import SignUpForm, UpdateCustomerForm
+from .forms import SignUpForm, UpdateCustomerForm, ChangePasswordForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -58,6 +58,26 @@ def update_customer(request):
             return redirect('home')
         else:
             return render(request, 'users/update_customer.html', {'form': form})
+    else:
+        messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
+        return redirect('home')
+
+def change_password(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        if request.method == 'POST':
+            form = ChangePasswordForm(current_user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your password has been changed. Please login again!')
+                return redirect('login')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+                return redirect('change-password')
+        else:
+            form = ChangePasswordForm(current_user)
+            return render(request, 'users/update_password.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
         return redirect('home')
