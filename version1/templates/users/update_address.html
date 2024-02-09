@@ -15,8 +15,17 @@
                     {% csrf_token %}
                     <!-- Form -->
                     {{ form.as_p }}
-                    <!-- Submit Button -->
-                    <div class="d-grid"><button class="btn btn-primary" id="submitButton" type="submit">Update Address</button></div>
+                    <!-- Buttons Wrapper -->
+                    <div class="d-grid row">
+                        <!-- Submit Button -->
+                        <div class="col-12 col-md-4 mb-2">
+                            <button class="btn btn-primary w-100" id="submitButton" type="submit">Update Address</button>
+                        </div>
+                        <!-- Back Button -->
+                        <div class="col-12 col-md-4 mb-2">
+                            <a class="btn btn-secondary w-100" href="{% url 'update-customer' %}">Go Back</a>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
