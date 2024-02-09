@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
+from .models import Customer
 from django import forms
 
 # Login form for customers
@@ -22,13 +23,14 @@ class LoginForm(forms.Form):
 		
 # Register form for new customers
 class SignUpForm(UserCreationForm):
+	phone_number = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number'}))
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
-	first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
-	last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
+	first_name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
+	last_name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
 
 	class Meta:
 		model = User
-		fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+		fields = ('username', 'first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2')
 
 	def __init__(self, *args, **kwargs):
 		super(SignUpForm, self).__init__(*args, **kwargs)
@@ -54,13 +56,14 @@ class UpdateCustomerForm(UserChangeForm):
 	password = None
 	
     # Get other fields
+	phone_number = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number'}))
 	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
-	first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
-	last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
+	first_name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
+	last_name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
 
 	class Meta:
 		model = User
-		fields = ('username', 'first_name', 'last_name', 'email')
+		fields = ('username', 'first_name', 'last_name', 'email', 'phone_number')
 
 	def __init__(self, *args, **kwargs):
 		super(UpdateCustomerForm, self).__init__(*args, **kwargs)
@@ -88,4 +91,15 @@ class ChangePasswordForm(SetPasswordForm):
 		self.fields['new_password2'].widget.attrs['placeholder'] = 'Confirm Password'
 		self.fields['new_password2'].label = ''
 		self.fields['new_password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
-		
+	
+class UpdateInfoForm(forms.ModelForm):
+	address1 = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address 1'}))
+	address2 = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address 2'}), required=False)
+	city = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}))
+	state = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'State'}))
+	zipcode = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Zip Code'}))
+	country = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Country'}))
+
+	class Meta:
+		model = Customer
+		fields = ['address1', 'address2', 'city', 'state', 'zipcode', 'country']

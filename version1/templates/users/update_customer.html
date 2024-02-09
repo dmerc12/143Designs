@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content%}
+<!-- Update profile section -->
 <section class="bg-light py-5">
     <div class="container px-5 my-5 px-5">
         <div class="text-center mb-5">
@@ -18,7 +19,11 @@
                     <div class="d-grid"><button class="btn btn-primary" id="submitButton" type="submit">Update Profile</button></div>
                 </form>
                 <br>
+                <!-- Change password section -->
                 <div class="d-grid"><a class="btn btn-primary" href="{% url 'change-password' %}">Change Password</a></div>
+                <br>
+                <!-- Update info section -->
+                <div class="d-grid"><a class="btn btn-primary" href="{% url 'update-address' %}">Update Address</a></div>
             </div>
         </div>
     </div>

@@ -1,8 +1,9 @@
-from .forms import LoginForm, SignUpForm, UpdateCustomerForm, ChangePasswordForm
+from .forms import LoginForm, SignUpForm, UpdateCustomerForm, ChangePasswordForm, UpdateInfoForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from .models import Customer
 
 # Login view for customer side of website
 def login_customer(request):
@@ -14,7 +15,7 @@ def login_customer(request):
             customer = authenticate(request, username=username, password=password)
             if customer is not None:
                 login(request, customer)
-                messages.success(request, 'You have been successfully logged in!')
+                messages.success(request, f'Welcome {customer.first_name}!')
                 return redirect('store-home')
             else:
                 messages.error(request, 'Incorrect username or password, please try again!')
@@ -42,8 +43,8 @@ def register_customer(request):
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, 'You Have Registered Successfully! Welcome!')
-            return redirect('home')
+            messages.success(request, 'You have registered successfully! Please add your address below!')
+            return redirect('update-address')
         else:
             messages.success(request, 'Whoops! There was an error processing your registration, please try again!')
             return redirect('register')
@@ -60,12 +61,12 @@ def update_customer(request):
             form.save()
             login(request, current_user)
             messages.success(request, 'Your profile has been successfully updated!')
-            return redirect('home')
+            return redirect('update-customer')
         else:
             return render(request, 'users/update_customer.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
-        return redirect('home')
+        return redirect('login')
 
 # Change password view for customer side of website
 def change_password(request):
@@ -87,4 +88,19 @@ def change_password(request):
             return render(request, 'users/update_password.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
-        return redirect('home')
+        return redirect('login')
+
+# Update customer info view for customer side of website
+def update_address(request):
+    if request.user.is_authenticated:
+        current_user = Customer.objects.get(id=request.user.id)
+        form = UpdateInfoForm(request.POST or None, instance=current_user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your address has been successfully updated!')
+            return redirect('update-customer')
+        else:
+            return render(request, 'users/update_address.html', {'form': form})
+    else:
+        messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
+        return redirect('login')
