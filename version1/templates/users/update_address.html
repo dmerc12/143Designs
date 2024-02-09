@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 {% block content%}
+<!-- Update info section -->
 <section class="bg-light py-5">
     <div class="container px-5 my-5 px-5">
         <div class="text-center mb-5">
             <!-- Header -->
             <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
-                <h2 class="fw-bolder">Login</h2>
-                <p class="lead mb-0">Login below</p>
+                <h2 class="fw-bolder">Update Address</h2>
+                <p class="lead mb-0">Update your address below</p>
             </div>
             <div class="row gx-5 justify-content-center">
             <div class="col-lg-6">
-                <form id="loginForm" method="POST" action="{% url 'login' %}">
+                <form id="updateAddressForm" method="POST" action="{% url 'update-address' %}">
                     {% csrf_token %}
                     <!-- Form -->
                     {{ form.as_p }}
                     <!-- Submit Button -->
-                    <div class="d-grid"><button class="btn btn-primary" id="submitButton" type="submit">Login</button></div>
+                    <div class="d-grid"><button class="btn btn-primary" id="submitButton" type="submit">Update Address</button></div>
                 </form>
             </div>
         </div>
