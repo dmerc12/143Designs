@@ -10,20 +10,28 @@
                 <p class="lead mb-0">Update your profile below</p>
             </div>
             <div class="row gx-5 justify-content-center">
-            <div class="col-lg-6">
-                <form id="updateCustomerForm" method="POST" action="{% url 'update-customer' %}">
-                    {% csrf_token %}
-                    <!-- Form -->
-                    {{ form.as_p }}
-                    <!-- Submit Button -->
-                    <div class="d-grid"><button class="btn btn-primary" id="submitButton" type="submit">Update Profile</button></div>
-                </form>
-                <br>
-                <!-- Change password section -->
-                <div class="d-grid"><a class="btn btn-primary" href="{% url 'change-password' %}">Change Password</a></div>
-                <br>
-                <!-- Update info section -->
-                <div class="d-grid"><a class="btn btn-primary" href="{% url 'update-address' %}">Update Address</a></div>
+                <div class="col-lg-10">
+                    <form id="updateCustomerForm" method="POST" action="{% url 'update-customer' %}">
+                        {% csrf_token %}
+                        <!-- Form -->
+                        {{ form.as_p }}
+                        <!-- Buttons Wrapper -->
+                        <div class="d-grid row">
+                            <!-- Submit Button -->
+                            <div class="col-12 col-md-4 mb-2">
+                                <button class="btn btn-primary w-100" id="submitButton" type="submit">Update Profile</button>
+                            </div>
+                            <!-- Update address section -->
+                            <div class="col-12 col-md-4 mb-2">
+                                <a class="btn btn-primary w-100" href="{% url 'update-address' %}">Update Address</a>
+                            </div>
+                            <!-- Change password section -->
+                            <div class="col-12 col-md-4 mb-2">
+                                <a class="btn btn-primary w-100" href="{% url 'change-password' %}">Change Password</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -56,13 +56,17 @@ def register_customer(request):
 def update_customer(request):
     if request.user.is_authenticated:
         current_user = User.objects.get(id=request.user.id)
+        current_customer = Customer.objects.get(user=current_user.id)
         form = UpdateCustomerForm(request.POST or None, instance=current_user)
         if form.is_valid():
             form.save()
+            current_customer.phone_number = form.cleaned_data['phone_number']
+            current_customer.save()
             login(request, current_user)
             messages.success(request, 'Your profile has been successfully updated!')
             return redirect('update-customer')
         else:
+            form.initial['phone_number'] = current_customer.phone_number
             return render(request, 'users/update_customer.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
