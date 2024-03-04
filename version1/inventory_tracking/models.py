@@ -25,7 +25,7 @@ class ProductSize(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Enter the price to sell the product for.')
 
     def __str__(self):
-        return f'{self.size} ${self.price}'
+        return f'{self.size} ${self.price} - {self.product.__str__()}'
     
 # Designs to be combined with product to create store items
 class Design(models.Model):
