@@ -326,4 +326,48 @@ class TestUsersForms(TestCase):
         }
         form = ChangePasswordForm(user=self.user, data=data)
         self.assertTrue(form.is_valid())
-      
+
+class TestUsersViews(TestCase):
+
+    # Setup before tests
+    def setUp(self):
+        self.user = User.objects.create_user(username='test_user', email='user@example.com', password='testpassword', first_name='user', last_name='example')
+        self.customer = Customer(first_name='John', last_name='Doe', email='john.doe@example.com', phone_number='+12156783467')
+
+    ## Tests for login view
+    # Test for login view rendering success
+        
+    # Test for login view empty fields
+    
+    # Test for login view incorrect credentials
+        
+    # Test for login view success
+        
+    ## Tests for logout view
+    # Test for logout view success
+    
+    ## Tests for register view
+    # Test for register view rendering success
+        
+    # Test for register view success
+        
+    ## Tests for update customer view
+    # Test for update customer view redirect
+
+    # Test for update customer view rendering success
+        
+    # Test for update customer view success
+        
+    ## Tests for change password view
+    # Test for change password view redirect
+    
+    # Test for change password view rendering success
+        
+    # Test for change password view success
+        
+    ## Tests for update address view
+    # Test for update address view redirect
+        
+    # Test for update address view rendering success
+        
+    # Test for update address view success
