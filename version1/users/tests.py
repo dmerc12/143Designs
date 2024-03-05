@@ -343,6 +343,7 @@ class TestUsersViews(TestCase):
         response = self.client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/login.html')
+        self.assertIsInstance(response.context['form'], LoginForm)
         
     # Test for login view empty fields
     def test_login_view_empty_fields(self):
@@ -395,8 +396,29 @@ class TestUsersViews(TestCase):
     
     ## Tests for register view
     # Test for register view rendering success
+    def test_register_view_rendering_success(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/register.html')
+        self.assertIsInstance(response.context['form'], SignUpForm)
         
     # Test for register view success
+    def test_register_view_success(self):
+        data = {
+            'username': 'username',
+            'first_name': 'user',
+            'last_name': 'name',
+            'email': 'email@example.com',
+            'phone_number': '+14256547624',
+            'password1': 'firstlast',
+            'password2': 'firstlast'
+        }
+        response = self.client.post(reverse('register'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('update-address'))
+        self.assertTrue(Customer.objects.filter(user__username=data['username'], first_name=data['first_name'], last_name=data['last_name']).exists())
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You have registered successfully! Please add your address below!', messages)
         
     ## Tests for update customer view
     # Test for update customer view redirect

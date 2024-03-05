@@ -45,9 +45,6 @@ def register_customer(request):
             login(request, user)
             messages.success(request, 'You have registered successfully! Please add your address below!')
             return redirect('update-address')
-        else:
-            messages.success(request, 'Whoops! There was an error processing your registration, please try again!')
-            return redirect('register')
     else:
         form = SignUpForm()
         return render(request, 'users/register.html', {'form': form})
@@ -65,9 +62,7 @@ def update_customer(request):
             login(request, current_user)
             messages.success(request, 'Your profile has been successfully updated!')
             return redirect('update-customer')
-        else:
-            form.initial['phone_number'] = current_customer.phone_number
-            return render(request, 'users/update_customer.html', {'form': form})
+        return render(request, 'users/update_customer.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
         return redirect('login')
