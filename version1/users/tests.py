@@ -72,7 +72,7 @@ class TestUsersForms(TestCase):
     # Setup before tests
     def setUp(self):
         self.user = User.objects.create_user(username='test_user', email='user@example.com', password='testpassword', first_name='user', last_name='example')
-        
+  
     # Tests for login form 
     # Test form initialization
     def test_login_form_initialization(self):
@@ -111,7 +111,6 @@ class TestUsersForms(TestCase):
         self.assertIn('email', form.fields.keys())
         self.assertIn('first_name', form.fields.keys())
         self.assertIn('last_name', form.fields.keys())
-
      
     # Test form validation empty fields 
     def test_register_form_validation_empty_fields(self):
@@ -212,3 +211,119 @@ class TestUsersForms(TestCase):
         form = SignUpForm(data=data)
         self.assertTrue(form.is_valid())
         
+    # Tests for update customer form 
+    # Test form initialization
+    def test_update_customerr_form_initialization(self):
+        form = UpdateCustomerForm()
+        self.assertIn('username', form.fields.keys())
+        self.assertIn('phone_number', form.fields.keys())
+        self.assertIn('email', form.fields.keys())
+        self.assertIn('first_name', form.fields.keys())
+        self.assertIn('last_name', form.fields.keys())
+     
+    # Test form validation empty fields 
+    def test_update_customer_form_validation_empty_fields(self):
+        data = {
+            'username': '',
+            'phone_number': '',
+            'email': '',
+            'first_name': '',
+            'last_name': ''
+        }
+        form = UpdateCustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
+        self.assertIn('phone_number', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+
+    # Test form validation fields too long
+    def test_update_customer_form_validation_fields_too_long(self):
+        data = {
+            'username': 'this is just a test so it is designed to fail if it is a good test and so then it will cause the form not to be valid and the due to those failures the form will not be valid and an error message will ensue',
+            'phone_number': '1-425-345-6948-19371-283',
+            'email': 'testthatthisistoolongsoithastobesuperlongandthentheformwillnotbevalidandthenthetestwillpassandbesuccessfulbutinordertodosoithastobeincorrectformatsoitgetspastthefirstchecksuntilitreachesthelengthcheck@example.com',
+            'first_name': 'this is just a test so it is designed to fail if it is a good test and so then it will cause the form not to be valid and the due to those failures the form will not be valid and an error message will ensue',
+            'last_name': 'this is just a test so it is designed to fail if it is a good test and so then it will cause the form not to be valid and the due to those failures the form will not be valid and an error message will ensue'
+        }
+        form = UpdateCustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
+        self.assertIn('phone_number', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+
+    # Test form validation email format incorrect
+    def test_update_customer_form_validation_invalid_email_format(self):
+        data = {
+            'username': 'testuser',
+            'phone_number': '1-425-345-6948',
+            'email': 'test at example dot com',
+            'first_name': 'test',
+            'last_name': 'user'
+        }
+        form = UpdateCustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+
+    # Test form validation success
+    def test_update_customer_form_validation_success(self):
+        data = {
+            'username': 'yet_another_update',
+            'phone_number': '98-693-694-9306',
+            'email': 'updated@example.com',
+            'first_name': 'updated',
+            'last_name': 'updated'
+        }
+        form = UpdateCustomerForm(data=data)
+        self.assertTrue(form.is_valid())
+        
+    # Tests for change password form 
+    # Test form initialization
+    def test_change_password_form_initialization(self):
+        form = ChangePasswordForm(user=self.user)
+        self.assertIn('new_password1', form.fields.keys())
+        self.assertIn('new_password2', form.fields.keys())
+
+    # Test form validation empty fields 
+    def test_change_password_form_validation_empty_fields(self):
+        data = {
+            'new_password1': '',
+            'new_password2': ''
+        }
+        form = ChangePasswordForm(user=self.user, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('new_password1', form.errors)
+        self.assertIn('new_password2', form.errors)
+
+    # Test form validation password invalid
+    def test_change_password_form_validation_password_invalid(self):
+        data = {
+            'new_password1': 'testuser',
+            'new_password2': 'testuser',
+        }
+        form = ChangePasswordForm(user=self.user, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('new_password2', form.errors)
+
+    # Test form validation mismatching passwords
+    def test_change_password_form_validation_mismatching_passwords(self):
+        data = {
+            'new_password1': 'mismatching',
+            'new_password2': 'passwords',
+        }
+        form = ChangePasswordForm(user=self.user, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('new_password2', form.errors)
+
+    # Test form validation success
+    def test_change_password_form_validation_success(self):
+        data = {
+            'new_password1': 'new_1234567890',
+            'new_password2': 'new_1234567890'
+        }
+        form = ChangePasswordForm(user=self.user, data=data)
+        self.assertTrue(form.is_valid())
+      
