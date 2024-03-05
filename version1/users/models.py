@@ -60,8 +60,7 @@ class Customer(models.Model):
 def create_customer(sender, instance, created, **kwargs):
     if created and not instance.is_superuser:
         if not Customer.objects.filter(user=instance).exists():
-            customer = Customer(user=instance, first_name=instance.first_name, last_name=instance.last_name, email=instance.email)
-            customer.save()
+            Customer.objects.create(user=instance, first_name=instance.first_name, last_name=instance.last_name, email=instance.email)
 
 # Suppliers
 class Supplier(models.Model):

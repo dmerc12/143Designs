@@ -10,17 +10,22 @@ def login_customer(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
+            print("form is valid")
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            customer = authenticate(request, username=username, password=password)
-            if customer is not None:
-                login(request, customer)
-                messages.success(request, f'Welcome {customer.first_name}!')
+            user = authenticate(username=username, password=password)
+            print("Customer: " + user.__str__())
+            if user is not None:
+                print("logged in")
+                login(request, user)
+                messages.success(request, f'Welcome {user.first_name}!')
                 return redirect('store-home')
             else:
+                print("customer not found")
                 messages.error(request, 'Incorrect username or password, please try again!')
                 return redirect('login')
         else:
+            print("form not valid")
             messages.error(request, 'Incorrect username or password, please try again!')
             return redirect('login')
     else:
