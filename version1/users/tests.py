@@ -3,7 +3,7 @@ from django.contrib.messages import get_messages
 from .admin import CustomerAdmin, SupplierAdmin
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from .models import *
 from .forms import *
@@ -334,7 +334,8 @@ class TestUsersViews(TestCase):
 
     # Setup before tests
     def setUp(self):
-        self.user = User.objects.create(first_name='first', last_name='last', username='firstlast', password='testuser', email='testuser@example.com')
+        self.client = Client()
+        self.user = User.objects.create_user(first_name='first', last_name='last', username='firstlast', password='testuser', email='testuser@example.com')
         
     ## Tests for login view
     # Test for login view rendering success
@@ -367,11 +368,9 @@ class TestUsersViews(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
         self.assertIn('Incorrect username or password, please try again!', messages)
 
-    # FIXME: This test is failing as the user coming back from authenticate is None while the user is being created successfully
     # Test for login view success
     def test_login_view_success(self):
         customer = Customer.objects.get(user__username=self.user.username)
-        print(customer.user.__str__())
         data = {
             'username': self.user.username,
             'password': 'testuser'
@@ -382,7 +381,7 @@ class TestUsersViews(TestCase):
         user = get_user(response.wsgi_request)
         self.assertTrue(user.is_authenticated)
         messages = [m.message for m in get_messages(response.wsgi_request)]
-        self.assertIn(f'Welcome {self.user.user.first_name}!', messages)
+        self.assertIn(f'Welcome {self.user.first_name}!', messages)
    
     ## Tests for logout view
     # Test for logout view success
