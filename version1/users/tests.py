@@ -330,6 +330,7 @@ class TestUsersForms(TestCase):
         form = ChangePasswordForm(user=self.user, data=data)
         self.assertTrue(form.is_valid())
 
+# Tests for users views
 class TestUsersViews(TestCase):
 
     # Setup before tests
