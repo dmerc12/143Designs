@@ -60,9 +60,32 @@ class TestSiteManagementViews(TestCase):
 
     ## Tests for home view
     # Test for home view rendering success
+    def test_home_view_rendering_success(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
         
     ## Tests for contact view
     # Test for contact view rendering success
+    def test_contact_view_rendering_success(self):
+        response = self.client.get(reverse('contact'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'contact.html')
+        self.assertIsInstance(response.context['form'], ContactForm)
         
-    # Test for contact view success 
-    
+    # Test for contact view success
+    def test_contact_view_success(self):
+        data = {
+            'first_name': 'first',
+            'last_name': 'last',
+            'email': 'test@email.com',
+            'phone_number': '+12345678901',
+            'title': 'title',
+            'message': 'message'
+        } 
+        response = self.client.post(reverse('contact'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('store-home'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn("Your message has been successfully sent. We will be in contact soon! In the meantime, check out what's in stock in our store below!", messages)
+   

@@ -372,7 +372,6 @@ class TestUsersViews(TestCase):
 
     # Test for login view success
     def test_login_view_success(self):
-        customer = Customer.objects.get(user__username=self.user.username)
         data = {
             'username': self.user.username,
             'password': 'testuser'
