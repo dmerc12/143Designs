@@ -484,3 +484,35 @@ class TestUsersViews(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
         self.assertIn('Your password has been changed!', messages)
         
+    ## Tests for update address view
+    # Test for update address view redirect
+    def test_update_address_view_redirect(self):
+        response = self.client.get(reverse('update-address'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You must be logged in to access this page. Please log in then try again!', messages)
+    
+    # Test for update address view rendering success
+    def test_update_address_view_rendering_success(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('update-address'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/update_address.html')
+       
+    # Test for update address view success
+    def test_update_address_view_success(self):
+        data = {
+            'address1': '321 updated',
+            'address2': 'new address',
+            'city': 'city',
+            'state': 'state',
+            'zipcode': '12345',
+            'country': 'US'
+        }
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('update-address'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('update-customer'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('Your address has been successfully updated!', messages)
