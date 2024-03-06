@@ -10,22 +10,17 @@ def login_customer(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            print("form is valid")
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            print("Customer: " + user.__str__())
+            user = authenticate(request=request, username=username, password=password)
             if user is not None:
-                print("logged in")
                 login(request, user)
                 messages.success(request, f'Welcome {user.first_name}!')
-                return redirect('store-home')
+                return redirect('home')
             else:
-                print("customer not found")
                 messages.error(request, 'Incorrect username or password, please try again!')
                 return redirect('login')
         else:
-            print("form not valid")
             messages.error(request, 'Incorrect username or password, please try again!')
             return redirect('login')
     else:
@@ -50,9 +45,6 @@ def register_customer(request):
             login(request, user)
             messages.success(request, 'You have registered successfully! Please add your address below!')
             return redirect('update-address')
-        else:
-            messages.success(request, 'Whoops! There was an error processing your registration, please try again!')
-            return redirect('register')
     else:
         form = SignUpForm()
         return render(request, 'users/register.html', {'form': form})
@@ -72,7 +64,7 @@ def update_customer(request):
             return redirect('update-customer')
         else:
             form.initial['phone_number'] = current_customer.phone_number
-            return render(request, 'users/update_customer.html', {'form': form})
+        return render(request, 'users/update_customer.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
         return redirect('login')
@@ -88,13 +80,9 @@ def change_password(request):
                 login(request, current_user)
                 messages.success(request, 'Your password has been changed!')
                 return redirect('update-customer')
-            else:
-                for error in list(form.errors.values()):
-                    messages.error(request, error)
-                return redirect('change-password')
         else:
             form = ChangePasswordForm(current_user)
-            return render(request, 'users/update_password.html', {'form': form})
+        return render(request, 'users/update_password.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
         return redirect('login')
@@ -108,8 +96,7 @@ def update_address(request):
             form.save()
             messages.success(request, 'Your address has been successfully updated!')
             return redirect('update-customer')
-        else:
-            return render(request, 'users/update_address.html', {'form': form})
+        return render(request, 'users/update_address.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
         return redirect('login')

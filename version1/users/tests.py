@@ -3,7 +3,7 @@ from django.contrib.messages import get_messages
 from .admin import CustomerAdmin, SupplierAdmin
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from .models import *
 from .forms import *
@@ -330,11 +330,13 @@ class TestUsersForms(TestCase):
         form = ChangePasswordForm(user=self.user, data=data)
         self.assertTrue(form.is_valid())
 
+# Tests for users views
 class TestUsersViews(TestCase):
 
     # Setup before tests
     def setUp(self):
-        self.user = User.objects.create(first_name='first', last_name='last', username='firstlast', password='testuser', email='testuser@example.com')
+        self.client = Client()
+        self.user = User.objects.create_user(first_name='first', last_name='last', username='firstlast', password='testuser', email='testuser@example.com')
         
     ## Tests for login view
     # Test for login view rendering success
@@ -342,6 +344,7 @@ class TestUsersViews(TestCase):
         response = self.client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/login.html')
+        self.assertIsInstance(response.context['form'], LoginForm)
         
     # Test for login view empty fields
     def test_login_view_empty_fields(self):
@@ -367,11 +370,8 @@ class TestUsersViews(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
         self.assertIn('Incorrect username or password, please try again!', messages)
 
-    # FIXME: This test is failing as the user coming back from authenticate is None while the user is being created successfully
     # Test for login view success
     def test_login_view_success(self):
-        customer = Customer.objects.get(user__username=self.user.username)
-        print(customer.user.__str__())
         data = {
             'username': self.user.username,
             'password': 'testuser'
@@ -382,33 +382,137 @@ class TestUsersViews(TestCase):
         user = get_user(response.wsgi_request)
         self.assertTrue(user.is_authenticated)
         messages = [m.message for m in get_messages(response.wsgi_request)]
-        self.assertIn(f'Welcome {self.user.user.first_name}!', messages)
+        self.assertIn(f'Welcome {self.user.first_name}!', messages)
    
     ## Tests for logout view
     # Test for logout view success
+    def test_logout_view_success(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('logout'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You have been successfully logged out!', messages)
     
     ## Tests for register view
     # Test for register view rendering success
+    def test_register_view_rendering_success(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/register.html')
+        self.assertIsInstance(response.context['form'], SignUpForm)
         
     # Test for register view success
+    def test_register_view_success(self):
+        data = {
+            'username': 'username',
+            'first_name': 'user',
+            'last_name': 'name',
+            'email': 'email@example.com',
+            'phone_number': '+14256547624',
+            'password1': 'firstlast',
+            'password2': 'firstlast'
+        }
+        response = self.client.post(reverse('register'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('update-address'))
+        self.assertTrue(Customer.objects.filter(user__username=data['username'], first_name=data['first_name'], last_name=data['last_name']).exists())
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You have registered successfully! Please add your address below!', messages)
         
     ## Tests for update customer view
     # Test for update customer view redirect
+    def test_update_customer_view_redirect(self):
+        response = self.client.get(reverse('update-customer'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You must be logged in to access this page. Please log in then try again!', messages)
 
     # Test for update customer view rendering success
+    def test_update_customer_view_rendering_success(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('update-customer'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/update_customer.html')
+        self.assertIsInstance(response.context['form'], UpdateCustomerForm)
         
     # Test for update customer view success
+    def test_update_customer_view_success(self):
+        data = {
+            'username': 'updateduser',
+            'email': 'updated@example.com',
+            'phone_number': '99-222-333-4444',
+            'first_name': 'updated',
+            'last_name': 'user'
+        }
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('update-customer'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('update-customer'))
+        self.assertTrue(Customer.objects.filter(user__username=data['username']).exists())
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('Your profile has been successfully updated!', messages)
         
     ## Tests for change password view
     # Test for change password view redirect
+    def test_change_password_view_redirect(self):
+        response = self.client.get(reverse('change-password'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You must be logged in to access this page. Please log in then try again!', messages)
     
     # Test for change password view rendering success
-        
+    def test_change_password_view_rendering_success(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('change-password'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/update_password.html')
+        self.assertIsInstance(response.context['form'], ChangePasswordForm)
+       
     # Test for change password view success
+    def test_change_password_success(self):
+        data = {
+            'new_password1': 'updatedpassword123',
+            'new_password2': 'updatedpassword123'
+        }
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('change-password'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('update-customer'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('Your password has been changed!', messages)
         
     ## Tests for update address view
     # Test for update address view redirect
-        
+    def test_update_address_view_redirect(self):
+        response = self.client.get(reverse('update-address'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You must be logged in to access this page. Please log in then try again!', messages)
+    
     # Test for update address view rendering success
-        
+    def test_update_address_view_rendering_success(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('update-address'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/update_address.html')
+       
     # Test for update address view success
+    def test_update_address_view_success(self):
+        data = {
+            'address1': '321 updated',
+            'address2': 'new address',
+            'city': 'city',
+            'state': 'state',
+            'zipcode': '12345',
+            'country': 'US'
+        }
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('update-address'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('update-customer'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('Your address has been successfully updated!', messages)
