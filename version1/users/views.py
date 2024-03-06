@@ -62,6 +62,8 @@ def update_customer(request):
             login(request, current_user)
             messages.success(request, 'Your profile has been successfully updated!')
             return redirect('update-customer')
+        else:
+            form.initial['phone_number'] = current_customer.phone_number
         return render(request, 'users/update_customer.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
@@ -84,7 +86,7 @@ def change_password(request):
                 return redirect('change-password')
         else:
             form = ChangePasswordForm(current_user)
-            return render(request, 'users/update_password.html', {'form': form})
+        return render(request, 'users/update_password.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
         return redirect('login')
@@ -98,8 +100,7 @@ def update_address(request):
             form.save()
             messages.success(request, 'Your address has been successfully updated!')
             return redirect('update-customer')
-        else:
-            return render(request, 'users/update_address.html', {'form': form})
+        return render(request, 'users/update_address.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please log in then try again!')
         return redirect('login')
