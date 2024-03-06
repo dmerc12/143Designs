@@ -456,14 +456,31 @@ class TestUsersViews(TestCase):
         
     ## Tests for change password view
     # Test for change password view redirect
+    def test_change_password_view_redirect(self):
+        response = self.client.get(reverse('change-password'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('You must be logged in to access this page. Please log in then try again!', messages)
     
     # Test for change password view rendering success
-        
+    def test_change_password_view_rendering_success(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('change-password'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/update_password.html')
+        self.assertIsInstance(response.context['form'], ChangePasswordForm)
+       
     # Test for change password view success
+    def test_change_password_success(self):
+        data = {
+            'new_password1': 'updatedpassword123',
+            'new_password2': 'updatedpassword123'
+        }
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('change-password'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('update-customer'))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertIn('Your password has been changed!', messages)
         
-    ## Tests for update address view
-    # Test for update address view redirect
-        
-    # Test for update address view rendering success
-        
-    # Test for update address view success

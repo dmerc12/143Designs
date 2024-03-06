@@ -80,10 +80,6 @@ def change_password(request):
                 login(request, current_user)
                 messages.success(request, 'Your password has been changed!')
                 return redirect('update-customer')
-            else:
-                for error in list(form.errors.values()):
-                    messages.error(request, error)
-                return redirect('change-password')
         else:
             form = ChangePasswordForm(current_user)
         return render(request, 'users/update_password.html', {'form': form})
