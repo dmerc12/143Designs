@@ -313,6 +313,14 @@ class TestUsersViews(TestCase):
         self.assertIn(f'Welcome {self.base2.first_name} {self.base2.last_name}!', messages)
 
     ## Tests for logout view
+    ### Tests logout view success
+    def test_logout_view_success(self):
+        self.client.force_login(self.base1)
+        response = self.client.get(reverse('logout'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Goodbye!', messages)
         
     ## Tests for register view
         

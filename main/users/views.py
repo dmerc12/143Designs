@@ -34,6 +34,12 @@ def login_user(request):
         form = LoginForm()
     return render(request, 'users/login.html', {'form': form})
 
+# View for logout functionality
+def logout_user(request):
+    logout(request)
+    messages.success(request, 'Goodbye!')
+    return redirect('home')
+
 # View for register page
 
 # View for update user page
