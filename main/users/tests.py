@@ -313,7 +313,7 @@ class TestUsersViews(TestCase):
         self.assertIn(f'Welcome {self.base2.first_name} {self.base2.last_name}!', messages)
 
     ## Tests for logout view
-    ### Tests logout view success
+    ### Test logout view success
     def test_logout_view_success(self):
         self.client.force_login(self.base1)
         response = self.client.get(reverse('logout'))
@@ -323,7 +323,32 @@ class TestUsersViews(TestCase):
         self.assertIn('Goodbye!', messages)
         
     ## Tests for register view
-        
+    ### Test register view rendering success
+    def test_register_view_rendering_success(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/register.html')
+        self.assertIsInstance(response.context['form'], RegisterForm)
+
+    ### Test register view success
+    def test_register_view_success(self):
+        data = {
+            'username': 'testuser',
+            'first_name': 'test',
+            'last_name': 'user',
+            'email': 'test@user.com',
+            'phone_number': '1234567890',
+            'password1': 'pass12345',
+            'password2': 'pass12345'
+        }
+        response = self.client.post(reverse('register'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        self.assertTrue(User.objects.filter(username=data['username']).exists)
+        self.assertTrue(CustomUser.objects.filter(user__username=data['username']).exists)
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f"Your account has been created and you have been logged in!\nWelcome {data['first_name']} {data['last_name']}!", messages)
+
     ## Tests for update user view
         
     ## Tests for change password view

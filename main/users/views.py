@@ -41,6 +41,22 @@ def logout_user(request):
     return redirect('home')
 
 # View for register page
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            user = form.save()
+            CustomUser.objects.create(user=user, phone_number=phone_number, role='user')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, f'Your account has been created and you have been logged in!\nWelcome {user.first_name} {user.last_name}!')
+            return redirect('home')
+    else:
+        form = RegisterForm()
+    return render(request, 'users/register.html', {'form': form})
 
 # View for update user page
 
