@@ -52,31 +52,113 @@ class TestUserForms(TestCase):
     ## Tests for register form
     ### Test register form initialization
     def test_register_form_initialization(self):
-        pass
+        form = RegisterForm()
+        self.assertIn('username', form.fields.keys())
+        self.assertIn('email', form.fields.keys())
+        self.assertIn('first_name', form.fields.keys())
+        self.assertIn('last_name', form.fields.keys())
+        self.assertIn('phone_number', form.fields.keys())
+        self.assertIn('password1', form.fields.keys())
+        self.assertIn('password2', form.fields.keys())
 
     ### Test register form validation with empty fields
     def test_register_form_validation_empty_fields(self):
-        pass
+        data = {
+            'username': '',
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+            'phone_number': '',
+            'password1': '',
+            'password2': ''
+        }
+        form = RegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
+        self.assertIn('password1', form.errors)
+        self.assertIn('password2', form.errors)
 
     ### Test register form validation with fields too long
     def test_register_form_validation_fields_too_long(self):
-        pass
+        data = {
+            'username': 'test' * 50,
+            'first_name': 'test' * 50,
+            'last_name': 'test' * 50,
+            'email': 'test' * 50 + '@email.com',
+            'phone_number': '1' * 16,
+            'password1': 'there is no max length for passwords',
+            'password2': 'there is no max length for passwords'
+        }
+        form = RegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
 
     ### Test register form validation with invalid email
     def test_register_form_validation_invalid_email(self):
-        pass
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'incorrect format',
+            'phone_number': '1-123-123-1234',
+            'password1': 'there is no max length for passwords',
+            'password2': 'there is no max length for passwords'
+        }
+        form = RegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
 
     ### Test register form validation with invalid password
     def test_register_form_validation_invalid_password(self):
-        pass
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'test@email.com',
+            'phone_number': '1-123-123-1234',
+            'password1': 'testtest',         
+            'password2': 'testtest'
+        }
+        form = RegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('password2', form.errors)
 
     ### Test register form validation with mismatching passwords
     def test_register_form_validation_mismatching_passwords(self):
-        pass
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'test@email.com',
+            'phone_number': '1-123-123-1234',
+            'password1': 'mismatching',         
+            'password2': 'passwords'
+        }
+        form = RegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('password2', form.errors)
 
     ### Test register form validation success
     def test_register_form_validation_successs(self):
-        pass
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'test@email.com',
+            'phone_number': '1-123-123-1234',
+            'password1': 'user12345',         
+            'password2': 'user12345'
+        }
+        form = RegisterForm(data=data)
+        self.assertTrue(form.is_valid())
         
     ## Tests for update user form
     
