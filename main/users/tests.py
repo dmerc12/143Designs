@@ -161,5 +161,80 @@ class TestUserForms(TestCase):
         self.assertTrue(form.is_valid())
         
     ## Tests for update user form
+    ### Test update user form initialization
+    def test_update_user_form_initialization(self):
+        form = UpdateUserForm()
+        self.assertIn('username', form.fields.keys())
+        self.assertIn('first_name', form.fields.keys())
+        self.assertIn('last_name', form.fields.keys())
+        self.assertIn('email', form.fields.keys())
+        self.assertIn('phone_number', form.fields.keys())
+
+    ### Test update user form validation with empty fields
+    def test_update_user_form_validation_empty_fields(self):
+        data = {
+            'username': '',
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+            'phone_number': '',
+        }
+        form = UpdateUserForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
+
+    ### Test update user form validation with fields too long
+    def test_update_user_form_validation_fields_too_long(self):
+        data = {
+            'username': 'test' * 50,
+            'first_name': 'test' * 50,
+            'last_name': 'test' * 50,
+            'email': 'test' * 50 + '@email.com',
+            'phone_number': '1' * 16,
+        }
+        form = UpdateUserForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
+
+    ### Test update user form validation with invalid email
+    def test_update_user_form_validation_invalid_email(self):
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'incorrect format',
+            'phone_number': '1-123-123-1234'
+        }
+        form = UpdateUserForm(data=data)
+        self.assertIn('email', form.errors)
+
+    ### Test update user form validation success
+    def test_update_user_form_validation_success(self):
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'test@email.com',
+            'phone_number': '1-123-123-1234'
+        }
+        form = UpdateUserForm(data=data)
+        self.assertTrue(form.is_valid())
     
     ## Tests for change password form
+    ### Test change password form initialization
+
+    ### Test change password form validation with empty fields
+
+    ### Test change password form validation with an invalid password
+
+    ### Test change password form validation with mismatching passwords
+
+    ### Test change password form validation success

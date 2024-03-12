@@ -57,8 +57,8 @@ class UpdateUserForm(UserChangeForm):
     # Get other fields
 	phone_number = forms.CharField(label="", max_length=15, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number'}))
 	email = forms.EmailField(label="", max_length=150, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
-	first_name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
-	last_name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
+	first_name = forms.CharField(label="", max_length=150, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
+	last_name = forms.CharField(label="", max_length=150, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
 
 	class Meta:
 		model = User
@@ -67,6 +67,7 @@ class UpdateUserForm(UserChangeForm):
 	def __init__(self, *args, **kwargs):
 		super(UpdateUserForm, self).__init__(*args, **kwargs)
 
+		self.fields['username'].widget.attrs['max_length'] = 185
 		self.fields['username'].widget.attrs['class'] = 'form-control'
 		self.fields['username'].widget.attrs['placeholder'] = 'Username'
 		self.fields['username'].label = ''
