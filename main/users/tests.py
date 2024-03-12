@@ -230,11 +230,34 @@ class TestUserForms(TestCase):
     
     ## Tests for change password form
     ### Test change password form initialization
+    def test_change_password_form_initialization(self):
+        form = ChangePasswordForm(user=self.base)
+        self.assertIn('new_password1', form.fields.keys())
+        self.assertIn('new_password2', form.fields.keys())
 
     ### Test change password form validation with empty fields
+    def test_change_password_form_validation_empty_fields(self):
+        data = {'new_password1': '', 'new_password2': ''}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertIn('new_password1', form.errors)
+        self.assertIn('new_password2', form.errors)
 
     ### Test change password form validation with an invalid password
+    def test_change_password_form_validation_invalid_password(self):
+        data = {'new_password1': self.base.first_name, 'new_password2': self.base.first_name}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('new_password2', form.errors)
 
     ### Test change password form validation with mismatching passwords
+    def test_change_password_form_validation_mismatching_passwords(self):
+        data = {'new_password1': 'mismatching', 'new_password2': 'passwords'}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('new_password2', form.errors)
 
     ### Test change password form validation success
+    def test_change_password_form_validation_success(self):
+        data = {'new_password1': 'updatedpass123', 'new_password2': 'updatedpass123'}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertTrue(form.is_valid())
