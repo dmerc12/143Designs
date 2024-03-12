@@ -1,7 +1,9 @@
 from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm
+from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
+from django.test import TestCase, Client
 from .models import Address, CustomUser
-from django.test import TestCase
+from django.urls import reverse
 
 # Tests for users models
 class TestUsersModels(TestCase):
@@ -22,7 +24,7 @@ class TestUsersModels(TestCase):
         self.assertEqual(str(user), f'{user.user.first_name} {user.user.last_name} - {user.user.username} - {user.role}')
 
 # Tests for users forms
-class TestUserForms(TestCase):
+class TestUsersForms(TestCase):
 
     def setUp(self):
         self.base = User.objects.create_user(username='username', password='testpass123', first_name='user', last_name='name', email='test@email.com')
@@ -261,3 +263,59 @@ class TestUserForms(TestCase):
         data = {'new_password1': 'updatedpass123', 'new_password2': 'updatedpass123'}
         form = ChangePasswordForm(user=self.base, data=data)
         self.assertTrue(form.is_valid())
+
+# Tests for users views
+class TestUsersViews(TestCase):
+    
+    def setUp(self):
+        self.client = Client()
+        self.base1 = User.objects.create_user(username='adminuser', password='pass12345', first_name='admin', last_name='admin', email='admin@email.com')
+        self.user1 = CustomUser.objects.create(user=self.base1, role='admin', phone_number='1234567890')
+        self.base2 = User.objects.create_user(username='username', password='pass12345', first_name='user', last_name='user', email='example@email.com')
+        self.user2 = CustomUser.objects.create(user=self.base2, role='user', phone_number='1234567890')
+
+    ## Tests for home view
+        
+    ## Tests for admin home view
+    
+    ## Tests for login view
+    ### Test login view rendering success
+    def test_login_view_rendering_success(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/login.html')
+        self.assertIsInstance(response.context['form'], LoginForm)
+
+    ### Test login view with incorrect credentials
+    def test_login_view_incorrect_credentials(self):
+        data = {'username': 'incorrect', 'password': 'credentials'}
+        response = self.client.post(reverse('login'), data=data)
+        self.assertEqual(response.status_code, 200)
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Incorrect username or password, please try again!', messages)
+
+    ### Test login view success with admin
+    def test_login_view_admin_success(self):
+        data = {'username': self.base1.username, 'password': 'pass12345'}
+        response = self.client.post(reverse('login'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('admin-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f'Welcome {self.base1.first_name} {self.base1.last_name}!', messages)
+
+    ### Test login view success with user
+    def test_login_view_user_success(self):
+        data = {'username': self.base2.username, 'password': 'pass12345'}
+        response = self.client.post(reverse('login'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f'Welcome {self.base2.first_name} {self.base2.last_name}!', messages)
+
+    ## Tests for logout view
+        
+    ## Tests for register view
+        
+    ## Tests for update user view
+        
+    ## Tests for change password view
