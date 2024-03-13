@@ -8,7 +8,7 @@ def before_all(context: Context):
     context.driver = WebDriver()
 
     # Register POM files below
-    ## Users POMs
+    ## Users POMsgit
     context.register_poms = RegisterPage(context.driver)
     context.login_pomss = LoginPage(context.driver)
 
