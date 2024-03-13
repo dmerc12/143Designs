@@ -1,5 +1,6 @@
 from selenium.webdriver.edge.webdriver import WebDriver
 from poms.users.register import RegisterPage
+from poms.users.login import LoginPage
 from behave.runner import Context
 
 # Setup for webdriver and POM files before selenium tests
@@ -9,6 +10,7 @@ def before_all(context: Context):
     # Register POM files below
     ## Users POMs
     context.register_poms = RegisterPage(context.driver)
+    context.login_pomss = LoginPage(context.driver)
 
     ## Inventory tracking POMs
 
