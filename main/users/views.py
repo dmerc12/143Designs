@@ -1,6 +1,7 @@
 from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import CustomUser
 
@@ -59,6 +60,26 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 # View for update user page
+def update_user(request):
+    if request.user.is_authenticated:
+        base_user = User.objects.get(pk=request.user.pk)
+        user = CustomUser.objects.get(user=base_user.pk)
+        if request.method == 'POST':
+            form = UpdateUserForm(request.POST, instance=base_user)
+            if form.is_valid():
+                form.save()
+                user.phone_number = form.cleaned_data['phone_number']
+                user.save()
+                login(request, base_user)
+                messages.success(request, 'Your account has been successfully updated!')
+                return redirect('home')
+        else:
+            form = UpdateUserForm(instance=base_user)
+            form.initial['phone_number'] = user.phone_number
+        return render(request, 'users/update.html', {'form': form})
+    else:
+        messages.error(request, 'You must be logged in tho access this page. Please register or login then try again!')
+        return redirect('login')
 
 # View for change password page
 

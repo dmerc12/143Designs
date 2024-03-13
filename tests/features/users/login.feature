@@ -34,5 +34,5 @@ Feature: Users need to be able to login to access the site
     Then  I should be on a page with the title <title>
 
     Examples:
-    |username   |password   |title |
-    |'testadmin'|'pass12345'|'Home'|
+    |username   |password   |title       |
+    |'testadmin'|'pass12345'|'Admin Home'|

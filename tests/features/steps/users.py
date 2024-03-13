@@ -1,11 +1,6 @@
 from behave import when
 
 # Register steps
-## When step for clicking register button in nav bar
-@when(u'I click the register button in the nav bar')
-def step_impl(context):
-    pass
-
 ## When step for entering username input on register page
 @when(u'I enter {username} in the username input on the register page')
 def step_impl(context, username):
@@ -47,11 +42,6 @@ def step_impl(context):
     context.register_poms.click_register_button()
 
 # Login steps
-## When step for clicking login button in nav bar
-@when(u'I click the login button in the nav bar')
-def step_impl(context):
-    pass
-
 ## When step for entering username input on login page
 @when(u'I enter {username} in the username input on the login page')
 def step_impl(context, username):
@@ -66,3 +56,34 @@ def step_impl(context, password):
 @when(u'I click the login button')
 def step_impl(context):
     context.login_poms.click_login_button()
+
+# Update user steps
+## When step for entering username input on update user page
+@when(u'I enter {new_username} in the username input on the update user page')
+def step_impl(context, new_username):
+    context.update_user_poms.enter_username_input(new_username)
+
+## When step for entering first name input on update user page
+@when(u'I enter {first_name} in the first name input on the update user page')
+def step_impl(context, first_name):
+    context.update_user_poms.enter_first_name_input(first_name)
+
+## When step for entering last name input on update user page
+@when(u'I enter {last_name} in the last name input on the update user page')
+def step_impl(context, last_name):
+    context.update_user_poms.enter_last_name_input(last_name)
+
+## When step for entering email input on update user page
+@when(u'I enter {email} in the email input on the update user page')
+def step_impl(context, email):
+    context.update_user_poms.enter_email_input(email)
+
+## When step for entering phone number input on update user page
+@when(u'I enter {phone_number} in the phone number inpupt on the update user page')
+def step_impl(context, phone_number):
+    context.update_user_poms.enter_phone_number_input(phone_number)
+
+## When step for clicking update user page
+@when(u'I click the update user button')
+def step_impl(context):
+    context.update_user_poms.click_update_user_button()

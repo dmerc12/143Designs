@@ -36,7 +36,7 @@ class TestUsersForms(TestCase):
         form = LoginForm()
         self.assertIn('username', form.fields.keys())
         self.assertIn('password', form.fields.keys())
-        
+
     ### Test for login form validation with empty fields
     def test_login_form_validation_empty_fields(self):
         data = {'username': '', 'password': ''}
@@ -44,7 +44,7 @@ class TestUsersForms(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('username', form.errors)
         self.assertIn('password', form.errors)
-        
+
     ### Test login form validation success
     def test_login_form_validation_success(self):
         data = {'username': self.base.username, 'password': self.base.password}
@@ -126,7 +126,7 @@ class TestUsersForms(TestCase):
             'last_name': 'test',
             'email': 'test@email.com',
             'phone_number': '1-123-123-1234',
-            'password1': 'testtest',         
+            'password1': 'testtest',
             'password2': 'testtest'
         }
         form = RegisterForm(data=data)
@@ -141,7 +141,7 @@ class TestUsersForms(TestCase):
             'last_name': 'test',
             'email': 'test@email.com',
             'phone_number': '1-123-123-1234',
-            'password1': 'mismatching',         
+            'password1': 'mismatching',
             'password2': 'passwords'
         }
         form = RegisterForm(data=data)
@@ -156,12 +156,12 @@ class TestUsersForms(TestCase):
             'last_name': 'test',
             'email': 'test@email.com',
             'phone_number': '1-123-123-1234',
-            'password1': 'user12345',         
+            'password1': 'user12345',
             'password2': 'user12345'
         }
         form = RegisterForm(data=data)
         self.assertTrue(form.is_valid())
-        
+
     ## Tests for update user form
     ### Test update user form initialization
     def test_update_user_form_initialization(self):
@@ -229,7 +229,7 @@ class TestUsersForms(TestCase):
         }
         form = UpdateUserForm(data=data)
         self.assertTrue(form.is_valid())
-    
+
     ## Tests for change password form
     ### Test change password form initialization
     def test_change_password_form_initialization(self):
@@ -266,7 +266,7 @@ class TestUsersForms(TestCase):
 
 # Tests for users views
 class TestUsersViews(TestCase):
-    
+
     def setUp(self):
         self.client = Client()
         self.base1 = User.objects.create_user(username='adminuser', password='pass12345', first_name='admin', last_name='admin', email='admin@email.com')
@@ -275,9 +275,9 @@ class TestUsersViews(TestCase):
         self.user2 = CustomUser.objects.create(user=self.base2, role='user', phone_number='1234567890')
 
     ## Tests for home view
-        
+
     ## Tests for admin home view
-    
+
     ## Tests for login view
     ### Test login view rendering success
     def test_login_view_rendering_success(self):
@@ -321,7 +321,7 @@ class TestUsersViews(TestCase):
         self.assertRedirects(response, reverse('home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn('Goodbye!', messages)
-        
+
     ## Tests for register view
     ### Test register view rendering success
     def test_register_view_rendering_success(self):
@@ -350,5 +350,36 @@ class TestUsersViews(TestCase):
         self.assertIn(f"Your account has been created and you have been logged in!\nWelcome {data['first_name']} {data['last_name']}!", messages)
 
     ## Tests for update user view
-        
+    ### Test update user vew redirect
+    def test_update_user_view_redirect(self):
+        response = self.client.get(reverse('update-user'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+
+    ### Test update user view rendering success
+    def test_update_user_view_rendering_success(self):
+        self.client.force_login(self.base1)
+        response = self.client.get(reverse('update-user'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/update.html')
+        self.assertIsInstance(response.context['form'], UpdateUserForm)
+
+    ### Test update user view success
+    def test_update_user_view_success(self):
+        self.client.force_login(self.base1)
+        data = {
+            'username': 'updated',
+            'first_name': 'updated',
+            'last_name': 'updated',
+            'email': 'updated@email.com',
+            'phone_number': '1-111-111-1111'
+        }
+        response = self.client.post(reverse('update-user'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        self.assertTrue(User.objects.filter(username=data['username']).exists())
+        self.assertTrue(CustomUser.objects.filter(phone_number=data['phone_number']).exists())
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f"Your account has been successfully updated!", messages)
+
     ## Tests for change password view
