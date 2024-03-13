@@ -84,3 +84,14 @@ def update_user(request):
 # View for change password page
 
 # View for delete user page
+def delete_user(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            request.user.delete()
+            logout(request)
+            messages.success(request, 'Your profile has been successfully deleted, goodbye!')
+            return redirect('home')
+        return render(request, 'users/delete.html')
+    else:
+        messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
+        return redirect('login')

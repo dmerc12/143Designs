@@ -2,6 +2,7 @@ from selenium.webdriver.edge.webdriver import WebDriver
 from poms.users.update_user import UpdateUserPage
 from .cleanup import cleanup_test_environment
 from poms.users.register import RegisterPage
+from poms.users.delete import DeleteUserPage
 from .setup import setup_test_environment
 from poms.users.login import LoginPage
 from behave.runner import Context
@@ -19,6 +20,7 @@ def before_all(context: Context):
     context.register_poms = RegisterPage(context.driver)
     context.login_poms = LoginPage(context.driver)
     context.update_user_poms = UpdateUserPage(context.driver)
+    context.delete_user_poms = DeleteUserPage(context.driver)
 
     ## Inventory tracking POMs
 

@@ -87,3 +87,16 @@ def step_impl(context, phone_number):
 @when(u'I click the update user button')
 def step_impl(context):
     context.update_user_poms.click_update_user_button()
+
+# Change password steps
+
+# Delete user steps
+## When step for clicking delete user link on update user page
+@when(u'I click the delete user link')
+def step_impl(context):
+    context.update_user_poms.click_delete_user_link()
+
+## When step for clicking delete user button on delete user page
+@when(u'I click the delete user button')
+def step_impl(context):
+    context.delete_user_poms.click_delete_user_button()

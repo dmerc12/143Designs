@@ -383,3 +383,26 @@ class TestUsersViews(TestCase):
         self.assertIn(f"Your account has been successfully updated!", messages)
 
     ## Tests for change password view
+
+    ## Tests for delete user view
+    ### Test delete user view redirect
+    def test_delete_user_redirect(self):
+        response = self.client.get(reverse('delete-user'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+
+    ### Test delete view rendering success
+    def test_delete_user_view_rendering_success(self):
+        self.client.force_login(self.base1)
+        response = self.client.get(reverse('delete-user'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/delete.html')
+
+    ### Test delete view success
+    def test_delete_user_success(self):
+        self.client.force_login(self.base1)
+        response = self.client.post(reverse('delete-user'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f"Your profile has been successfully deleted, goodbye!", messages)
