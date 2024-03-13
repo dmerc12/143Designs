@@ -1,6 +1,11 @@
 from behave import when
 
 # Register steps
+## When step for clicking register button in nav bar
+@when(u'I click the register button in the nav bar')
+def step_impl(context):
+    pass
+
 ## When step for entering username input on register page
 @when(u'I enter {username} in the username input on the register page')
 def step_impl(context, username):
@@ -40,3 +45,24 @@ def step_impl(context, password2):
 @when(u'I click the register button')
 def step_impl(context):
     context.register_poms.click_register_button()
+
+# Login steps
+## When step for clicking login button in nav bar
+@when(u'I click the login button in the nav bar')
+def step_impl(context):
+    pass
+
+## When step for entering username input on login page
+@when(u'I enter {username} in the username input on the login page')
+def step_impl(context, username):
+    context.login_poms.enter_username_input(username)
+
+## When step for entering password input on login page
+@when(u'I enter {password} in the password input on the login page')
+def step_impl(context, password):
+    context.login_poms.enter_password_input(password)
+
+## When step for clicking login button on login page
+@when(u'I click the login button')
+def step_impl(context):
+    context.login_poms.click_login_button()
