@@ -5,14 +5,6 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import CustomUser
 
-# View for home page
-def home(request):
-    return render(request, 'home.html')
-
-# View for admin home page
-def admin_home(request):
-    return render(request, 'admin_home.html')
-
 # View for login page
 def login_user(request):
     if request.method == 'POST':
