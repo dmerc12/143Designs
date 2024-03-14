@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+{% block title %}
+<title>Update Account</title>
+{% endblock title %}
+{% block content%}
+<div id="layoutAuthentication_content">
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="card shadow-lg border-0 rounded-lg mt-5">
+                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Update Account</h3></div>
+                        <div class="card-body">
+                            <form id="updateUserForm" method="POST" action="{% url 'update-user' %}">
+                                {% csrf_token %}
+                                <!-- Form -->
+                                {{ form.as_p }}
+                                <!-- Buttons wrapper -->
+                                <div class="d-flex justify-content-center">
+                                    <!-- Submit Button -->
+                                    <button class="btn btn-primary w-50" id="updateUserButton" type="submit">Update Account</button>
+                                    <!-- Delete profile button-->
+                                    <a id="deleteUserLink" class="btn btn-danger w-50 ml-2" href="{% url 'delete-user' %}">Delete Account</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script>
+    // Auto formatting for phone numbers
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneNumberInput = document.getElementById('id_phone_number');
+
+        phoneNumberInput.addEventListener('input', function() {
+            // Remove any non-digit characters from the input value
+            const phoneNumber = phoneNumberInput.value.replace(/\D/g, '');
+
+            // Format the phone number with dashes
+            const formattedPhoneNumber = formatPhoneNumber(phoneNumber);
+
+            // Update the input value with the formatted phone number
+            phoneNumberInput.value = formattedPhoneNumber;
+        });
+
+        function formatPhoneNumber(phoneNumber) {
+            let formattedPhoneNumber = '';
+
+            // Add country code if available
+            if (phoneNumber.length > 10) {
+                formattedPhoneNumber += phoneNumber.substring(0, phoneNumber.length - 10) + '-';
+                phoneNumber = phoneNumber.substring(phoneNumber.length - 10);
+            }
+
+            // Add area code
+            if (phoneNumber.length >= 4) {
+                formattedPhoneNumber += phoneNumber.substring(0, 3) + '-';
+                phoneNumber = phoneNumber.substring(3);
+            }
+
+            // Add remaining numbers with dashes
+            if (phoneNumber.length > 3) {
+                formattedPhoneNumber += phoneNumber.substring(0, 3) + '-';
+                phoneNumber = phoneNumber.substring(3);
+            }
+
+            // Add the rest of the number
+            formattedPhoneNumber += phoneNumber;
+
+            return formattedPhoneNumber;
+        }
+    });
+</script>
+{% endblock content %}
