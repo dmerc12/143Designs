@@ -7,6 +7,7 @@ from poms.users.delete import DeleteUserPage
 from .setup import setup_test_environment
 from poms.users.login import LoginPage
 from behave.runner import Context
+from poms.navbar import NavBar
 
 # Setup for webdriver and POM files before selenium tests
 def before_all(context: Context):
@@ -33,6 +34,7 @@ def before_all(context: Context):
     ## Store POMs
 
     ## Navigation POMs
+    context.navbar_poms = NavBar(context.driver)
 
     # Implicit wait for elements
     context.driver.implicitly_wait(1)
