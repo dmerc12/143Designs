@@ -383,6 +383,32 @@ class TestUsersViews(TestCase):
         self.assertIn(f"Your account has been successfully updated!", messages)
 
     ## Tests for change password view
+    ### Test change password view redirect
+    def test_change_password_redirect(self):
+        response = self.client.get(reverse('change-password'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+
+    ### Test change password view rendering success
+    def test_change_password_view_rendering_success(self):
+        self.client.force_login(self.base1)
+        response = self.client.get(reverse('change-password'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/change_password.html')
+        self.assertIsInstance(response.context['form'], ChangePasswordForm)
+
+    ### Test change password view success
+    def test_change_password_success(self):
+        self.client.force_login(self.base1)
+        data = {
+            'new_password1': 'new12345',
+            'new_password2': 'new12345'
+        }
+        response = self.client.post(reverse('change-password'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f"Your password has been successfully changed!", messages)
 
     ## Tests for delete user view
     ### Test delete user view redirect
@@ -391,14 +417,14 @@ class TestUsersViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('login'))
 
-    ### Test delete view rendering success
+    ### Test delete user view rendering success
     def test_delete_user_view_rendering_success(self):
         self.client.force_login(self.base1)
         response = self.client.get(reverse('delete-user'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/delete.html')
 
-    ### Test delete view success
+    ### Test delete user view success
     def test_delete_user_success(self):
         self.client.force_login(self.base1)
         response = self.client.post(reverse('delete-user'))

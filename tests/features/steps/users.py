@@ -89,6 +89,20 @@ def step_impl(context):
     context.update_user_poms.click_update_user_button()
 
 # Change password steps
+## When step for entering first password input on change password page
+@when(u'I enter <new_password1> in the first password input on the change password page')
+def step_impl(context, new_password1):
+    context.change_password_poms.enter_password1_input(new_password1)
+
+### When step for entering second password input on change password page
+@when(u'I enter <new_password2> in the second password input on the change password page')
+def step_impl(context, new_password2):
+    context.change_password_poms.enter_password2_input(new_password2)
+
+### When step for clicking change password button on change password page
+@when(u'I click the change password button')
+def step_impl(context):
+    context.change_password_poms.click_change_password_button()
 
 # Delete user steps
 ## When step for clicking delete user link on update user page

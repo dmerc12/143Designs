@@ -1,3 +1,4 @@
+from poms.users.change_password import ChangePasswordPage
 from selenium.webdriver.edge.webdriver import WebDriver
 from poms.users.update_user import UpdateUserPage
 from .cleanup import cleanup_test_environment
@@ -21,6 +22,7 @@ def before_all(context: Context):
     context.login_poms = LoginPage(context.driver)
     context.update_user_poms = UpdateUserPage(context.driver)
     context.delete_user_poms = DeleteUserPage(context.driver)
+    context.change_password_poms = ChangePasswordPage(context.driver)
 
     ## Inventory tracking POMs
 

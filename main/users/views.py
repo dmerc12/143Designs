@@ -82,6 +82,21 @@ def update_user(request):
         return redirect('login')
 
 # View for change password page
+def change_password(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = ChangePasswordForm(request.user, request.POST)
+            if form.is_valid():
+                form.save()
+                login(request, request.user)
+                messages.success(request, 'Your password has been successfully changed!')
+                return redirect('home')
+        else:
+            form = ChangePasswordForm(request.user)
+        return render(request, 'users/change_password.html', {'form': form})
+    else:
+        messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
+        return redirect('login')
 
 # View for delete user page
 def delete_user(request):

@@ -22,5 +22,8 @@ def step_impl(context):
     raise NotImplementedError('step incomplete')
 
 ## When step for clicking change password in navbar dropdown
+@when(u'I click change password in the nav bar drop down')
+def step_impl(context):
+    raise NotImplementedError('step incomplete')
 
 ## When step for clicking logout in navbar dropdown
