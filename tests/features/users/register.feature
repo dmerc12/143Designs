@@ -14,12 +14,12 @@ Feature: Customers need to be able to register with the site so that they can us
     Then  I should be on a page with the title <title>
 
     Examples:
-    |username|first_name|last_name|email|phone_number|password1|password2|title |
-    |''  |''    |''   |''|''|''|''|'Register'|
-    |'test'|'test'|'test'|'test@email.com'|'1234567890'|'test12345'|'test12345'|'Register'|
-    |'test'|'test'|'test'|'test@email.com'|'1234567890'|'mismatching'|'passwords'|'Register'|
-    |'test'|'test'|'test'|'invalid format'|'1234567890'|'pass12345'|'pass12345'|'Register'|
-    |'test' * 40|'test' * 40|'test' * 40|'test@email.com' * 40|'1234567890' * 20|'pass12345'|'pass12345'|'Register'|
+    |username   |first_name |last_name  |email                |phone_number     |password1    |password2  |title     |
+    |''         |''         |''         |''                   |''               |''           |''         |'Register'|
+    |'test'     |'test'     |'test'     |'test@email.com'     |'1234567890'     |'test12345'  |'test12345'|'Register'|
+    |'test'     |'test'     |'test'     |'test@email.com'     |'1234567890'     |'mismatching'|'passwords'|'Register'|
+    |'test'     |'test'     |'test'     |'invalid format'     |'1234567890'     |'pass12345'  |'pass12345'|'Register'|
+    |'test' * 40|'test' * 40|'test' * 40|'test@email.com' * 40|'1234567890' * 20|'pass12345'  |'pass12345'|'Register'|
 
   Scenario Outline: As a user I should be able to register with valid information
     Given I am on the home page

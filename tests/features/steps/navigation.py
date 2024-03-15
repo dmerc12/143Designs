@@ -31,6 +31,11 @@ def step_impl(context):
 def step_impl(context):
     context.navbar_poms.click_logout()
 
+## When step for clicking contact button
+@when(u'I click the contact button in the nav bar')
+def step_impl(context):
+    context.navbar_poms.click_contact_button()
+
 ## When step for entering search criteria
 @when(u'')
 def step_impl(context, criteria):
