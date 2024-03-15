@@ -2,6 +2,7 @@ Feature: Customers need to be able to delete their account so they can leave the
 
   Scenario Outline: As a user I should be able to update my information with valid information
     Given I am on the home page
+    When  I click the nav bar drop down
     When  I click the login button in the nav bar
     When  I enter <username> in the username input on the login page
     When  I enter <password> in the password input on the login page

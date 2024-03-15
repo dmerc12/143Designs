@@ -52,3 +52,8 @@ class NavBar():
     def click_side_navbar_toggle(self):
         element: WebElement = self.driver.find_element(By.ID, 'sidebarToggle')
         return element.click()
+
+    ## POM for clicking contact button
+    def click_contact_button(self):
+        element: WebElement = self.driver.find_element(By.ID, 'navContactButton')
+        return element.click()

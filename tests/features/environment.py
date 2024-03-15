@@ -1,5 +1,6 @@
 from poms.users.change_password import ChangePasswordPage
 from selenium.webdriver.edge.webdriver import WebDriver
+from poms.site_management.contact import ContactPage
 from poms.users.update_user import UpdateUserPage
 from .cleanup import cleanup_test_environment
 from poms.users.register import RegisterPage
@@ -30,6 +31,7 @@ def before_all(context: Context):
     ## Order tracking POMs
 
     ## Site management POMs
+    context.contact_poms = ContactPage(context.driver)
 
     ## Store POMs
 

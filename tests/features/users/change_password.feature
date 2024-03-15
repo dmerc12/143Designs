@@ -2,6 +2,7 @@ Feature: Users need to be able to change their password so their account doesn't
 
     Scenario Outline: As a user I should not be able to change my password with when not meeting password requirements
       Given I am on the home page
+      When  I click the nav bar drop down
       When  I click the login button in the nav bar
       When  I enter <username> in the username input on the login page
       When  I enter <password> in the password input on the login page
@@ -20,6 +21,7 @@ Feature: Users need to be able to change their password so their account doesn't
 
   Scenario Outline: As a user I should be able to change my password with when meeting password requirements
     Given I am on the home page
+    When  I click the nav bar drop down
     When  I click the login button in the nav bar
     When  I enter <username> in the username input on the login page
     When  I enter <password> in the password input on the login page
