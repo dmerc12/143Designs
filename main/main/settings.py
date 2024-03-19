@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'site_management.apps.SiteManagementConfig',
+    'inventory.apps.InventoryConfig',
+    'orders.apps.OrdersConfig',
+    'store.apps.StoreConfig',
 ]
 
 MIDDLEWARE = [
