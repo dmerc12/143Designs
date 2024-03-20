@@ -22,7 +22,7 @@ class TestInventoryModels(TestCase):
     ### Test for get product sizes method
     def test_product_sizes(self):
         sizes = self.product.get_product_sizes()
-        self.assertIn(sizes, self.size)
+        self.assertIn(self.size, sizes)
 
     ## Tests for product size model
     ### Test for model string method

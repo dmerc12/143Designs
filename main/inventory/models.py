@@ -56,9 +56,10 @@ class Purchase(models.Model):
         purchase_products = PurchaseProduct.objects.filter(purchase=self)
         purchase_designs = PurchaseDesign.objects.filter(purchase=self)
         purchase_items = list(chain(purchase_products, purchase_designs))
-        subtotal = sum(purchase_item.quantity * (purchase_item.product_size.cost if isinstance(purchase_item, PurchaseProduct) else purchase_item.design.cost)for purchase_item in purchase_items)
+        subtotal = sum(purchase_item.quantity * (purchase_item.size.cost if isinstance(purchase_item, PurchaseProduct) else purchase_item.design.cost)for purchase_item in purchase_items)
         self.subtotal = subtotal
         self.save()
+        return subtotal
     
 # Model for purchase products
 class PurchaseProduct(models.Model):
