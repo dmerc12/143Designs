@@ -31,3 +31,13 @@ class CustomUser(models.Model):
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name} - {self.user.username} - {self.role}'
+
+# Model for suppliers
+class Supplier(models.Model):
+    name = models.CharField(max_length=150)
+    location = models.CharField(max_length=250)
+    notes = models.TextField(max_length=250, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    

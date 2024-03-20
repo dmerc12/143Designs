@@ -1,8 +1,8 @@
 from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm
+from .models import Address, CustomUser, Supplier
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from .models import Address, CustomUser
 from django.urls import reverse
 
 # Tests for users models
@@ -23,6 +23,12 @@ class TestUsersModels(TestCase):
         user = CustomUser.objects.create(user=self.user, role='admin', phone_number='phone number')
         self.assertEqual(str(user), f'{user.user.first_name} {user.user.last_name} - {user.user.username} - {user.role}')
 
+    ## Tests for supplier model
+    ### Test for model string method
+    def test_supplier_str(self):
+        supplier = Supplier.objects.create(name='test', location='test')
+        self.assertEqual(str(supplier), supplier.name)
+        
 # Tests for users forms
 class TestUsersForms(TestCase):
 
