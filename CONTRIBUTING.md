@@ -6,7 +6,7 @@ Welcome to 143 Designs! We're excited to have you contribute. Before you get sta
 
 1. Fork the repository to your GitHub account.
 2. Clone your forked repository to your local machine:
-git clone https://github.com/your-username/your-repository.git
+git clone https://github.com/dmerc12/143Designs.git
 
 3. Create a new branch for your feature or bug fix:
 git checkout -b feature-name
@@ -51,4 +51,4 @@ By contributing to this project, you agree that your contributions will be licen
 
 If you have any questions or need further assistance, feel free to reach out to us at dylanmercer12@icloud.com.
 
-Thank you for contributing to Jarvis!
+Thank you for contributing to 143 Designs!
