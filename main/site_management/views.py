@@ -19,4 +19,4 @@ def contact(request):
             return redirect('home')
     else:
         form = ContactForm()
-    return render(request, 'site_management/contact.html', {'form': form})
+    return render(request, 'site_management/messages/contact.html', {'form': form})
