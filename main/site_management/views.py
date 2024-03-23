@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import ContactForm
+from .models import Message
 
 # View for home page
 def home(request):
@@ -10,6 +11,7 @@ def home(request):
 def admin_home(request):
     return render(request, 'admin_home.html')
 
+# View for contact page
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -20,3 +22,9 @@ def contact(request):
     else:
         form = ContactForm()
     return render(request, 'site_management/messages/contact.html', {'form': form})
+
+# View for admin messages home
+def messages_home(request):
+    messages = Message.objects.all()
+    return render(request, 'site_management/messages/home.html', {'messages': messages})
+    
