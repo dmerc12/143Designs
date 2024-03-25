@@ -15,9 +15,10 @@ def login_user(request):
             base_user = authenticate(request, username=username, password=password)
             if base_user is not None:
                 login(request, base_user)
-                user = CustomUser.objects.get(user=base_user)
                 messages.success(request, f'Welcome {base_user.first_name} {base_user.last_name}!')
-                if user.role == 'admin':
+                if  request.user.is_superuser:
+                    return redirect('admin-home')
+                elif CustomUser.objects.get(user=base_user).role == 'admin':
                     return redirect('admin-home')
                 else:
                     return redirect('home')
@@ -53,8 +54,7 @@ def register(request):
 
 # View for register admin page
 def register_admin(request):
-    user = CustomUser.objects.get(user=request.user)
-    if user.role != 'user':
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id).role != 'user') and request.user.is_authenticated:
         if request.method == 'POST':
             form = RegisterForm(request.POST)
             if form.is_valid():
