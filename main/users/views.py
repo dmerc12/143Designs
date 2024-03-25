@@ -49,7 +49,30 @@ def register(request):
             return redirect('home')
     else:
         form = RegisterForm()
-    return render(request, 'users/register.html', {'form': form})
+    return render(request, 'users/users/register.html', {'form': form})
+
+# View for register admin page
+def register_admin(request):
+    user = CustomUser.objects.get(user=request.user)
+    if user.role != 'user':
+        if request.method == 'POST':
+            form = RegisterForm(request.POST)
+            if form.is_valid():
+                phone_number = form.cleaned_data['phone_number']
+                user = form.save()
+                CustomUser.objects.create(user=user, phone_number=phone_number, role='admin')
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password1']
+                user = authenticate(username=username, password=password)
+                login(request, user)
+                messages.success(request, f'Admin account {user.first_name} {user.last_name} has been created and they can now use their credentials to login!')
+                return redirect('admin-home')
+        else:
+            form = RegisterForm()
+        return render(request, 'users/admin/register.html', {'form': form})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
 
 # View for update user page
 def update_user(request):
@@ -68,9 +91,9 @@ def update_user(request):
         else:
             form = UpdateUserForm(instance=base_user)
             form.initial['phone_number'] = user.phone_number
-        return render(request, 'users/update.html', {'form': form})
+        return render(request, 'users/users/update.html', {'form': form})
     else:
-        messages.error(request, 'You must be logged in tho access this page. Please register or login then try again!')
+        messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
         return redirect('login')
 
 # View for change password page
@@ -85,7 +108,7 @@ def change_password(request):
                 return redirect('home')
         else:
             form = ChangePasswordForm(request.user)
-        return render(request, 'users/change_password.html', {'form': form})
+        return render(request, 'users/users/change_password.html', {'form': form})
     else:
         messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
         return redirect('login')
@@ -98,7 +121,7 @@ def delete_user(request):
             logout(request)
             messages.success(request, 'Your profile has been successfully deleted, goodbye!')
             return redirect('home')
-        return render(request, 'users/delete.html')
+        return render(request, 'users/users/delete.html')
     else:
         messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
         return redirect('login')
