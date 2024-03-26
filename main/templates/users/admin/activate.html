@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% block title %}
-<title>Delete Admin Account</title>
+<title>Activate Admin Account</title>
 {% endblock title %}
 {% block content%}
 <div id="layoutAuthentication_content">
@@ -9,15 +9,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5">
                     <div class="card shadow-lg border-0 rounded-lg mt-5">
-                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Delete Admin Account</h3></div>
+                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Activate Admin Account</h3></div>
                         <div class="card-body">
-                            <form id="deleteAccountForm" method="POST" action="{% url 'delete-admin' admin.pk %}">
+                            <form id="activateAdminForm" method="POST" action="{% url 'activate-admin' admin.pk %}">
                                 {% csrf_token %}
-                                <p>Are you sure you want to delete the admin account for {{ admin.first_name }} {{ admin.last_name }}?</p>
+                                <p>Are you sure you want to activate the admin account for {{ admin.user.first_name }} {{ admin.user.last_name }}?</p>
                                 <!-- Buttons Wrapper -->
                                 <div class="d-flex justify-content-center">
                                     <!-- Submit Button -->
-                                    <button class="btn btn-primary w-50" id="deleteUserButton" type="submit">Yes, Delete Admin Account</button>
+                                    <button class="btn btn-primary w-50" id="activateAdminButton" type="submit">Yes, Activate Admin Account</button>
                                 </div>
                             </form>
                         </div>

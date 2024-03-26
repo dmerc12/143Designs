@@ -44,7 +44,7 @@
                             <th>Active</th>
                             <th>Created</th>
                             <th>Last Modified</th>
-                            <th>Delete</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -57,7 +57,7 @@
                             <th>Active</th>
                             <th>Created</th>
                             <th>Last Modified</th>
-                            <th>Delete</th>
+                            <th>Action</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -76,7 +76,11 @@
                                     {% endif %}
                                     <td>{{ admin.created }}</td>
                                     <td>{{ admin.last_modified }}</td>
-                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.pk %}">Delete</a></td>
+                                    {% if admin.active %}
+                                        <td><a class="btn btn-danger" href="{% url 'deactivate-admin' admin.pk %}">Deactivate</a></td>
+                                    {% else %}
+                                        <td><a class="btn btn-success" href="{% url 'activate-admin' admin.pk %}">Activate</a></td>
+                                    {% endif %}
                                 {% else %}
                                     <td>{{ admin.first_name}}</td>
                                     <td>{{ admin.last_name}}</td>
@@ -90,7 +94,7 @@
                                     {% endif %}
                                     <td>{{ admin.date_joined }}</td>
                                     <td>{{ admin.last_login }}</td>
-                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.pk %}">Delete</a></td>
+                                    <td>Super User</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}

@@ -16,7 +16,7 @@ def login_user(request):
             if base_user is not None:
                 login(request, base_user)
                 messages.success(request, f'Welcome {base_user.first_name} {base_user.last_name}!')
-                if  request.user.is_superuser or CustomUser.objects.get(user=base_user).role == 'admin':
+                if  (request.user.is_superuser and request.user.is_activ) or (CustomUser.objects.get(user=base_user).role == 'admin' and CustomUser.objects.get(user=base_user).active):
                     return redirect('admin')
                 else:
                     return redirect('home')
@@ -135,16 +135,30 @@ def delete_user(request):
         messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
         return redirect('login')
 
-# View for delete admin page
-def delete_admin(request, admin_id):
+# View for activate admin page
+def activate_admin(request, admin_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        admin = CustomUser.objects.get(pk=admin_id)
+        if request.method == 'POST':
+            admin.active = True
+            admin.save()
+            messages.success(request, f'The profile for {admin.user.first_name} {admin.user.last_name} has been activated!')
+            return redirect('admin-home')
+        return render(request, 'users/admin/activate.html', {'admin': admin})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for deactivate admin page
+def deactivate_admin(request, admin_id):
     if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
         admin = CustomUser.objects.get(pk=admin_id)
         if request.method == 'POST':
             admin.active = False
             admin.save()
-            messages.success(request, f'The profile for {admin.user.first_name} {admin.user.last_name} has been deactivated and is now set for deletion!')
+            messages.warning(request, f'The profile for {admin.user.first_name} {admin.user.last_name} has been deactivated!')
             return redirect('admin-home')
-        return render(request, 'users/admin/delete.html', {'admin': admin})
+        return render(request, 'users/admin/deactivate.html', {'admin': admin})
     else:
         messages.error(request, 'You must be a site admin access this page!')
         return redirect('home')

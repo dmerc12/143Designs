@@ -116,7 +116,7 @@ class TestSiteManagementViews(TestCase):
     def test_contact_view_rendering_success(self):
         response = self.client.get(reverse('contact'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'site_management/contact.html')
+        self.assertTemplateUsed(response, 'site_management/messages/contact.html')
         self.assertIsInstance(response.context['form'], ContactForm)
 
     ### Test contact view success
