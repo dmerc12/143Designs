@@ -45,6 +45,7 @@
                             <th>Created</th>
                             <th>Last Modified</th>
                             <th>Action</th>
+                            <th>Reset Password</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -58,6 +59,7 @@
                             <th>Created</th>
                             <th>Last Modified</th>
                             <th>Action</th>
+                            <th>Reset Password</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -81,6 +83,7 @@
                                     {% else %}
                                         <td><a class="btn btn-success" href="{% url 'activate-admin' admin.pk %}">Activate</a></td>
                                     {% endif %}
+                                    <td><a class="btn btn-info" href="{% url 'admin-reset-password' admin.user.pk %}">Reset Password</a></td>
                                 {% else %}
                                     <td>{{ admin.first_name}}</td>
                                     <td>{{ admin.last_name}}</td>
@@ -94,6 +97,7 @@
                                     {% endif %}
                                     <td>{{ admin.date_joined }}</td>
                                     <td>{{ admin.last_login }}</td>
+                                    <td>Super User</td>
                                     <td>Super User</td>
                                 {% endif %}
                             </tr>
