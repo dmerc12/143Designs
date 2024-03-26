@@ -279,6 +279,8 @@ class TestUsersViews(TestCase):
         self.user1 = CustomUser.objects.create(user=self.base1, role='admin', phone_number='1234567890')
         self.base2 = User.objects.create_user(username='username', password='pass12345', first_name='user', last_name='user', email='example@email.com')
         self.user2 = CustomUser.objects.create(user=self.base2, role='user', phone_number='1234567890')
+        self.base3 = User.objects.create_user(username='anotheradmin', password='pass12345', first_name='user', last_name='user', email='example@email.com')
+        self.user3 = CustomUser.objects.create(user=self.base3, role='admin', phone_number='1234567890')
 
     ## Tests for home view
 
@@ -486,9 +488,34 @@ class TestUsersViews(TestCase):
 
     ### Test delete user view success
     def test_delete_user_success(self):
-        self.client.force_login(self.base1)
+        self.client.force_login(self.base2)
         response = self.client.post(reverse('delete-user'))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn(f"Your profile has been successfully deleted, goodbye!", messages)
+
+    ## Tests for delete admin view
+    ### Test delete admin view redirect
+    def test_delete_admin_view_redirect(self):
+        response = self.client.get(reverse('delete-admin'), args=[self.base1.pk])
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test delete admin view rendering success
+    def test_delete_admin_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('delete-admin'), args=[self.base1.pk])
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/admin/delete.html')
+
+    ### Test delete admin view success
+    def test_delete_admin_view_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('delete-admin'), args=[self.base1.pk])
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('admin-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f'The profile for {self.base1.first_name} {self.base1.last_name} has been deleted and their access has been revoked!', messages)

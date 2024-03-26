@@ -63,14 +63,15 @@
                                     <td>{{ admin.user.username }}</td>
                                     <td>{{ admin.user.email }}</td>
                                     <td>{{ admin.phone_number }}</td>
+                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.user.pk %}">Delete</a></td>
                                 {% else %}
                                     <td>Super User</td>
                                     <td>Super User</td>
                                     <td>{{ admin.username }}</td>
                                     <td>{{ admin.email }}</td>
                                     <td>Super User</td>
+                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.pk %}">Delete</a></td>
                                 {% endif %}
-                                <td><a class="btn btn-danger" href="#">Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

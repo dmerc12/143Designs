@@ -64,7 +64,7 @@ def register_admin(request):
                 user = authenticate(username=username, password=password)
                 login(request, user)
                 messages.success(request, f'Admin account {user.first_name} {user.last_name} has been created and they can now use their credentials to login!')
-                return redirect('admin')
+                return redirect('admin-home')
         else:
             form = RegisterForm()
         return render(request, 'users/admin/register.html', {'form': form})
@@ -134,3 +134,18 @@ def delete_user(request):
     else:
         messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
         return redirect('login')
+
+# View for delete admin page
+def delete_admin(request, admin_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        admin = User.objects.get(pk=admin_id)
+        if request.method == 'POST':
+            admin.delete()
+            user = User.objects.get(pk=request.user.pk)
+            login(request, user)
+            messages.success(request, f'The profile for {admin.first_name} {admin.last_name} has been deleted and their access has been revoked!')
+            return redirect('admin-home')
+        return render(request, 'users/admin/delete.html', {'admin': admin})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
