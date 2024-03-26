@@ -518,4 +518,4 @@ class TestUsersViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('admin-home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
-        self.assertIn(f'The profile for {self.base1.first_name} {self.base1.last_name} has been deleted and their access has been revoked!', messages)
+        self.assertIn(f'The profile for {self.base1.first_name} {self.base1.last_name} has been deactivated and is now set for deletion!', messages)

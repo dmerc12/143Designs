@@ -41,6 +41,9 @@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Phone Number</th>
+                            <th>Active</th>
+                            <th>Created</th>
+                            <th>Last Modified</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
@@ -51,6 +54,9 @@
                             <th>Username</th>
                             <th>Email</th>
                             <th>Phone Number</th>
+                            <th>Active</th>
+                            <th>Created</th>
+                            <th>Last Modified</th>
                             <th>Delete</th>
                         </tr>
                     </tfoot>
@@ -63,13 +69,27 @@
                                     <td>{{ admin.user.username }}</td>
                                     <td>{{ admin.user.email }}</td>
                                     <td>{{ admin.phone_number }}</td>
-                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.user.pk %}">Delete</a></td>
+                                    {% if admin.active %}
+                                        <td><p class='text-success'>Active</p></td>
+                                    {% else %}
+                                        <td><p class='text-danger'>Inactive</p></td>
+                                    {% endif %}
+                                    <td>{{ admin.created }}</td>
+                                    <td>{{ admin.last_modified }}</td>
+                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.pk %}">Delete</a></td>
                                 {% else %}
-                                    <td>Super User</td>
-                                    <td>Super User</td>
+                                    <td>{{ admin.first_name}}</td>
+                                    <td>{{ admin.last_name}}</td>
                                     <td>{{ admin.username }}</td>
                                     <td>{{ admin.email }}</td>
                                     <td>Super User</td>
+                                    {% if admin.is_active %}
+                                        <td><p class='text-success'>Active</p></td>
+                                    {% else %}
+                                        <td><p class='text-danger'>Inactive</p></td>
+                                    {% endif %}
+                                    <td>{{ admin.date_joined }}</td>
+                                    <td>{{ admin.last_login }}</td>
                                     <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.pk %}">Delete</a></td>
                                 {% endif %}
                             </tr>

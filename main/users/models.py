@@ -26,11 +26,12 @@ class CustomUser(models.Model):
     role = models.CharField(max_length=5, choices=ROLE_CHOICES)
     phone_number = models.CharField(max_length=15)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name} - {self.user.username} - {self.role}'
+        return f'{self.user.first_name} {self.user.last_name} - {self.user.username} - {self.role} - {self.active}'
 
 # Model for suppliers
 class Supplier(models.Model):
@@ -40,4 +41,3 @@ class Supplier(models.Model):
 
     def __str__(self):
         return self.name
-    

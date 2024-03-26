@@ -138,12 +138,11 @@ def delete_user(request):
 # View for delete admin page
 def delete_admin(request, admin_id):
     if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
-        admin = User.objects.get(pk=admin_id)
+        admin = CustomUser.objects.get(pk=admin_id)
         if request.method == 'POST':
-            admin.delete()
-            user = User.objects.get(pk=request.user.pk)
-            login(request, user)
-            messages.success(request, f'The profile for {admin.first_name} {admin.last_name} has been deleted and their access has been revoked!')
+            admin.active = False
+            admin.save()
+            messages.success(request, f'The profile for {admin.user.first_name} {admin.user.last_name} has been deactivated and is now set for deletion!')
             return redirect('admin-home')
         return render(request, 'users/admin/delete.html', {'admin': admin})
     else:
