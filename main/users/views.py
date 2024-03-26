@@ -16,10 +16,8 @@ def login_user(request):
             if base_user is not None:
                 login(request, base_user)
                 messages.success(request, f'Welcome {base_user.first_name} {base_user.last_name}!')
-                if  request.user.is_superuser:
-                    return redirect('admin-home')
-                elif CustomUser.objects.get(user=base_user).role == 'admin':
-                    return redirect('admin-home')
+                if  request.user.is_superuser or CustomUser.objects.get(user=base_user).role == 'admin':
+                    return redirect('admin')
                 else:
                     return redirect('home')
             else:
@@ -54,7 +52,7 @@ def register(request):
 
 # View for register admin page
 def register_admin(request):
-    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id).role != 'user') and request.user.is_authenticated:
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
         if request.method == 'POST':
             form = RegisterForm(request.POST)
             if form.is_valid():
@@ -66,10 +64,21 @@ def register_admin(request):
                 user = authenticate(username=username, password=password)
                 login(request, user)
                 messages.success(request, f'Admin account {user.first_name} {user.last_name} has been created and they can now use their credentials to login!')
-                return redirect('admin-home')
+                return redirect('admin')
         else:
             form = RegisterForm()
         return render(request, 'users/admin/register.html', {'form': form})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for admin home page
+def admin_home(request):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        superusers = User.objects.filter(is_superuser=True)
+        admins = CustomUser.objects.filter(role='admin')
+        all_admins = list(superusers) + list(admins)
+        return render(request, 'users/admin/home.html', {'admins': all_admins})
     else:
         messages.error(request, 'You must be a site admin access this page!')
         return redirect('home')

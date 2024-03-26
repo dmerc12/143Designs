@@ -305,7 +305,7 @@ class TestUsersViews(TestCase):
         data = {'username': self.base1.username, 'password': 'pass12345'}
         response = self.client.post(reverse('login'), data=data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('admin-home'))
+        self.assertRedirects(response, reverse('admin'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn(f'Welcome {self.base1.first_name} {self.base1.last_name}!', messages)
 
@@ -362,6 +362,8 @@ class TestUsersViews(TestCase):
         response = self.client.get(reverse('register-admin'))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
 
     ### Test register admin view rendering success
     def test_register_admin_view_rendering_success(self):
@@ -385,11 +387,27 @@ class TestUsersViews(TestCase):
         }
         response = self.client.post(reverse('register-admin'), data=data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('admin-home'))
+        self.assertRedirects(response, reverse('admin'))
         self.assertTrue(User.objects.filter(username=data['username']).exists)
         self.assertTrue(CustomUser.objects.filter(user__username=data['username']).exists)
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn(f"Admin account {data['first_name']} {data['last_name']} has been created and they can now use their credentials to login!", messages)
+
+    ## Tests for admin home
+    ### Test for admin home redirect
+    def test_admin_home_redirect(self):
+        response = self.client.get(reverse('admin-home'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test for admin home rendering success
+    def test_admin_home_rendering_success(self):
+        self.client.force_login(self.base1)
+        response = self.client.get(reverse('admin-home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/admin/home.html')
 
     ## Tests for update user view
     ### Test update user vew redirect
