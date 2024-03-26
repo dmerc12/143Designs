@@ -1,0 +1,83 @@
+{% extends 'base/base.html' %}
+{% block title %}
+<title>Admin Home</title>
+{% endblock title %}
+{% block content %}
+<header class="bg-light py-5 mb-2">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center my-5">
+                    <h1 class="display-5 fw-bolder mb-2">143 Custom Designs Admin Home</h1>
+                    <p class="text-primary mb-4">Here you can manage the site by managing current admin accounts. All accounts below have admin access and can view the admin site.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="container-fluid px-4">
+        <h1 class="mt-1">Admin Home</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item">Dashboard</li>
+            <li class="breadcrumb-item active">Admin Home</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="fas fa-table me-1"></i>
+                    Admins
+                </div>
+                <div>
+                    <a id="createAccountNavigation" class="btn btn-success" href="{% url 'register-admin' %}">Create Admin</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Delete</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for admin in admins %}
+                            <tr>
+                                {% if admin.role == 'admin' %}
+                                    <td>{{ admin.user.first_name }}</td>
+                                    <td>{{ admin.user.last_name }}</td>
+                                    <td>{{ admin.user.username }}</td>
+                                    <td>{{ admin.user.email }}</td>
+                                    <td>{{ admin.phone_number }}</td>
+                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.user.pk %}">Delete</a></td>
+                                {% else %}
+                                    <td>Super User</td>
+                                    <td>Super User</td>
+                                    <td>{{ admin.username }}</td>
+                                    <td>{{ admin.email }}</td>
+                                    <td>Super User</td>
+                                    <td><a class="btn btn-danger" href="{% url 'delete-admin' admin.pk %}">Delete</a></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}
