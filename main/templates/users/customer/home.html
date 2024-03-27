@@ -62,7 +62,7 @@
                                 <td>{{ customer.email }}</td>
                                 <td>{{ customer.phone_number }}</td>
                                 <td><a class="btn btn-info" href="{% url 'edit-customer' customer.pk %}">Edit</a></td>
-                                <td><a class="btn btn-danger" href="#">Delete</a></td>
+                                <td><a class="btn btn-danger" href="{% url 'delete-customer' customer.pk %}">Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

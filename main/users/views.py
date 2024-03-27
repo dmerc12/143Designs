@@ -226,3 +226,16 @@ def edit_customer(request, customer_id):
     else:
         messages.error(request, 'You must be a site admin access this page!')
         return redirect('home')
+
+# View for delete customer page
+def delete_customer(request, customer_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        customer = get_object_or_404(Customer, pk=customer_id)
+        if request.method == 'POST':
+            customer.delete()
+            messages.success(request, 'Customer successfully deleted!')
+            return redirect('customer-home')
+        return render(request, 'users/customer/delete.html', {'customer': customer})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')

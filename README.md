@@ -38,7 +38,6 @@ This application was designed for a small business (143 Designs) to manage their
 - Admin users can create, update, and delete testimonials.
 
 ### To Do
-- Create an order automatically from a message.
 - Create and manage orders, carts, and the store.
 - Finish the front end pages/functionality.
 - Take online payments to complete an order.

@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% block title %}
-<title>Delete Message</title>
+<title>Delete Customer</title>
 {% endblock title %}
 {% block content%}
 <div id="layoutAuthentication_content">
@@ -9,15 +9,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-5">
                     <div class="card shadow-lg border-0 rounded-lg mt-5">
-                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Delete Message</h3></div>
+                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Delete Customer</h3></div>
                         <div class="card-body">
-                            <form id="deleteMessageForm" method="POST" action="{% url 'delete-message' message.id %}">
+                            <form id="deleteCustomerForm" method="POST" action="{% url 'delete-customer' customer.id %}">
                                 {% csrf_token %}
-                                <p>Are you sure you want to delete the message for {{ message.first_name }} {{ message.last_name }} with title {{ message.title }}?</p>
+                                <p>Are you sure you want to delete the customer named {{ customer.first_name }} {{ customer.last_name }}?</p>
                                 <!-- Buttons Wrapper -->
                                 <div class="d-flex justify-content-center">
                                     <!-- Submit Button -->
-                                    <button class="btn btn-primary w-50" id="deleteMessageButton" type="submit">Yes, Delete Message</button>
+                                    <button class="btn btn-primary w-50" id="deleteCustomerButton" type="submit">Yes, Delete Customer</button>
                                 </div>
                             </form>
                         </div>

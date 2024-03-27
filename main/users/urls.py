@@ -1,6 +1,6 @@
 from .views import admin_home, register_admin, activate_admin, deactivate_admin, admin_reset_password
 from .views import login_user, logout_user, register, update_user, delete_user, change_password
-from .views import customer_home, create_customer, edit_customer
+from .views import customer_home, create_customer, edit_customer, delete_customer
 from django.urls import path
 
 # URL's for Users app
@@ -19,4 +19,5 @@ urlpatterns = [
     path('customer/', customer_home, name='customer-home'),
     path('customer/create/', create_customer, name='create-customer'),
     path('customer/edit/<int:customer_id>/', edit_customer, name='edit-customer'),
+    path('customer/delete/<int:customer_id>/',  delete_customer, name='delete-customer')
 ]

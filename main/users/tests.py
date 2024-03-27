@@ -753,3 +753,28 @@ class TestUsersViews(TestCase):
         self.assertRedirects(response, reverse('customer-home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn('Customer successfully updated!', messages)
+
+    ## Tests for delete customer view
+    ### Test delete customer view redirect
+    def test_delete_customer_view_redirect(self):
+        response = self.client.get(reverse('delete-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test delete customer view rendering success
+    def test_delete_customer_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('delete-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/delete.html')
+
+    ### Test delete customer view success
+    def test_delete_customer_view_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('delete-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('customer-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Customer successfully deleted!', messages)
