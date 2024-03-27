@@ -1,4 +1,4 @@
-from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm
+from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm
 from .models import Address, CustomUser, Supplier
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
@@ -21,7 +21,7 @@ class TestUsersModels(TestCase):
     ### Test for model string method
     def test_user_str(self):
         user = CustomUser.objects.create(user=self.user, role='admin', phone_number='phone number')
-        self.assertEqual(str(user), f'{user.user.first_name} {user.user.last_name} - {user.user.username} - {user.role}')
+        self.assertEqual(str(user), f'{user.user.first_name} {user.user.last_name} - {user.user.username} - {user.role} - {user.active}')
 
     ## Tests for supplier model
     ### Test for model string method
@@ -270,6 +270,40 @@ class TestUsersForms(TestCase):
         form = ChangePasswordForm(user=self.base, data=data)
         self.assertTrue(form.is_valid())
 
+    ## Tests for admin change password form
+    ### Test admin change password form initialization
+    def test_admin_change_password_form_initialization(self):
+        form = ChangePasswordForm(user=self.base)
+        self.assertIn('new_password1', form.fields.keys())
+        self.assertIn('new_password2', form.fields.keys())
+
+    ### Test admin change password form validation with empty fields
+    def test_admin_change_password_form_validation_empty_fields(self):
+        data = {'new_password1': '', 'new_password2': ''}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertIn('new_password1', form.errors)
+        self.assertIn('new_password2', form.errors)
+
+    ### Test admin change password form validation with an invalid password
+    def test_admin_change_password_form_validation_invalid_password(self):
+        data = {'new_password1': self.base.first_name, 'new_password2': self.base.first_name}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('new_password2', form.errors)
+
+    ### Test admin change password form validation with mismatching passwords
+    def test_admin_change_password_form_validation_mismatching_passwords(self):
+        data = {'new_password1': 'mismatching', 'new_password2': 'passwords'}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('new_password2', form.errors)
+
+    ### Test admin change password form validation success
+    def test_admin_change_password_form_validation_success(self):
+        data = {'new_password1': 'updatedpass123', 'new_password2': 'updatedpass123'}
+        form = ChangePasswordForm(user=self.base, data=data)
+        self.assertTrue(form.is_valid())
+
 # Tests for users views
 class TestUsersViews(TestCase):
 
@@ -389,7 +423,7 @@ class TestUsersViews(TestCase):
         }
         response = self.client.post(reverse('register-admin'), data=data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('admin'))
+        self.assertRedirects(response, reverse('admin-home'))
         self.assertTrue(User.objects.filter(username=data['username']).exists)
         self.assertTrue(CustomUser.objects.filter(user__username=data['username']).exists)
         messages = [message.message for message in get_messages(response.wsgi_request)]
@@ -495,27 +529,82 @@ class TestUsersViews(TestCase):
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn(f"Your profile has been successfully deleted, goodbye!", messages)
 
-    ## Tests for delete admin view
-    ### Test delete admin view redirect
-    def test_delete_admin_view_redirect(self):
-        response = self.client.get(reverse('delete-admin'), args=[self.base1.pk])
+    ## Tests for activate admin view
+    ### Test activate admin view redirect
+    def test_activate_admin_view_redirect(self):
+        response = self.client.get(reverse('activate-admin', args=[self.user1.pk]))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn('You must be a site admin access this page!', messages)
 
-    ### Test delete admin view rendering success
-    def test_delete_admin_view_rendering_success(self):
+    ### Test activate admin view rendering success
+    def test_activate_admin_view_rendering_success(self):
         self.client.force_login(self.base3)
-        response = self.client.get(reverse('delete-admin'), args=[self.base1.pk])
+        response = self.client.get(reverse('activate-admin', args=[self.user1.pk]))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'users/admin/delete.html')
+        self.assertTemplateUsed(response, 'users/admin/activate.html')
 
-    ### Test delete admin view success
-    def test_delete_admin_view_success(self):
+    ### Test activate admin view success
+    def test_activate_admin_view_success(self):
         self.client.force_login(self.base3)
-        response = self.client.post(reverse('delete-admin'), args=[self.base1.pk])
+        response = self.client.post(reverse('activate-admin', args=[self.user1.pk]))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('admin-home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
-        self.assertIn(f'The profile for {self.base1.first_name} {self.base1.last_name} has been deleted and their access has been revoked!', messages)
+        self.assertIn(f'The profile for {self.base1.first_name} {self.base1.last_name} has been activated!', messages)
+
+    ## Tests for deactivate admin view
+    ### Test deactivate admin view redirect
+    def test_deactivate_admin_view_redirect(self):
+        response = self.client.get(reverse('deactivate-admin', args=[self.user1.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test deactivate admin view rendering success
+    def test_deactivate_admin_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('deactivate-admin', args=[self.user1.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/admin/deactivate.html')
+
+    ### Test deactivate admin view success
+    def test_deactivate_admin_view_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('deactivate-admin', args=[self.user1.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('admin-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f'The profile for {self.base1.first_name} {self.base1.last_name} has been deactivated!', messages)
+
+    ## Tests for admin reset password view
+    ### Test admin reset password view redirect
+    def test_admin_reset_password_view_redirect(self):
+        response = self.client.get(reverse('admin-reset-password', args=[self.user1.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test admin reset password view rendering success
+    def test_admin_reset_password_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('admin-reset-password', args=[self.user1.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/admin/reset_password.html')
+        self.assertIsInstance(response.context['form'], AdminChangePasswordForm)
+
+    ### Test admin reset password view success
+    def test_admin_reset_password_view_success(self):
+        data = {
+            'new_password1': 'resetpassword',
+            'new_password2': 'resetpassword'
+        }
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('admin-reset-password', args=[self.user1.pk]), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('admin-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(f'The password for {self.base1.first_name} {self.base1.last_name} has been reset!', messages)

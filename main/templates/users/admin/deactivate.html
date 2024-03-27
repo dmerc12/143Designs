@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% block title %}
+<title>Deactivate Admin Account</title>
+{% endblock title %}
+{% block content%}
+<div id="layoutAuthentication_content">
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card shadow-lg border-0 rounded-lg mt-5">
+                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Deactivate Admin Account</h3></div>
+                        <div class="card-body">
+                            <form id="deactivateAdminForm" method="POST" action="{% url 'deactivate-admin' admin.pk %}">
+                                {% csrf_token %}
+                                <p>Are you sure you want to deactivate the admin account for {{ admin.user.first_name }} {{ admin.user.last_name }}?</p>
+                                <!-- Buttons Wrapper -->
+                                <div class="d-flex justify-content-center">
+                                    <!-- Submit Button -->
+                                    <button class="btn btn-primary w-50" id="deactivateAdminButton" type="submit">Yes, Deactivate Admin Account</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock content %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from users.models import CustomUser
 from .forms import ContactForm
 from .models import Message
 
@@ -9,7 +10,11 @@ def home(request):
 
 # View for admin home page
 def admin_home(request):
-    return render(request, 'admin_home.html')
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        return render(request, 'admin_home.html')
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
 
 # View for contact page
 def contact(request):
@@ -27,4 +32,3 @@ def contact(request):
 def messages_home(request):
     messages = Message.objects.all()
     return render(request, 'site_management/messages/home.html', {'messages': messages})
-    

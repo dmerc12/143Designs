@@ -1,4 +1,4 @@
-from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm
+from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -16,7 +16,7 @@ def login_user(request):
             if base_user is not None:
                 login(request, base_user)
                 messages.success(request, f'Welcome {base_user.first_name} {base_user.last_name}!')
-                if  request.user.is_superuser or CustomUser.objects.get(user=base_user).role == 'admin':
+                if  (request.user.is_superuser and request.user.is_active) or (CustomUser.objects.get(user=base_user).role == 'admin' and CustomUser.objects.get(user=base_user).active):
                     return redirect('admin')
                 else:
                     return redirect('home')
@@ -49,39 +49,6 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'users/users/register.html', {'form': form})
-
-# View for register admin page
-def register_admin(request):
-    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
-        if request.method == 'POST':
-            form = RegisterForm(request.POST)
-            if form.is_valid():
-                phone_number = form.cleaned_data['phone_number']
-                user = form.save()
-                CustomUser.objects.create(user=user, phone_number=phone_number, role='admin')
-                username = form.cleaned_data['username']
-                password = form.cleaned_data['password1']
-                user = authenticate(username=username, password=password)
-                login(request, user)
-                messages.success(request, f'Admin account {user.first_name} {user.last_name} has been created and they can now use their credentials to login!')
-                return redirect('admin-home')
-        else:
-            form = RegisterForm()
-        return render(request, 'users/admin/register.html', {'form': form})
-    else:
-        messages.error(request, 'You must be a site admin access this page!')
-        return redirect('home')
-
-# View for admin home page
-def admin_home(request):
-    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
-        superusers = User.objects.filter(is_superuser=True)
-        admins = CustomUser.objects.filter(role='admin')
-        all_admins = list(superusers) + list(admins)
-        return render(request, 'users/admin/home.html', {'admins': all_admins})
-    else:
-        messages.error(request, 'You must be a site admin access this page!')
-        return redirect('home')
 
 # View for update user page
 def update_user(request):
@@ -135,17 +102,81 @@ def delete_user(request):
         messages.error(request, 'You must be logged in to access this page. Please register or login then try again!')
         return redirect('login')
 
-# View for delete admin page
-def delete_admin(request, admin_id):
+# View for admin home page
+def admin_home(request):
     if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
-        admin = User.objects.get(pk=admin_id)
+        superusers = User.objects.filter(is_superuser=True)
+        admins = CustomUser.objects.filter(role='admin')
+        all_admins = list(superusers) + list(admins)
+        return render(request, 'users/admin/home.html', {'admins': all_admins})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for register admin page
+def register_admin(request):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
         if request.method == 'POST':
-            admin.delete()
-            user = User.objects.get(pk=request.user.pk)
-            login(request, user)
-            messages.success(request, f'The profile for {admin.first_name} {admin.last_name} has been deleted and their access has been revoked!')
+            form = RegisterForm(request.POST)
+            if form.is_valid():
+                phone_number = form.cleaned_data['phone_number']
+                user = form.save()
+                CustomUser.objects.create(user=user, phone_number=phone_number, role='admin')
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password1']
+                user = authenticate(username=username, password=password)
+                login(request, user)
+                messages.success(request, f'Admin account {user.first_name} {user.last_name} has been created and they can now use their credentials to login!')
+                return redirect('admin-home')
+        else:
+            form = RegisterForm()
+        return render(request, 'users/admin/register.html', {'form': form})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for activate admin page
+def activate_admin(request, admin_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        admin = CustomUser.objects.get(pk=admin_id)
+        if request.method == 'POST':
+            admin.active = True
+            admin.save()
+            messages.success(request, f'The profile for {admin.user.first_name} {admin.user.last_name} has been activated!')
             return redirect('admin-home')
-        return render(request, 'users/admin/delete.html', {'admin': admin})
+        return render(request, 'users/admin/activate.html', {'admin': admin})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for deactivate admin page
+def deactivate_admin(request, admin_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        admin = CustomUser.objects.get(pk=admin_id)
+        if request.method == 'POST':
+            admin.active = False
+            admin.save()
+            messages.warning(request, f'The profile for {admin.user.first_name} {admin.user.last_name} has been deactivated!')
+            return redirect('admin-home')
+        return render(request, 'users/admin/deactivate.html', {'admin': admin})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for admin reset password page
+def admin_reset_password(request, user_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        user = User.objects.get(pk=user_id)
+        if request.method == 'POST':
+            form = AdminChangePasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                login(request, request.user)
+                messages.success(request, f'The password for {user.first_name} {user.last_name} has been reset!')
+                return redirect('admin-home')
+        else:
+            form = AdminChangePasswordForm(user)
+        return render(request, 'users/admin/reset_password.html', {'form': form, 'user': user})
     else:
         messages.error(request, 'You must be a site admin access this page!')
         return redirect('home')

@@ -2,7 +2,11 @@
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="{% url 'home' %}">143 Designs</a>
     <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    {% if request.user.is_authenticated %}
+        {% if request.user.is_superuser or request.user.customuser.role == 'admin' and request.user.customuser.active %}
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        {% endif %}
+    {% endif %}
     <!-- Site navigation -->
     <div class="container px-4 px-lg-5">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
