@@ -33,12 +33,8 @@
         <!-- Navbar -->
         {% include 'base/navbar.html' %}
         <div id="layoutSidenav">
-            {% if request.user.is_authenticated %}
-                {% if request.user.is_superuser or request.user.customuser.role == 'admin' and request.user.customuser.active %}
-                    <!-- Side navbar -->
-                    {% include 'base/sidenavbar.html' %}
-                {% endif %}
-            {% endif %}
+            <!-- Side navbar -->
+            {% include 'base/sidenavbar.html' %}
             <div id="layoutSidenav_content">
                 <!-- Display error messages -->
                 <div class="mx-auto row mt-2">
@@ -53,12 +49,11 @@
                             {% elif message.tags == 'success' %}
                                 <div class="card bg-success text-white mb-4">
                             {% endif %}
-                                <div class="card-body">
-                                    <h5>{{ message }}</h5>
-                                </div>
+                            <div class="card-body">
+                                <h5>{{ message }}</h5>
+                            </div>
                         {% endfor %}
-                    </div>
-                {% endif %}
+                    {% endif %}
                 </div>
                 <!-- Page content -->
                 {% block content %}{% endblock content %}
