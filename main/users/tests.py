@@ -383,6 +383,7 @@ class TestUsersViews(TestCase):
         self.user2 = CustomUser.objects.create(user=self.base2, role='user', phone_number='1234567890')
         self.base3 = User.objects.create_user(username='anotheradmin', password='pass12345', first_name='user', last_name='user', email='example@email.com')
         self.user3 = CustomUser.objects.create(user=self.base3, role='admin', phone_number='1234567890')
+        self.customer = Customer.objects.create(first_name='first', last_name='last', email='email@email.com', phone_number='1-222-333-4444')
 
     ## Tests for login view
     ### Test login view rendering success
@@ -720,3 +721,35 @@ class TestUsersViews(TestCase):
         self.assertRedirects(response, reverse('customer-home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn('Customer successfully created!', messages)
+
+    ## Tests for edit customer view
+    ### Test edit customer view redirect
+    def test_edit_customer_view_redirect(self):
+        response = self.client.get(reverse('edit-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test edit customer view rendering success
+    def test_edit_customer_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('edit-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/edit.html')
+        self.assertIsInstance(response.context['form'], CustomerForm)
+
+    ### Test edit customer view success
+    def test_edit_customer_view_success(self):
+        data = {
+            'first_name': 'first',
+            'last_name': 'last',
+            'email': 'test@email.com',
+            'phone_number': '1-222-333-4444'
+        }
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('edit-customer', args=[self.customer.pk]), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('customer-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Customer successfully updated!', messages)

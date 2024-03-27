@@ -61,7 +61,7 @@
                                 <td>{{ customer.last_name }}</td>
                                 <td>{{ customer.email }}</td>
                                 <td>{{ customer.phone_number }}</td>
-                                <td><a class="btn btn-info" href="#">Edit</a></td>
+                                <td><a class="btn btn-info" href="{% url 'edit-customer' customer.pk %}">Edit</a></td>
                                 <td><a class="btn btn-danger" href="#">Delete</a></td>
                             </tr>
                         {% endfor %}

@@ -1,6 +1,6 @@
 from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm, CustomerForm
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .models import CustomUser, Customer
 from django.contrib import messages
@@ -53,8 +53,8 @@ def register(request):
 # View for update user page
 def update_user(request):
     if request.user.is_authenticated:
-        base_user = User.objects.get(pk=request.user.pk)
-        user = CustomUser.objects.get(user=base_user.pk)
+        base_user = get_object_or_404(User, pk=request.user.pk)
+        user = get_object_or_404(CustomUser, user=base_user.pk)
         if request.method == 'POST':
             form = UpdateUserForm(request.POST, instance=base_user)
             if form.is_valid():
@@ -138,7 +138,7 @@ def register_admin(request):
 # View for activate admin page
 def activate_admin(request, admin_id):
     if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
-        admin = CustomUser.objects.get(pk=admin_id)
+        admin = get_object_or_404(CustomUser, pk=admin_id)
         if request.method == 'POST':
             admin.active = True
             admin.save()
@@ -152,7 +152,7 @@ def activate_admin(request, admin_id):
 # View for deactivate admin page
 def deactivate_admin(request, admin_id):
     if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
-        admin = CustomUser.objects.get(pk=admin_id)
+        admin = get_object_or_404(CustomUser, pk=admin_id)
         if request.method == 'POST':
             admin.active = False
             admin.save()
@@ -166,7 +166,7 @@ def deactivate_admin(request, admin_id):
 # View for admin reset password page
 def admin_reset_password(request, user_id):
     if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
-        user = User.objects.get(pk=user_id)
+        user = get_object_or_404(User, pk=user_id)
         if request.method == 'POST':
             form = AdminChangePasswordForm(user, request.POST)
             if form.is_valid():
@@ -202,6 +202,27 @@ def create_customer(request):
         else:
             form = CustomerForm()
         return render(request, 'users/customer/create.html', {'form': form})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for edit customer page
+def edit_customer(request, customer_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        customer = get_object_or_404(Customer, pk=customer_id)
+        if request.method == 'POST':
+            form = CustomerForm(request.POST, instance=customer)
+            if form.is_valid():
+                customer.first_name = form.cleaned_data['first_name']
+                customer.last_name = form.cleaned_data['last_name']
+                customer.email = form.cleaned_data['email']
+                customer.phone_number = form.cleaned_data['phone_number']
+                customer.save()
+                messages.success(request, 'Customer successfully updated!')
+                return redirect('customer-home')
+        else:
+            form = CustomerForm(instance=customer)
+        return render(request, 'users/customer/edit.html', {'form': form, 'customer': customer})
     else:
         messages.error(request, 'You must be a site admin access this page!')
         return redirect('home')
