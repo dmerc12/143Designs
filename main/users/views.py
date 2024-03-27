@@ -16,7 +16,7 @@ def login_user(request):
             if base_user is not None:
                 login(request, base_user)
                 messages.success(request, f'Welcome {base_user.first_name} {base_user.last_name}!')
-                if  (request.user.is_superuser and request.user.is_activ) or (CustomUser.objects.get(user=base_user).role == 'admin' and CustomUser.objects.get(user=base_user).active):
+                if  (request.user.is_superuser and request.user.is_active) or (CustomUser.objects.get(user=base_user).role == 'admin' and CustomUser.objects.get(user=base_user).active):
                     return redirect('admin')
                 else:
                     return redirect('home')

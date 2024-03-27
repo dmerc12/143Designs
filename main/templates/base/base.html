@@ -33,8 +33,12 @@
         <!-- Navbar -->
         {% include 'base/navbar.html' %}
         <div id="layoutSidenav">
-            <!-- Side navbar -->
-            {% include 'base/sidenavbar.html' %}
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser or request.user.customuser.role == 'admin' and request.user.customuser.active %}
+                    <!-- Side navbar -->
+                    {% include 'base/sidenavbar.html' %}
+                {% endif %}
+            {% endif %}
             <div id="layoutSidenav_content">
                 <!-- Display error messages -->
                 <div class="mx-auto row mt-2">
