@@ -28,7 +28,24 @@ def contact(request):
         form = ContactForm()
     return render(request, 'site_management/messages/contact.html', {'form': form})
 
-# View for admin messages home
+# View for admin messages home page
 def messages_home(request):
-    messages = Message.objects.all()
-    return render(request, 'site_management/messages/home.html', {'messages': messages})
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        contacts = Message.objects.all()
+        return render(request, 'site_management/messages/home.html', {'contacts': contacts})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for delete message page
+def delete_message(request, message_id):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        message = Message.objects.get(pk=message_id)
+        if request.method == 'POST':
+            message.delete()
+            messages.success(request, f'The message has been deleted!')
+            return redirect('messages-home')
+        return render(request, 'site_management/messages/delete.html', {'message': message})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')

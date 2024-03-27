@@ -37,9 +37,10 @@
             {% include 'base/sidenavbar.html' %}
             <div id="layoutSidenav_content">
                 <!-- Display error messages -->
-                <div class="mx-auto row mt-2">
+                <div class="mx-auto justify-content-center text-center row mt-2">
                     {% if messages %}
                         {% for message in messages %}
+                        <div class="col-auto">
                             {% if message.tags == 'error' %}
                                 <div class="card bg-danger text-white mb-4">
                             {% elif message.tags == 'info' %}
@@ -52,6 +53,7 @@
                             <div class="card-body">
                                 <h5>{{ message }}</h5>
                             </div>
+                        </div>
                         {% endfor %}
                     {% endif %}
                 </div>
