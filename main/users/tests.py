@@ -1,5 +1,5 @@
-from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm
-from .models import Address, CustomUser, Supplier
+from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm, CustomerForm
+from .models import Address, CustomUser, Supplier, Customer
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
@@ -22,6 +22,12 @@ class TestUsersModels(TestCase):
     def test_user_str(self):
         user = CustomUser.objects.create(user=self.user, role='admin', phone_number='phone number')
         self.assertEqual(str(user), f'{user.user.first_name} {user.user.last_name} - {user.user.username} - {user.role} - {user.active}')
+
+    ## Tests for customer model
+    ### Test for model string method
+    def test_customer_str(self):
+        customer = Customer.objects.create(first_name='first', last_name='last', email='first@email.com', phone_number='1-222-333-4444')
+        self.assertEqual(str(customer), f'{customer.first_name} {customer.last_name}')
 
     ## Tests for supplier model
     ### Test for model string method
@@ -302,6 +308,68 @@ class TestUsersForms(TestCase):
     def test_admin_change_password_form_validation_success(self):
         data = {'new_password1': 'updatedpass123', 'new_password2': 'updatedpass123'}
         form = ChangePasswordForm(user=self.base, data=data)
+        self.assertTrue(form.is_valid())
+
+    ## Tests for customer form
+    ### Test customer form initialization
+    def test_customer_form_initialization(self):
+        pass
+
+    ### Test customer form validation with empty fields
+    def test_customer_form_validataion_empty_fields(self):
+        data = {
+            'username': '',
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+            'phone_number': '',
+        }
+        form = CustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
+
+    ### Test customer form validation with fields too long
+    def test_customer_form_validation_fields_too_long(self):
+        data = {
+            'username': 't' * 160,
+            'first_name': 't' * 160,
+            'last_name': 't' * 160,
+            'email': (('test' * 150) + '@email.com'),
+            'phone_number': '1' * 17,
+        }
+        form = CustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
+
+    ### Test customer form validation with invalid email
+    def test_customer_form_validation_invalid_email(self):
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'incorrect format',
+            'phone_number': '1-123-123-1234',
+        }
+        form = CustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+
+    ### Test customer form validation success
+    def test_customer_form_validation_success(self):
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'test@email.com',
+            'phone_number': '1-123-123-1234',
+        }
+        form = CustomerForm(data=data)
         self.assertTrue(form.is_valid())
 
 # Tests for users views
