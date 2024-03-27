@@ -1,9 +1,9 @@
-from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm
+from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm, CustomerForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from .models import CustomUser, Customer
 from django.contrib import messages
-from .models import CustomUser
 
 # View for login page
 def login_user(request):
@@ -177,6 +177,31 @@ def admin_reset_password(request, user_id):
         else:
             form = AdminChangePasswordForm(user)
         return render(request, 'users/admin/reset_password.html', {'form': form, 'user': user})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for customer home page
+def customer_home(request):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        customers = Customer.objects.all()
+        return render(request, 'users/customer/home.html', {'customers': customers})
+    else:
+        messages.error(request, 'You must be a site admin access this page!')
+        return redirect('home')
+
+# View for create customer page
+def create_customer(request):
+    if (request.user.is_superuser or CustomUser.objects.filter(user=request.user.id, role='admin').exists()) and request.user.is_authenticated:
+        if request.method == 'POST':
+            form = CustomerForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Customer successfully created!')
+                return redirect('customer-home')
+        else:
+            form = CustomerForm()
+        return render(request, 'users/customer/create.html', {'form': form})
     else:
         messages.error(request, 'You must be a site admin access this page!')
         return redirect('home')

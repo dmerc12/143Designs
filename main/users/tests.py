@@ -384,10 +384,6 @@ class TestUsersViews(TestCase):
         self.base3 = User.objects.create_user(username='anotheradmin', password='pass12345', first_name='user', last_name='user', email='example@email.com')
         self.user3 = CustomUser.objects.create(user=self.base3, role='admin', phone_number='1234567890')
 
-    ## Tests for home view
-
-    ## Tests for admin home view
-
     ## Tests for login view
     ### Test login view rendering success
     def test_login_view_rendering_success(self):
@@ -676,3 +672,51 @@ class TestUsersViews(TestCase):
         self.assertRedirects(response, reverse('admin-home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn(f'The password for {self.base1.first_name} {self.base1.last_name} has been reset!', messages)
+
+    ## Tests for customer home view
+    ### Test customer home view redirect
+    def test_customer_home_view_redirect(self):
+        response = self.client.get(reverse('customer-home'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test customer home view rendering success
+    def test_customer_home_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('customer-home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/home.html')
+
+    ## Tests for create customer view
+    ### Test create customer view redirect
+    def test_create_customer_view_redirect(self):
+        response = self.client.get(reverse('create-customer'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test create customer view rendering success
+    def test_create_customer_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('create-customer'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/create.html')
+        self.assertIsInstance(response.context['form'], CustomerForm)
+
+    ### Test create customer view success
+    def test_create_customer_view_success(self):
+        data = {
+            'first_name': 'first',
+            'last_name': 'last',
+            'email': 'test@email.com',
+            'phone_number': '1-222-333-4444'
+        }
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('create-customer'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('customer-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Customer successfully created!', messages)
