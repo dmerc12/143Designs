@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
+from .models import Customer
 from django import forms
 
 # Login form
@@ -110,3 +111,13 @@ class AdminChangePasswordForm(SetPasswordForm):
 		self.fields['new_password2'].widget.attrs['placeholder'] = 'Confirm Password'
 		self.fields['new_password2'].label = ''
 		self.fields['new_password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
+
+class CustomerForm(forms.ModelForm):
+	first_name = forms.CharField(label="", max_length=150, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
+	last_name = forms.CharField(label="", max_length=150, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
+	email = forms.EmailField(label="", max_length=150, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
+	phone_number = forms.CharField(label="", max_length=15, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number'}))
+
+	class Meta:
+		model = Customer
+		fields = ['first_name', 'last_name', 'email', 'phone_number']

@@ -1,5 +1,5 @@
-from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm
-from .models import Address, CustomUser, Supplier
+from .forms import LoginForm, RegisterForm, UpdateUserForm, ChangePasswordForm, AdminChangePasswordForm, CustomerForm
+from .models import Address, CustomUser, Supplier, Customer
 from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
@@ -22,6 +22,12 @@ class TestUsersModels(TestCase):
     def test_user_str(self):
         user = CustomUser.objects.create(user=self.user, role='admin', phone_number='phone number')
         self.assertEqual(str(user), f'{user.user.first_name} {user.user.last_name} - {user.user.username} - {user.role} - {user.active}')
+
+    ## Tests for customer model
+    ### Test for model string method
+    def test_customer_str(self):
+        customer = Customer.objects.create(first_name='first', last_name='last', email='first@email.com', phone_number='1-222-333-4444')
+        self.assertEqual(str(customer), f'{customer.first_name} {customer.last_name}')
 
     ## Tests for supplier model
     ### Test for model string method
@@ -304,6 +310,68 @@ class TestUsersForms(TestCase):
         form = ChangePasswordForm(user=self.base, data=data)
         self.assertTrue(form.is_valid())
 
+    ## Tests for customer form
+    ### Test customer form initialization
+    def test_customer_form_initialization(self):
+        pass
+
+    ### Test customer form validation with empty fields
+    def test_customer_form_validataion_empty_fields(self):
+        data = {
+            'username': '',
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+            'phone_number': '',
+        }
+        form = CustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
+
+    ### Test customer form validation with fields too long
+    def test_customer_form_validation_fields_too_long(self):
+        data = {
+            'username': 't' * 160,
+            'first_name': 't' * 160,
+            'last_name': 't' * 160,
+            'email': (('test' * 150) + '@email.com'),
+            'phone_number': '1' * 17,
+        }
+        form = CustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('first_name', form.errors)
+        self.assertIn('last_name', form.errors)
+        self.assertIn('email', form.errors)
+        self.assertIn('phone_number', form.errors)
+
+    ### Test customer form validation with invalid email
+    def test_customer_form_validation_invalid_email(self):
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'incorrect format',
+            'phone_number': '1-123-123-1234',
+        }
+        form = CustomerForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+
+    ### Test customer form validation success
+    def test_customer_form_validation_success(self):
+        data = {
+            'username': 'test',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'test@email.com',
+            'phone_number': '1-123-123-1234',
+        }
+        form = CustomerForm(data=data)
+        self.assertTrue(form.is_valid())
+
 # Tests for users views
 class TestUsersViews(TestCase):
 
@@ -315,10 +383,7 @@ class TestUsersViews(TestCase):
         self.user2 = CustomUser.objects.create(user=self.base2, role='user', phone_number='1234567890')
         self.base3 = User.objects.create_user(username='anotheradmin', password='pass12345', first_name='user', last_name='user', email='example@email.com')
         self.user3 = CustomUser.objects.create(user=self.base3, role='admin', phone_number='1234567890')
-
-    ## Tests for home view
-
-    ## Tests for admin home view
+        self.customer = Customer.objects.create(first_name='first', last_name='last', email='email@email.com', phone_number='1-222-333-4444')
 
     ## Tests for login view
     ### Test login view rendering success
@@ -608,3 +673,108 @@ class TestUsersViews(TestCase):
         self.assertRedirects(response, reverse('admin-home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn(f'The password for {self.base1.first_name} {self.base1.last_name} has been reset!', messages)
+
+    ## Tests for customer home view
+    ### Test customer home view redirect
+    def test_customer_home_view_redirect(self):
+        response = self.client.get(reverse('customer-home'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test customer home view rendering success
+    def test_customer_home_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('customer-home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/home.html')
+
+    ## Tests for create customer view
+    ### Test create customer view redirect
+    def test_create_customer_view_redirect(self):
+        response = self.client.get(reverse('create-customer'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test create customer view rendering success
+    def test_create_customer_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('create-customer'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/create.html')
+        self.assertIsInstance(response.context['form'], CustomerForm)
+
+    ### Test create customer view success
+    def test_create_customer_view_success(self):
+        data = {
+            'first_name': 'first',
+            'last_name': 'last',
+            'email': 'test@email.com',
+            'phone_number': '1-222-333-4444'
+        }
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('create-customer'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('customer-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Customer successfully created!', messages)
+
+    ## Tests for edit customer view
+    ### Test edit customer view redirect
+    def test_edit_customer_view_redirect(self):
+        response = self.client.get(reverse('edit-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test edit customer view rendering success
+    def test_edit_customer_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('edit-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/edit.html')
+        self.assertIsInstance(response.context['form'], CustomerForm)
+
+    ### Test edit customer view success
+    def test_edit_customer_view_success(self):
+        data = {
+            'first_name': 'first',
+            'last_name': 'last',
+            'email': 'test@email.com',
+            'phone_number': '1-222-333-4444'
+        }
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('edit-customer', args=[self.customer.pk]), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('customer-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Customer successfully updated!', messages)
+
+    ## Tests for delete customer view
+    ### Test delete customer view redirect
+    def test_delete_customer_view_redirect(self):
+        response = self.client.get(reverse('delete-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test delete customer view rendering success
+    def test_delete_customer_view_rendering_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.get(reverse('delete-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/customer/delete.html')
+
+    ### Test delete customer view success
+    def test_delete_customer_view_success(self):
+        self.client.force_login(self.base3)
+        response = self.client.post(reverse('delete-customer', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('customer-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('Customer successfully deleted!', messages)

@@ -1,4 +1,5 @@
 from django.contrib.messages import get_messages
+from users.models import CustomUser, Customer
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from .models import Message, Testimonial
@@ -14,8 +15,9 @@ class TestSiteManagementModels(TestCase):
     ## Tests for messsage model
     ### Test for model string method
     def test_message_str(self):
-        message = Message.objects.create(first_name='first', last_name='last', email='e@mail.com', phone_number='123123132541', title='title', message='message')
-        self.assertEqual(str(message), f'{message.first_name} {message.last_name} - {message.title}')
+        customer = Customer.objects.create(first_name='first', last_name='last', email='e@mail.com', phone_number='1-222-333-4444')
+        message = Message.objects.create(customer=customer, title='title', message='message')
+        self.assertEqual(str(message), f'{customer.first_name} {customer.last_name} - {message.title}')
 
     ## Tests for testimonial model
     ### Test for model string method when featured
@@ -98,6 +100,10 @@ class TestSiteManagementViews(TestCase):
 
     def setUp(self):
         self.client = Client()
+        self.base = User.objects.create(username='test', password='test', first_name='first', last_name='last', email='firstlast@email.com')
+        self.user = CustomUser.objects.create(user=self.base, phone_number='1-222-333-4444', role='admin')
+        self.customer = Customer.objects.create(first_name='first', last_name='last', email='e@mail.com', phone_number='1-222-333-4444')
+        self.message = Message.objects.create(customer=self.customer, title='title', message='message')
 
     ## Tests for home view
     ### Test home view rendering success
@@ -108,8 +114,19 @@ class TestSiteManagementViews(TestCase):
 
     ## Tests for admin home view
     ### Test admin home view redirect
+    def test_admin_home_view_redirect(self):
+        response = self.client.get(reverse('admin'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
 
     ### Test admin home rendering success
+    def test_admin_home_view_rendering_success(self):
+        self.client.force_login(self.base)
+        response = self.client.get(reverse('admin'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'admin_home.html')
 
     ## Tests for contact view
     ### Test contact view rendering success
@@ -134,3 +151,44 @@ class TestSiteManagementViews(TestCase):
         self.assertRedirects(response, reverse('home'))
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertIn(f"Your message has been successfully sent. We will be in contact soon!\nIn the meantime, check out our store!", messages)
+
+    ## Tests for messages home view
+    ### Test messages home view redirect
+    def test_messages_home_view_redirect(self):
+        response = self.client.get(reverse('messages-home'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test messages home view rendering success
+    def test_messages_home_view_rendering_success(self):
+        self.client.force_login(self.base)
+        response = self.client.get(reverse('messages-home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'site_management/messages/home.html')
+
+    ## Tests for delete message view
+    ### Test delete message view redirect
+    def test_delete_message_view_redirect(self):
+        response = self.client.get(reverse('delete-message', args=[self.message.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('You must be a site admin access this page!', messages)
+
+    ### Test delete message view rendering success
+    def test_delete_message_view_rendering_success(self):
+        self.client.force_login(self.base)
+        response = self.client.get(reverse('delete-message', args=[self.message.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'site_management/messages/delete.html')
+
+    ### Test delete message view success
+    def test_delete_message_view_success(self):
+        self.client.force_login(self.base)
+        response = self.client.post(reverse('delete-message', args=[self.message.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('messages-home'))
+        messages = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn('The message has been deleted!', messages)

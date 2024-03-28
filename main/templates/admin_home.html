@@ -119,8 +119,8 @@
                         <h5 class="card-title">Customers</h5>
                         <p class="card-text ml-1" data-toggle="tooltip" data-placement="top" title="View and manage all customers here. Add a new customer by clicking 'Add Customer', or view all customers by clicking 'View Customers'."><i class="fa fa-info-circle" aria-hidden="true"></i></p>
                     </div>
-                    <a href="#" class="btn btn-success mb-1">Add Customer</a>
-                    <a href="#" class="btn btn-secondary">View Customers</a>
+                    <a href="{% url 'create-customer' %}" class="btn btn-success mb-1">Add Customer</a>
+                    <a href="{% url 'customer-home' %}" class="btn btn-secondary">View Customers</a>
                 </div>
             </div>
         </div>

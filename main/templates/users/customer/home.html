@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% block title %}
-<title>Messages</title>
+<title>Customer Home</title>
 {% endblock title %}
 {% block content %}
 <header class="bg-light py-5 mb-2">
@@ -8,8 +8,8 @@
         <div class="row gx-5 justify-content-center">
             <div class="col-lg-6">
                 <div class="text-center my-5">
-                    <h1 class="display-5 fw-bolder mb-2">143 Custom Designs Messsages Home</h1>
-                    <p class="text-primary mb-4">Here you can manage the site by managing current messages. Create an order with the Create Order button or after an order has been created, the message can be deleted with the Delete Message button.</p>
+                    <h1 class="display-5 fw-bolder mb-2">143 Custom Designs Customer Home</h1>
+                    <p class="text-primary mb-4">Here you can manage the site by managing current customers. Create a new customer using the Create Customer button or manage the current customers with the Edit and Delete buttons.</p>
                 </div>
             </div>
         </div>
@@ -17,16 +17,19 @@
 </header>
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Messages</h1>
+        <h1 class="mt-1">Customer Home</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="{% url 'admin' %}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Messages</li>
+            <li class="breadcrumb-item active">Customer Home</li>
         </ol>
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
                     <i class="fas fa-table me-1"></i>
-                    Messages
+                    Admins
+                </div>
+                <div>
+                    <a id="createCustomerNavigation" class="btn btn-success" href="{% url 'create-customer' %}">Create Admin</a>
                 </div>
             </div>
             <div class="card-body">
@@ -37,9 +40,8 @@
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
-                            <th>Title</th>
-                            <th>Message</th>
-                            <th>Action</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -48,21 +50,19 @@
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
-                            <th>Title</th>
-                            <th>Message</th>
-                            <th>Action</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        {% for contact in contacts %}
+                        {% for customer in customers %}
                             <tr>
-                                <td>{{ contact.customer.first_name }}</td>
-                                <td>{{ contact.customer.last_name }}</td>
-                                <td>{{ contact.customer.email }}</td>
-                                <td>{{ contact.customer.phone_number }}</td>
-                                <td>{{ contact.title }}</td>
-                                <td>{{ contact.message }}</td>
-                                <td><a class="btn btn-danger" href="{% url 'delete-message' contact.pk %}">Delete Message</a></td>
+                                <td>{{ customer.first_name }}</td>
+                                <td>{{ customer.last_name }}</td>
+                                <td>{{ customer.email }}</td>
+                                <td>{{ customer.phone_number }}</td>
+                                <td><a class="btn btn-info" href="{% url 'edit-customer' customer.pk %}">Edit</a></td>
+                                <td><a class="btn btn-danger" href="{% url 'delete-customer' customer.pk %}">Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
