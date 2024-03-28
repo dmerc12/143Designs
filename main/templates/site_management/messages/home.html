@@ -19,7 +19,7 @@
     <div class="container-fluid px-4">
         <h1 class="mt-4">Messages</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard</li>
+            <li class="breadcrumb-item"><a href="{% url 'admin' %}">Dashboard</a></li>
             <li class="breadcrumb-item active">Messages</li>
         </ol>
         <div class="card mb-4">
@@ -56,10 +56,10 @@
                     <tbody>
                         {% for contact in contacts %}
                             <tr>
-                                <td>{{ contact.first_name }}</td>
-                                <td>{{ contact.last_name }}</td>
-                                <td>{{ contact.email }}</td>
-                                <td>{{ contact.phone_number }}</td>
+                                <td>{{ contact.customer.first_name }}</td>
+                                <td>{{ contact.customer.last_name }}</td>
+                                <td>{{ contact.customer.email }}</td>
+                                <td>{{ contact.customer.phone_number }}</td>
                                 <td>{{ contact.title }}</td>
                                 <td>{{ contact.message }}</td>
                                 <td><a class="btn btn-danger" href="{% url 'delete-message' contact.pk %}">Delete Message</a></td>

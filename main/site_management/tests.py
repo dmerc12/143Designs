@@ -1,8 +1,8 @@
 from django.contrib.messages import get_messages
+from users.models import CustomUser, Customer
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from .models import Message, Testimonial
-from users.models import CustomUser
 from django.urls import reverse
 from .forms import ContactForm
 
@@ -15,8 +15,9 @@ class TestSiteManagementModels(TestCase):
     ## Tests for messsage model
     ### Test for model string method
     def test_message_str(self):
-        message = Message.objects.create(first_name='first', last_name='last', email='e@mail.com', phone_number='123123132541', title='title', message='message')
-        self.assertEqual(str(message), f'{message.first_name} {message.last_name} - {message.title}')
+        customer = Customer.objects.create(first_name='first', last_name='last', email='e@mail.com', phone_number='1-222-333-4444')
+        message = Message.objects.create(customer=customer, title='title', message='message')
+        self.assertEqual(str(message), f'{customer.first_name} {customer.last_name} - {message.title}')
 
     ## Tests for testimonial model
     ### Test for model string method when featured
@@ -101,7 +102,8 @@ class TestSiteManagementViews(TestCase):
         self.client = Client()
         self.base = User.objects.create(username='test', password='test', first_name='first', last_name='last', email='firstlast@email.com')
         self.user = CustomUser.objects.create(user=self.base, phone_number='1-222-333-4444', role='admin')
-        self.message = Message.objects.create(first_name='first', last_name='last', email='first@email.com', phone_number=self.user.phone_number, title='title', message='message')
+        self.customer = Customer.objects.create(first_name='first', last_name='last', email='e@mail.com', phone_number='1-222-333-4444')
+        self.message = Message.objects.create(customer=self.customer, title='title', message='message')
 
     ## Tests for home view
     ### Test home view rendering success

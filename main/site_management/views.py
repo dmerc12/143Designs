@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
+from users.models import CustomUser, Customer
 from django.contrib import messages
-from users.models import CustomUser
 from .forms import ContactForm
 from .models import Message
 
@@ -21,7 +21,8 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            form.save()
+            customer = Customer.objects.create(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], phone_number=form.cleaned_data['phone_number'])
+            Message.objects.create(customer=customer, title=form.cleaned_data['title'], message=form.cleaned_data['message'])
             messages.success(request, 'Your message has been successfully sent. We will be in contact soon!\nIn the meantime, check out our store!')
             return redirect('home')
     else:
